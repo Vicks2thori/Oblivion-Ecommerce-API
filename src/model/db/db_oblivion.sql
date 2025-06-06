@@ -21,7 +21,7 @@ CREATE TABLE Clients (
 CREATE TABLE Admins (
   idAdmins TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   idUsers TINYINT UNSIGNED,
-  statusAdmins BIT NOT NULL DEFAULT,
+  statusAdmins BOOLEAN NOT NULL DEFAULT true,,
   FOREIGN KEY (idUsers) REFERENCES Users(idUsers)
 );
 
@@ -29,8 +29,7 @@ CREATE TABLE Admins (
 CREATE TABLE Category (
   idCategory TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nameCategory VARCHAR(50) NOT NULL,
-  statusCategory BIT NOT NULL DEFAULT 1
-);
+  statusCategory BOOLEAN NOT NULL DEFAULT true
 
 -- Produtos
 CREATE TABLE Product (
@@ -40,7 +39,7 @@ CREATE TABLE Product (
   descriptionProduct TEXT NULL,
   priceProduct DECIMAL(8,2) NOT NULL,
   codProduct BIGINT NOT NULL,
-  statusProduct BIT NOT NULL DEFAULT 1,
+  statusProduct BOOLEAN NOT NULL DEFAULT true,
   idCategory TINYINT UNSIGNED NOT NULL,
   idStock SMALLINT UNSIGNED NOT NULL,
   FOREIGN KEY (idImages) REFERENCES Images(idImages),
@@ -60,7 +59,7 @@ CREATE TABLE Payment (
   idPayment TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   namePayment VARCHAR(50) NOT NULL,
   idImgPayment TINYINT UNSIGNED NOT NULL,
-  statusPayment BIT NOT NULL DEFAULT 1,
+  statusPayment BOOLEAN NOT NULL DEFAULT true,,
   idPaymentCondition TINYINT UNSIGNED NOT NULL,
   FOREIGN KEY (idPaymentCondition) REFERENCES PaymentCondition(idPaymentCondition),
   FOREIGN KEY (idImgPayment) REFERENCES ImgPayment(idImgPayment)
@@ -86,7 +85,7 @@ VALUES
 CREATE TABLE PaymentCondition (
   idPaymentCondition TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   namePaymentCondition VARCHAR(50) NOT NULL,
-  statusPaymentCondition BIT NOT NULL DEFAULT 1
+  statusPaymentCondition BOOLEAN NOT NULL DEFAULT true
 );
 
 -- Estoque
@@ -99,7 +98,7 @@ CREATE TABLE Stock (
 CREATE TABLE StockCategory (
   idStockCategory SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nameStockCategory VARCHAR(50) NOT NULL,
-  statusStockCategory BIT NOT NULL DEFAULT 1
+  statusStockCategory BOOLEAN NOT NULL DEFAULT true
 );
 
 -- Movimentação de estoque
