@@ -1,37 +1,30 @@
-//paymentEntity.js
+//productEntity.js esqueci de alterar os nomes em cima uadfhcaehfc\ea
 const { DataTypes } = require('sequelize');
 const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
 
-const Payment = sequelize.define('Payment', {
-  idPayment: {
+const Clients = sequelize.define('Admins', { //ta assim no BD depois eu choro aqui
+  idClients: {
     type: DataTypes.TINYINT.UNSIGNED,
     primaryKey: true,
     autoIncrement: true,
   },
-  namePayment: {
-    type: DataTypes.STRING(50),
+  cpfs: {
+    type: DataTypes.STRING(11),
     allowNull: false,
-  },
+  }, 
+  cells: {
+    type: DataTypes.STRING(11),
+    allowNull: false,
+  }, 
 
-//Chave estrangeira imagem
-/*idImgPayment: {
+//Chave estrangeira users
+/*idUsers: {
     type: DataTypes.TINYINT.UNSIGNED,
     allowNull: false,
   }, */
-
-//Chave estrangeira condição de pagamento
-/*idPaymentCondition: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-  statusPayment: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true,
-  },
 }, {
   freezeTableName: true,
   timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
 });
 
-module.exports = Payment;
+module.exports = Admins;

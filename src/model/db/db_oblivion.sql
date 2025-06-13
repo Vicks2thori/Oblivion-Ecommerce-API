@@ -30,6 +30,7 @@ CREATE TABLE Category (
   idCategory TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nameCategory VARCHAR(50) NOT NULL,
   statusCategory BOOLEAN NOT NULL DEFAULT true
+);
 
 -- Produtos
 CREATE TABLE Product (
@@ -37,7 +38,7 @@ CREATE TABLE Product (
   nameProduct VARCHAR(100) NOT NULL,
   idImg SMALLINT UNSIGNED NULL,
   descriptionProduct TEXT NULL,
-  priceProduct DECIMAL(8,2) NOT NULL,
+  priceProduct DECIMAL(8,2) NOT NULL DEFAULT 0,
   codProduct BIGINT NOT NULL,
   statusProduct BOOLEAN NOT NULL DEFAULT true,
   idCategory TINYINT UNSIGNED NOT NULL,
@@ -102,14 +103,14 @@ CREATE TABLE StockCategory (
 );
 
 -- Movimentação de estoque
-CREATE TABLE StockMoviment (
+CREATE TABLE StockMoviment ( --O NOME DAS TABELAAAASSSSSSSSSSSSSS
   idStockMoviment SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nameStockMoviment VARCHAR(50) NOT NULL,
   dateStockMoviment DATE NOT NULL,
   idStockCategory TINYINT UNSIGNED NOT NULL,
   typeStockMoviment ENUM('exit', 'entry', 'definition') NOT NULL,
-  idAdmins TINYINT NOT NULL, 
-  idProduct SMALLINT UNSIGNED NOT NULL, --fica a duvida de como alterar
+  idAdmins TINYINT NOT NULL, -- UNSIGNED faltou aqui e verificar a tabela do admin
+  idProduct SMALLINT UNSIGNED NOT NULL, --fica a duvida de como alterar de novo com uma tabela intermediária mas tem em order tambe reyfcaey
   FOREIGN KEY (idStockCategory) REFERENCES StockCategory(idStockCategory),
   FOREIGN KEY (idAdmins) REFERENCES Admins(idAdmins),
   FOREIGN KEY (idProduct) REFERENCES Product(idProduct)
@@ -118,13 +119,15 @@ CREATE TABLE StockMoviment (
 -- Pedidos
 CREATE TABLE Orders (
   idOrders SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  dateOrders DATE NOT NULL,
+  dateOrders DATE NOT NULL, -- tenho que pensar nisso aqui ainda  
   codOrders CHAR(5) NOT NULL UNIQUE,
   idClients TINYINT UNSIGNED NOT NULL,
-  idProduct SMALLINT UNSIGNED NOT NULL, --fica a duvida de como adcionar
+  idProduct SMALLINT UNSIGNED NOT NULL, --fica a duvida de como adcionar TENHI QUE criar uma tabela intermediária aerhfcbabhecf
   idPayment TINYINT UNSIGNED NOT NULL, --no caso a condição ja vem associada com o pagamento?
-  totalityOrders SMALLINT UNSIGNED NOT NULL, --Seria o valor total dos itens (ujwdxd eu ainda não entendi muito bem)
-  statusOrders ENUM('pending', 'cancel', 'aproved') NOT NULL,
+  -- idPaymentCondition
+  totalityOrders SMALLINT UNSIGNED NOT NULL, --Seria o valor total dos itens (ujwdxd eu ainda não entendi muito bem) TENHO que fazer uma tabela intermediária
+  --descriptionOrders TEXT NULL, to vendo o quanto é viavel isso aqui
+  statusOrders ENUM('pending', 'cancel', 'aproved') NOT NULL DEFAULT 'pending',
   FOREIGN KEY (idClients) REFERENCES Clients(idClients),
   FOREIGN KEY (idProduct) REFERENCES Product(idProduct),
   FOREIGN KEY (idPayment) REFERENCES Payment(idPayment)
