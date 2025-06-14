@@ -1,13 +1,12 @@
-//movimentStockDto.js
+//stock_movementDto.js
 const Joi = require('joi');
 
-const createMovimentStockSchema = Joi.object({
-  nameStockMoviment: Joi.string().min(3).max(50).required(),
-  dateStockMoviment: Joi.date().required(), //validar como formatar e mandar pro bd
-  //idStockCategory
-  typeStockMoviment: Joi.string().valid('exit', 'entry', 'definition').required(),
-  //idAdmins se for mapear (pensar em outros tambem)
-  //idProduct ainda vou fazer uma tabela intermediária pra eu poder colocar
+const createStockMovementSchema = Joi.object({
+  name: Joi.string().min(3).max(50).required(),
+  date: Joi.date().iso().required(), //iso YYYY-MM-DD
+  category_id: Joi.number().min(1).max(65535).required(),
+  admin_id: Joi.number().min(1).max(255).required(),
+  type: Joi.string().valid('exit', 'entry', 'definition').required(),
 });
 
-module.exports = { createMovimentStockSchema };
+module.exports = { createStockMovementSchema };

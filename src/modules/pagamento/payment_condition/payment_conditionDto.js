@@ -1,10 +1,11 @@
+//payment_conditionDto.js
 //Opcional
 //Se for manipulada diretamente (upload de imagens fora do produto)
 const Joi = require('joi');
 
-const createPymentConditionSchema = Joi.object({
-  namePaymentCondition: Joi.string().min(2).max(50).required(),
-  statusPaymentCondition: Joi.number().valid(0, 1).default(1).required()
+const createPaymentConditionSchema = Joi.object({
+  name: Joi.string().min(2).max(50).required(),
+  status: Joi.boolean().default(true).required()
 });
 
-module.exports = { createPymentConditionSchema };
+module.exports = { createPaymentConditionSchema };

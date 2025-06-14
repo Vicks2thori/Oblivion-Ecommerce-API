@@ -1,6 +1,6 @@
 -- USUÁRIOS
 CREATE TABLE user (
-  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
@@ -8,16 +8,16 @@ CREATE TABLE user (
 );
 
 CREATE TABLE client (
-  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id TINYINT UNSIGNED NOT NULL UNIQUE,
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id SMALLINT UNSIGNED NOT NULL UNIQUE,
   cpf CHAR(11) NOT NULL UNIQUE,
-  cell CHAR(11) NOT NULL UNIQUE,
+  phone CHAR(11) NOT NULL UNIQUE,
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
 CREATE TABLE admin (
   id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id TINYINT UNSIGNED NOT NULL UNIQUE,
+  user_id SMALLINT UNSIGNED NOT NULL UNIQUE,
   status BOOLEAN NOT NULL DEFAULT TRUE,
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
@@ -67,12 +67,14 @@ CREATE TABLE order (
   id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   date DATE NOT NULL,
   code CHAR(5) NOT NULL UNIQUE,
-  client_id TINYINT UNSIGNED NOT NULL,
+  client_id SMALLINT UNSIGNED NOT NULL,
   payment_id TINYINT UNSIGNED NOT NULL,
-  total DECIMAL(10,2) NOT NULL,
+  payment_condition_id TINYINT UNSIGNED NOT NULL,
+  total DECIMAL(10,2) NOT NULL, -- acho que vou precisar de uma tabela intediária pra guardar o total
   status ENUM('pending', 'cancel', 'approved') NOT NULL DEFAULT 'pending',
   FOREIGN KEY (client_id) REFERENCES client(id),
-  FOREIGN KEY (payment_id) REFERENCES payment(id)
+  FOREIGN KEY (payment_id) REFERENCES payment(id),
+  FOREIGN KEY (payment_condition_id) REFERENCES payment_condition(id)
 );
 
 CREATE TABLE order_item (
@@ -118,7 +120,6 @@ CREATE TABLE stock_movement (
   type ENUM('exit', 'entry', 'adjustment') NOT NULL,
   FOREIGN KEY (category_id) REFERENCES stock_category(id),
   FOREIGN KEY (admin_id) REFERENCES admin(id),
-  FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
 CREATE TABLE stock_movement_item (
@@ -144,7 +145,7 @@ CREATE TABLE enterprise (
 
 CREATE TABLE site (
   id BIT PRIMARY KEY,
-  enterprise_id TINYINT UNSIGNED NOT NULL,
+  enterprise_id BIT NOT NULL,
   primary_color CHAR(6) NOT NULL DEFAULT '000000',
   secondary_color CHAR(6) NOT NULL DEFAULT '123456',
   text_color CHAR(6) NOT NULL DEFAULT 'FFFFFF',

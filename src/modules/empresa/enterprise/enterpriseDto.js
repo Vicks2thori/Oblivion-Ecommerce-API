@@ -1,13 +1,13 @@
-//configEnterpriseDto.js
+//enterpriseDto.js
 const Joi = require('joi');
 
 const createEnterpriseSchema = Joi.object({
-  nameEnterprise: Joi.string().min(3).max(50).required(),
-  //idImg opcional vai ser o logo
-  cellEnterprise: Joi.string().min(11).max(11).required(),
-  instagramEnterprise: Joi.string().min(1).max(30).optional(),
-  facebookEnterprise: Joi.string().min(5).max(50).optional(),
-  emailEnterprise: Joi.string().email().min(6).max(50).optional()
+  name: Joi.string().min(3).max(50).required(),
+  logo_image_id: Joi.number().min(1).max(65535).optional, //chave estrangeira deve ser validada no controler
+  phone: Joi.string().length(11).required(),
+  instagram: Joi.string().min(1).max(30).optional(),
+  facebook: Joi.string().min(5).max(50).optional(),
+  email: Joi.string().email().min(6).max(50).optional()
 });
 
 module.exports = { createEnterpriseSchema };

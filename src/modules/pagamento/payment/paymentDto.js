@@ -2,10 +2,10 @@
 const Joi = require('joi');
 
 const createPaymentSchema = Joi.object({
-  namePayment: Joi.string().min(3).max(50).required(),
-  //idImagPayment
-  //idPaymentCondition
-  statusPayment: Joi.number().valid(0, 1).default(1).required()
+  name: Joi.string().min(3).max(50).required(),
+  image_id: Joi.number().min(1).max(255).required(),
+  condition_id: Joi.number().min(1).max(255).required(),
+  statusPayment: Joi.boolean().default(true).required()
 });
 
 module.exports = { createPaymentSchema };
