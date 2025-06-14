@@ -1,163 +1,152 @@
--- Usuário genérico
-
-CREATE TABLE Users (
-  idUser TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  names VARCHAR(80) NOT NULL,
-  emails VARCHAR(50) NOT NULL UNIQUE,
-  passwords VARCHAR(255) NOT NULL, --Senha criptografada (255 caracteres para suportar hashes seguros)
-  types ENUM('client', 'admin') NOT NULL
+-- USUÁRIOS
+CREATE TABLE user (
+  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(80) NOT NULL,
+  email VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  type ENUM('client', 'admin') NOT NULL
 );
 
--- Clientes com dados obrigatórios
-CREATE TABLE Clients (
-  idClients TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  idUsers TINYINT UNSIGNED,
-  cpfs CHAR(11) NOT NULL UNIQUE,
-  cells CHAR(11) NOT NULL UNIQUE,
-  FOREIGN KEY (idUsers) REFERENCES Users(idUsers)
+CREATE TABLE client (
+  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id TINYINT UNSIGNED NOT NULL UNIQUE,
+  cpf CHAR(11) NOT NULL UNIQUE,
+  cell CHAR(11) NOT NULL UNIQUE,
+  FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
--- Admins com dados mais simples
-CREATE TABLE Admins (
-  idAdmins TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  idUsers TINYINT UNSIGNED,
-  statusAdmins BOOLEAN NOT NULL DEFAULT true,,
-  FOREIGN KEY (idUsers) REFERENCES Users(idUsers)
+CREATE TABLE admin (
+  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id TINYINT UNSIGNED NOT NULL UNIQUE,
+  status BOOLEAN NOT NULL DEFAULT TRUE,
+  FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
--- Categorias
-CREATE TABLE Category (
-  idCategory TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nameCategory VARCHAR(50) NOT NULL,
-  statusCategory BOOLEAN NOT NULL DEFAULT true
+-- ASSETS
+CREATE TABLE image (
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  path VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Produtos
-CREATE TABLE Product (
-  idProduct SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nameProduct VARCHAR(100) NOT NULL,
-  idImg SMALLINT UNSIGNED NULL,
-  descriptionProduct TEXT NULL,
-  priceProduct DECIMAL(8,2) NOT NULL DEFAULT 0,
-  codProduct BIGINT NOT NULL,
-  statusProduct BOOLEAN NOT NULL DEFAULT true,
-  idCategory TINYINT UNSIGNED NOT NULL,
-  idStock SMALLINT UNSIGNED NOT NULL,
-  FOREIGN KEY (idImages) REFERENCES Images(idImages),
-  FOREIGN KEY (idCategory) REFERENCES Category(idCategory),
-  FOREIGN KEY (idStock) REFERENCES Stock(idStock)
+CREATE TABLE img_payment (
+  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  path VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Armazenar imagens
-CREATE TABLE Images (
-  idImages SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nameImage VARCHAR(50) NOT NULL UNIQUE,
-  patchImage VARCHAR(50) NOT NULL UNIQUE
+-- PRODUTO
+CREATE TABLE category (
+  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  status BOOLEAN NOT NULL DEFAULT TRUE
 );
 
--- Formas de pagamento
-CREATE TABLE Payment (
-  idPayment TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  namePayment VARCHAR(50) NOT NULL,
-  idImgPayment TINYINT UNSIGNED NOT NULL,
-  statusPayment BOOLEAN NOT NULL DEFAULT true,,
-  idPaymentCondition TINYINT UNSIGNED NOT NULL,
-  FOREIGN KEY (idPaymentCondition) REFERENCES PaymentCondition(idPaymentCondition),
-  FOREIGN KEY (idImgPayment) REFERENCES ImgPayment(idImgPayment)
+CREATE TABLE stock (
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  quantity SMALLINT NOT NULL DEFAULT 0
 );
 
--- Imagem das formas de pagamento (padrões)
-CREATE TABLE ImgPayment (
-  idImgPayment TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nameImgPayment VARCHAR(50) NOT NULL UNIQUE,
-  patchImgPayment VARCHAR(50) NOT NULL UNIQUE,
+CREATE TABLE product (
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  image_id SMALLINT UNSIGNED,
+  description TEXT,
+  price DECIMAL(8,2) NOT NULL DEFAULT 0,
+  code BIGINT NOT NULL UNIQUE,
+  status BOOLEAN NOT NULL DEFAULT TRUE,
+  category_id TINYINT UNSIGNED NOT NULL,
+  stock_id SMALLINT UNSIGNED NOT NULL,
+  FOREIGN KEY (image_id) REFERENCES image(id),
+  FOREIGN KEY (category_id) REFERENCES category(id),
+  FOREIGN KEY (stock_id) REFERENCES stock(id)
 );
 
---Inserindo as imagens padrões
-INSERT INTO ImgPayment (nameImgPayment, patchImgPayment)
-VALUES 
-('Cartão', '../../assets/images/payment/card'),
-('Dinheiro', '../../assets/images/payment/money'),
-('Ticket', '../../assets/images/payment/ticket'),
-('Pix', '../../assets/images/payment/pix'),
-('Outros', '../../assets/images/payment/others');
-
--- Condição de pagamento
-CREATE TABLE PaymentCondition (
-  idPaymentCondition TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  namePaymentCondition VARCHAR(50) NOT NULL,
-  statusPaymentCondition BOOLEAN NOT NULL DEFAULT true
+-- PEDIDO
+CREATE TABLE order (
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  date DATE NOT NULL,
+  code CHAR(5) NOT NULL UNIQUE,
+  client_id TINYINT UNSIGNED NOT NULL,
+  payment_id TINYINT UNSIGNED NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  status ENUM('pending', 'cancel', 'approved') NOT NULL DEFAULT 'pending',
+  FOREIGN KEY (client_id) REFERENCES client(id),
+  FOREIGN KEY (payment_id) REFERENCES payment(id)
 );
 
--- Estoque
-CREATE TABLE Stock (
-  idStock SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  quantityStock SMALLINT NOT NULL DEFAULT 0
+CREATE TABLE order_item (
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  order_id SMALLINT UNSIGNED NOT NULL,
+  product_id SMALLINT UNSIGNED NOT NULL,
+  quantity SMALLINT UNSIGNED NOT NULL,
+  subtotal DECIMAL(8,2) NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id),
+  FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
--- Categoria de Movimentação de estoque
-CREATE TABLE StockCategory (
-  idStockCategory SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nameStockCategory VARCHAR(50) NOT NULL,
-  statusStockCategory BOOLEAN NOT NULL DEFAULT true
+-- PAGAMENTO
+CREATE TABLE payment_condition (
+  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  status BOOLEAN NOT NULL DEFAULT TRUE
 );
 
--- Movimentação de estoque
-CREATE TABLE StockMoviment ( --O NOME DAS TABELAAAASSSSSSSSSSSSSS
-  idStockMoviment SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nameStockMoviment VARCHAR(50) NOT NULL,
-  dateStockMoviment DATE NOT NULL,
-  idStockCategory TINYINT UNSIGNED NOT NULL,
-  typeStockMoviment ENUM('exit', 'entry', 'definition') NOT NULL,
-  idAdmins TINYINT NOT NULL, -- UNSIGNED faltou aqui e verificar a tabela do admin
-  idProduct SMALLINT UNSIGNED NOT NULL, --fica a duvida de como alterar de novo com uma tabela intermediária mas tem em order tambe reyfcaey
-  FOREIGN KEY (idStockCategory) REFERENCES StockCategory(idStockCategory),
-  FOREIGN KEY (idAdmins) REFERENCES Admins(idAdmins),
-  FOREIGN KEY (idProduct) REFERENCES Product(idProduct)
+CREATE TABLE payment (
+  id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  image_id TINYINT UNSIGNED NOT NULL,
+  condition_id TINYINT UNSIGNED NOT NULL,
+  status BOOLEAN NOT NULL DEFAULT TRUE,
+  FOREIGN KEY (image_id) REFERENCES img_payment(id),
+  FOREIGN KEY (condition_id) REFERENCES payment_condition(id)
 );
 
--- Pedidos
-CREATE TABLE Orders (
-  idOrders SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  dateOrders DATE NOT NULL, -- tenho que pensar nisso aqui ainda  
-  codOrders CHAR(5) NOT NULL UNIQUE,
-  idClients TINYINT UNSIGNED NOT NULL,
-  idProduct SMALLINT UNSIGNED NOT NULL, --fica a duvida de como adcionar TENHI QUE criar uma tabela intermediária aerhfcbabhecf
-  idPayment TINYINT UNSIGNED NOT NULL, --no caso a condição ja vem associada com o pagamento?
-  -- idPaymentCondition
-  totalityOrders SMALLINT UNSIGNED NOT NULL, --Seria o valor total dos itens (ujwdxd eu ainda não entendi muito bem) TENHO que fazer uma tabela intermediária
-  --descriptionOrders TEXT NULL, to vendo o quanto é viavel isso aqui
-  statusOrders ENUM('pending', 'cancel', 'aproved') NOT NULL DEFAULT 'pending',
-  FOREIGN KEY (idClients) REFERENCES Clients(idClients),
-  FOREIGN KEY (idProduct) REFERENCES Product(idProduct),
-  FOREIGN KEY (idPayment) REFERENCES Payment(idPayment)
+-- ESTOQUE
+CREATE TABLE stock_category (
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  status BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE OrderItens (
-  idOrderItens SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  idProduct SMALLINT UNSIGNED NOT NULL, --fica a duvida de como adcionar
-  quantity SMALLINT UNSIGNED NOT NULL, --no caso a condição ja vem associada com o pagamento?
-  subtotal DECIMAL(8,2), --Seria o valor total dos itens (ujwdxd eu ainda não entendi muito bem)
-  statusOrders ENUM('pending', 'cancel', 'aproved') NOT NULL,
-  FOREIGN KEY (idOrders) REFERENCES Orders(idOrders),
-  FOREIGN KEY (idProduct) REFERENCES Product(idProduct)
+CREATE TABLE stock_movement (
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  date DATE NOT NULL,
+  category_id SMALLINT UNSIGNED NOT NULL,
+  admin_id TINYINT UNSIGNED NOT NULL,
+  type ENUM('exit', 'entry', 'adjustment') NOT NULL,
+  FOREIGN KEY (category_id) REFERENCES stock_category(id),
+  FOREIGN KEY (admin_id) REFERENCES admin(id),
+  FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
--- Empresas
-CREATE TABLE Enterprise ( --Não sei exatamente como chamar pq a ideia é ter um bd para cada empresa mas seria sobre o site esse
-  idEnterprise TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nameEnterprise VARCHAR(50) NOT NULL,
-  idImg TINYINT UNSIGNED NULL, --Armazenar a logo
-  cellEnterprise CHAR(11) NOT NULL,
-  instagramEnterprise VARCHAR(30) NULL, --seria apenas o nome? preciso decidir
-  facebookEnterprise VARCHAR(50) NULL,
-  emailEnterprise VARCHAR(50) NULL,
-  FOREIGN KEY (idImg) REFERENCES Img(idImg)
+CREATE TABLE stock_movement_item (
+  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  stock_movement_id SMALLINT UNSIGNED NOT NULL,
+  product_id SMALLINT UNSIGNED NOT NULL,
+  quantity SMALLINT NOT NULL,
+  FOREIGN KEY (stock_movement_id) REFERENCES stock_movement(id),
+  FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
-CREATE TABLE Site (
-  idSite TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  primaryColorSite CHAR(6) NOT NULL DEFAULT "000000",
-  secondColorSite CHAR(6) NOT NULL DEFAULT "123456", --numeroa aleatórios pois ainda não decidimos o hexa "padrão"
-  textColorSite CHAR(6) NOT NULL DEFAULT "FFFFFF",
+-- EMPRESA
+CREATE TABLE enterprise (
+  id BIT PRIMARY KEY, -- só vai ter 1 registro, que vou passar nas funções
+  name VARCHAR(50) NOT NULL,
+  logo_image_id SMALLINT UNSIGNED,
+  phone CHAR(11) NOT NULL,
+  instagram VARCHAR(30),
+  facebook VARCHAR(50),
+  email VARCHAR(50),
+  FOREIGN KEY (logo_image_id) REFERENCES image(id)
+);
+
+CREATE TABLE site (
+  id BIT PRIMARY KEY,
+  enterprise_id TINYINT UNSIGNED NOT NULL,
+  primary_color CHAR(6) NOT NULL DEFAULT '000000',
+  secondary_color CHAR(6) NOT NULL DEFAULT '123456',
+  text_color CHAR(6) NOT NULL DEFAULT 'FFFFFF',
+  FOREIGN KEY (enterprise_id) REFERENCES enterprise(id)
 );
