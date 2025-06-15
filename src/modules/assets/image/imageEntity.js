@@ -1,27 +1,37 @@
-//productEntity.js esqueci de alterar os nomes em cima uadfhcaehfc\ea
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+// imageEntity.js
+const pool = require('../../../model/conection_db');
 
-const Admins = sequelize.define('Admins', { //ta assim no BD depois eu choro aqui
-  idAdmins: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  statusAdmins: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    default: true,
-  }, 
+//Create
+async function createImage(name, patch) {
+  const [result] = await pool.query(`
+    INSERT INTO image (name, patch)
+    VALUES (?, ?)`, [name, patch]
+  );
+  return result.insertId;
+}
 
-//Chave estrangeira users
-/*idUsers: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+//Read
+async function getImage(name) {
+  const [rows] = await pool.query(`
+    SELECT * FROM image WHERE name = ?`, [name]
+  );
+  return rows[0];
+}
 
-module.exports = Admins;
+//Update
+async function updateImage(id, newName, newPatch) {
+  const [result] = await pool.query(`
+    UPDATE image SET name = ?, patch = ? WHERE id = ?
+  `, [newName, newPatch, id]);
+  return result.affectedRows > 0;
+}
+
+//Delete
+async function deleteImage(name) {
+  const [result] = await pool.query(`
+    DELETE FROM image WHERE name = ?`, [name]
+  );
+  return result.affectedRows > 0;
+}
+
+module.exports = { createImage, getImage, updateImage, deleteImage, };
