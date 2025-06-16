@@ -104,6 +104,14 @@ CREATE TABLE payment (
   FOREIGN KEY (condition_id) REFERENCES payment_condition(id)
 );
 
+CREATE TABLE payment_has_condition (
+  idPayment TINYINT UNSIGNED NOT NULL,
+  idPaymentCondition TINYINT UNSIGNED NOT NULL,
+  PRIMARY KEY (idPayment, idPaymentCondition),
+  FOREIGN KEY (idPayment) REFERENCES payment(idPayment) ON DELETE CASCADE,
+  FOREIGN KEY (idPaymentCondition) REFERENCES payment_condition(idPaymentCondition) ON DELETE CASCADE
+);
+
 -- ESTOQUE
 CREATE TABLE stock_category (
   id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -145,9 +153,7 @@ CREATE TABLE enterprise (
 
 CREATE TABLE site (
   id BIT PRIMARY KEY,
-  enterprise_id BIT NOT NULL,
   primary_color CHAR(6) NOT NULL DEFAULT '000000',
   secondary_color CHAR(6) NOT NULL DEFAULT '123456',
   text_color CHAR(6) NOT NULL DEFAULT 'FFFFFF',
-  FOREIGN KEY (enterprise_id) REFERENCES enterprise(id)
 );
