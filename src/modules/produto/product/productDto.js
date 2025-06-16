@@ -11,4 +11,15 @@ const createProductSchema = Joi.object({
   category_id: Joi.number().min(1).max(255).required(),
   stock_id: Joi.number().min(1).max(65535).required()
 })
-module.exports = { createProductSchema };
+
+const updateProductSchema = Joi.object({
+  name: Joi.string().min(1).max(100).optional(),
+  image_id: Joi.number().min(1).max(65535).optional(),
+  description: Joi.string().max(65535).optional(),
+  price: Joi.number().precision(2).min(0.01).max(999999.99).optional(),
+  code: Joi.number().min(1).max(9223372036854775807).optional(),
+  status: Joi.boolean().optional(),
+  category_id: Joi.number().min(1).max(255).optional(),
+  stock_id: Joi.number().min(1).max(65535).optional()
+})
+module.exports = { createProductSchema, updateProductSchema };

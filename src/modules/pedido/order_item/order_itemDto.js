@@ -9,4 +9,6 @@ const createOrderItemSchema = Joi.object({
   subtotal: Joi.number().precision(2).min(0.01).max(99999999.99).required()
 });
 
+//preciso pensar como vou fazer o update aqui
+
 module.exports = { createOrderItemSchema };

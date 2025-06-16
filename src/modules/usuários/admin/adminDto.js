@@ -6,4 +6,9 @@ const createAdminSchema = Joi.object({
   status: Joi.boolean().default(true).required()
 });
 
-module.exports = { createAdminSchema };
+const updateAdminSchema = Joi.object({
+  //ele não pode nem receber o id pois não pode alterar
+  status: Joi.boolean().optional()
+});
+
+module.exports = { createAdminSchema, updateAdminSchema };

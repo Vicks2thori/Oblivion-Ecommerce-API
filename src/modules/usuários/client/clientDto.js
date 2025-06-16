@@ -7,4 +7,9 @@ const createClientSchema = Joi.object({
   phone: Joi.string().length(11).required()
 });
 
-module.exports = { createClientSchema };
+const updateClientSchema = Joi.object({
+  cpf: Joi.string().length(11).optional(),
+  phone: Joi.string().length(11).optional()
+});
+
+module.exports = { createClientSchema, updateClientSchema };

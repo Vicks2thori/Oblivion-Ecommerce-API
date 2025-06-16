@@ -7,4 +7,6 @@ const createStockMovementItemSchema = Joi.object({
   quantity: Joi.number().min(1).max(65535).required(),
 });
 
+//Não tem Update, nem Delete
+
 module.exports = { createStockMovementItemSchema };

@@ -8,4 +8,9 @@ const createImageSchema = Joi.object({
   patch: Joi.string().min(5).max(50).required(), //fazer um esquema para deixar os 2 unicos
 });
 
-module.exports = { createImageSchema };
+const updateImageSchema = Joi.object({
+  name: Joi.string().min(3).max(50).optional(),
+  patch: Joi.string().min(5).max(50).optional(),
+});
+
+module.exports = { createImageSchema, updateImageSchema };

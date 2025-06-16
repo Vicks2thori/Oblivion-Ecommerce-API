@@ -8,4 +8,9 @@ const createPaymentConditionSchema = Joi.object({
   status: Joi.boolean().default(true).required()
 });
 
-module.exports = { createPaymentConditionSchema };
+const updatePaymentConditionSchema = Joi.object({
+  name: Joi.string().min(2).max(50).optional(),
+  status: Joi.boolean().optional()
+});
+
+module.exports = { createPaymentConditionSchema, updatePaymentConditionSchema};

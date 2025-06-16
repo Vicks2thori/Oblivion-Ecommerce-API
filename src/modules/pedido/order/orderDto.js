@@ -12,4 +12,8 @@ const createOrderSchema = Joi.object({
   status: Joi.string().valid('pending','cancel','approved').default('pending').required() //depois eu vejo se vai ter o "em conversa"
 });
 
-module.exports = { createOrderSchema };
+const updateOrderSchema = Joi.object({
+  status: Joi.string().valid('pending','cancel','approved').required()
+});
+
+module.exports = { createOrderSchema, updateOrderSchema };

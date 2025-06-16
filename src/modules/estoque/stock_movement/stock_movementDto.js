@@ -9,4 +9,6 @@ const createStockMovementSchema = Joi.object({
   type: Joi.string().valid('exit', 'entry', 'definition').required(),
 });
 
+//Não tem Update, nem Delete
+
 module.exports = { createStockMovementSchema };
