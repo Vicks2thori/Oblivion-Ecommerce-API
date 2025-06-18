@@ -1,43 +1,46 @@
-//paymentEntity.js
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//enterpriseEntity.js
+const pool = require('../../../model/conection_db');
 
-const Enterprise = sequelize.define('Enterprise', {
-  idEnterprise: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  nameEnterprise: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-  },
+//Definir uma logo padrão de ? para a emresa
+//Read
+async function getEnterprise() {
+  const [rows] = await pool.query(`SELECT * FROM enterprise LIMIT 1`);
+  return rows[0];
+}
 
-//Chave estrangeira imagem logo
-/*idImg: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: true,
-  }, */
+//CreateDefault (só existe uma empresa)
+async function defaultEnterprise({
+  name = "Oblivion",
+  phone = "10987654321",
+  instagram = null,
+  facebook = null,
+  email = null,
+  logo_image = null
+}) {
+  const existing = await getEnterprise();
 
-  cellEnterprise: {
-    type: DataTypes.STRING(11),
-    allowNull: false,
-  },
-  instagramEnterprise: {
-    type: DataTypes.STRING(30),
-    allowNull: true,
-  },
-  facebookEnterprise: {
-    type: DataTypes.STRING(50),
-    allowNull: true,
-  },
-  emailEnterprise: {
-    type: DataTypes.STRING(50),
-    allowNull: true,
-  },
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+  if (existing) {
+    return existing.id;
+  }
 
-module.exports = Enterprise;
+  const [create] = await pool.query(`
+    INSERT INTO enterprise (name, phone, instagram, facebook, email, logo_image)
+    VALUES (?, ?, ?, ?, ?, ?)`,
+    [name, phone, instagram, facebook, email, logo_image]
+  );
+
+  return create.insertId;
+}
+
+//Update
+async function updateEnterprise({ name, phone, instagram, facebook, email, logo_image }) {
+  const [result] = await pool.query(`
+    UPDATE enterprise
+    SET name = ?, phone = ?, instagram = ?, facebook = ?, email = ?, logo_image = ?
+    LIMIT 1
+  `, [name, phone, instagram, facebook, email, logo_image]);
+
+  return result.affectedRows > 0;
+}
+
+module.exports = { getEnterprise, defaultEnterprise, updateEnterprise};

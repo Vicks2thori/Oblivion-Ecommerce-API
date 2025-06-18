@@ -42,11 +42,6 @@ CREATE TABLE category (
   status BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE stock (
-  id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  quantity SMALLINT NOT NULL DEFAULT 0
-);
-
 CREATE TABLE product (
   id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
@@ -56,10 +51,9 @@ CREATE TABLE product (
   code BIGINT NOT NULL UNIQUE,
   status BOOLEAN NOT NULL DEFAULT TRUE,
   category_id TINYINT UNSIGNED NOT NULL,
-  stock_id SMALLINT UNSIGNED NOT NULL,
+  quantity SMALLINT UNSIGNED NOT NULL,
   FOREIGN KEY (image_id) REFERENCES image(id),
   FOREIGN KEY (category_id) REFERENCES category(id),
-  FOREIGN KEY (stock_id) REFERENCES stock(id)
 );
 
 -- PEDIDO
@@ -71,7 +65,7 @@ CREATE TABLE order (
   payment_id TINYINT UNSIGNED NOT NULL,
   payment_condition_id TINYINT UNSIGNED NOT NULL,
   total DECIMAL(10,2) NOT NULL, -- acho que vou precisar de uma tabela intediária pra guardar o total
-  status ENUM('pending', 'cancel', 'approved') NOT NULL DEFAULT 'pending',
+  status ENUM('pending', 'cancel', 'approved') NOT NULL DEFAULT 'pending', -- preciso ver se vai ter o "em conversa" se bem que ele é só um status intermediário
   FOREIGN KEY (client_id) REFERENCES client(id),
   FOREIGN KEY (payment_id) REFERENCES payment(id),
   FOREIGN KEY (payment_condition_id) REFERENCES payment_condition(id)
@@ -105,11 +99,11 @@ CREATE TABLE payment (
 );
 
 CREATE TABLE payment_has_condition (
-  idPayment TINYINT UNSIGNED NOT NULL,
-  idPaymentCondition TINYINT UNSIGNED NOT NULL,
-  PRIMARY KEY (idPayment, idPaymentCondition),
-  FOREIGN KEY (idPayment) REFERENCES payment(idPayment) ON DELETE CASCADE,
-  FOREIGN KEY (idPaymentCondition) REFERENCES payment_condition(idPaymentCondition) ON DELETE CASCADE
+  payment_id TINYINT UNSIGNED NOT NULL,
+  condition_id TINYINT UNSIGNED NOT NULL,
+  PRIMARY KEY (payment_id, condition_id),
+  FOREIGN KEY (payment_id) REFERENCES payment(id) ON DELETE CASCADE,
+  FOREIGN KEY (condition_id) REFERENCES payment_condition(id) ON DELETE CASCADE
 );
 
 -- ESTOQUE
@@ -143,12 +137,11 @@ CREATE TABLE stock_movement_item (
 CREATE TABLE enterprise (
   id BIT PRIMARY KEY, -- só vai ter 1 registro, que vou passar nas funções
   name VARCHAR(50) NOT NULL,
-  logo_image_id SMALLINT UNSIGNED,
+  logo_image VARCHAR(100), -- vou salvar aqui mesmo a pasta dela
   phone CHAR(11) NOT NULL,
   instagram VARCHAR(30),
   facebook VARCHAR(50),
-  email VARCHAR(50),
-  FOREIGN KEY (logo_image_id) REFERENCES image(id)
+  email VARCHAR(50)
 );
 
 CREATE TABLE site (
