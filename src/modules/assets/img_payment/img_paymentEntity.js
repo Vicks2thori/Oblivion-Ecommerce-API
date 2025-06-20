@@ -1,27 +1,39 @@
-//productEntity.js esqueci de alterar os nomes em cima uadfhcaehfc\ea
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//img_paymentEntity.js
+const pool = require('../../../model/conection_db');
 
-const Admins = sequelize.define('Admins', { //ta assim no BD depois eu choro aqui
-  idAdmins: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  statusAdmins: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    default: true,
-  }, 
+//Create
+async function createImage(name, patch) {
+  const [result] = await pool.query(`
+    INSERT INTO image (name, patch)
+    VALUES (?, ?)`, [name, patch]
+  );
+  return result.insertId;
+}
 
-//Chave estrangeira users
-/*idUsers: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+// Read
+async function getImage(name) {
+  const [rows] = await pool.query(`
+    SELECT * FROM image WHERE name = ?`, [name]
+  );
+  return rows[0];
+}
 
-module.exports = Admins;
+// Default - insere imagens padrão apenas se não existirem
+async function defaultImages() {
+  const defaultImages = [
+    { name: 'Pix', patch: 'images/payment/pix.png' },
+    { name: 'Money', patch: 'images/payment/money.png' },
+    { name: 'Card', patch: 'images/payment/card.png' },
+    { name: 'Ticket', patch: 'images/payment/ticket.png' },
+    { name: 'Other', patch: 'images/payment/other.png' },
+  ];
+
+  for (const img of defaultImages) {
+    const existing = await getImage(img.name);
+    if (!existing) {
+      await createImage(img.name, img.patch);
+    }
+  }
+}
+
+module.exports = { getImage, defaultImages };

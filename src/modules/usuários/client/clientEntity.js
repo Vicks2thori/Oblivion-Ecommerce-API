@@ -1,30 +1,35 @@
-//productEntity.js esqueci de alterar os nomes em cima uadfhcaehfc\ea
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//clientEntiy.js
+const pool = require('../../../model/conection_db');
+const { getUser, createUser, updateUser } = require('../user/userEntity');
 
-const Clients = sequelize.define('Admins', { //ta assim no BD depois eu choro aqui
-  idClients: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  cpfs: {
-    type: DataTypes.STRING(11),
-    allowNull: false,
-  }, 
-  cells: {
-    type: DataTypes.STRING(11),
-    allowNull: false,
-  }, 
+//Create
+async function createClient(name, email, password, cpf, phone) {
+  const type = "client",
+  user_id = createUser(name, email, password, type)
+  const [result] = await pool.query(`
+    INSERT INTO client (user_id, cpf, phone)
+    VALUES (?, ?, ?)`, [user_id, cpf, phone]
+  );
+  return result.insertId;
+}
 
-//Chave estrangeira users
-/*idUsers: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+//Read
+async function getClient() {
+  getUser("client");
+}
 
-module.exports = Admins;
+//preciso buscar uma forma de buscar o user_id
+//Update
+async function updateClient(name, email, password, cpf, phone) {
+  const type = "client"
+  getUser(type);
+  updateUser(name, email, password)
+  const [result] = await pool.query(`
+    UPDATE admin
+    SET status = ?
+  `, [status]);
+
+  return result.affectedRows > 0;
+}
+
+module.exports = { createAdmin, getAdmin, updateAdmin };

@@ -1,25 +1,31 @@
-//categoryEntity.js
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//category.js
+const pool = require('../../../model/conection_db');
 
-const Category = sequelize.define('Category', {
-  idCategory: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  nameCategory: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-  },
-  statusCategory: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true,
-  },
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+//Create
+async function createCategory(name, status) {
+  const [result] = await pool.query(`
+    INSERT INTO category (name, status)
+    VALUES (?, ?)`, [name, status]
+  );
+  return result.insertId;
+}
 
-module.exports = Category;
+//Read
+async function getCategory(name) {
+  const [rows] = await pool.query(`
+    SELECT * FROM category WHERE name = ?`, [name]
+  );
+  return rows[0];
+}
+
+//Update
+async function updateCategory(name, status) {
+    const [result] = await pool.query(`
+    UPDATE category
+    SET name = ?, status = ?
+  `, [name, status]);
+
+  return result.affectedRows > 0;
+}
+
+module.exports = { createCategory, getCategory, updateCategory};

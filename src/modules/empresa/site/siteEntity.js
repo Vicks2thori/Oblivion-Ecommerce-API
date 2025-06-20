@@ -1,31 +1,41 @@
-//paymentEntity.js
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//siteEntity.js
+const pool = require('../../../model/conection_db');
 
-const Site = sequelize.define('Site', {
-  idSite: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  primaryColorSite: {
-    type: DataTypes.STRING(6),
-    allowNull: false,
-    defaultValue: "000000", //ainda precisamos padronizar
-  },
-  secondColorSite: {
-    type: DataTypes.STRING(6),
-    allowNull: false,
-    defaultValue: "123456", //ainda precisamos padronizar
-  },
-    primaryColorSite: {
-    type: DataTypes.STRING(6),
-    allowNull: false,
-    defaultValue: "FFFFFF", //ainda precisamos padronizar
-  },
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+//Read
+async function getSite() {
+  const [rows] = await pool.query(`SELECT * FROM site LIMIT 1`);
+  return rows[0];
+}
 
-module.exports = Site;
+//CreateDefault (só existe um site)
+async function defaultSite({
+  primary_color = "000000",
+  secondary_color = "123456",
+  text_color = "FFFFFF"
+}) {
+  const existing = await getEnterprise();
+
+  if (existing) {
+    return existing.id;
+  }
+
+  const [create] = await pool.query(`
+    INSERT INTO enterprise (primary_color, secondary_color, text_color)
+    VALUES (?, ?, ?)`,
+    [primary_color, secondary_color, text_color]);
+
+  return create.insertId;
+}
+
+//Update
+async function updateSite({primary_color, secondary_color, text_color}) {
+  const [result] = await pool.query(`
+    UPDATE site
+    SET primary_color = ?, secondary_color = ?, text_color = ?
+    LIMIT 1
+  `, [primary_color, secondary_color, text_color]);
+
+  return result.affectedRows > 0;
+}
+
+module.exports = { getSite, defaultSite, updateSite};

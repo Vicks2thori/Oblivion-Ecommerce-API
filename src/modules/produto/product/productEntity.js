@@ -1,51 +1,41 @@
 //productEntity.js
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+const pool = require('../../../model/conection_db');
 
-const Product = sequelize.define('Product', {
-  idProduct: {
-    type: DataTypes.SMALLINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  nameProduct: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
-  },
+//vai criar junto o estoque
+//Create
+async function createProduct(name, image_id, description, price, code, status, category_id, quantity) {
+  const [result] = await pool.query(`
+    INSERT INTO product (name, image_id, description, price, code, status, category_id, quantity)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [name, image_id, description, price, code, status, category_id, quantity]
+  );
+  return result.insertId;
+}
 
-//Chave estrangeira imagem
-/*idImg: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-  descriptionProduct: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  priceProduct: {
-    type: DataTypes.DECIMAL(8,2),
-    allowNull: false,
-    default: 0,
-  },
-  codProduct: {
-    type: DataTypes.BIGINT,
-    allowNull: false,
-  },
+//Tem que ter um get por categoria ja que vou apresentar no ecommerce
+//Read
+async function getProduct(name) {
+  const [rows] = await pool.query(`
+    SELECT * FROM product WHERE name = ?`, [name]
+  );
+  return rows[0];
+} // como que é melhor puxar?
 
-//Chave estrangeira categorias
-/*idCategory: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
+//Update
+async function updateProduct(name, status) {
+    const [result] = await pool.query(`
+    UPDATE product
+    SET name = ?, image_id = ?, description = ?, price = ?, code = ?, status = ?, category_id = ?
+  `, [name, image_id, description, price, code, status, category_id]);
 
-  statusProduct: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true,
-  },
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+  return result.affectedRows > 0;
+}
 
-module.exports = Product;
+//Delete
+async function deleteProduct(code) {
+  const [result] = await pool.query(`
+    DELETE FROM product WHERE code = ?`, [code]
+  );
+  return result.affectedRows > 0;
+}
+
+module.exports = { createProduct, getProduct, updateProduct, deleteProduct};

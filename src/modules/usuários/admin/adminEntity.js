@@ -1,27 +1,31 @@
-//productEntity.js esqueci de alterar os nomes em cima uadfhcaehfc\ea
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//adminEntiy.js
+const pool = require('../../../model/conection_db');
+const { getUser, createUser } = require('../user/userEntity');
 
-const Admins = sequelize.define('Admins', { //ta assim no BD depois eu choro aqui
-  idAdmins: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  statusAdmins: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    default: true,
-  }, 
+//Create
+async function createAdmin(name, email, password, status) {
+  const type = "admin";
+  user_id = createUser(name, email, password, type)
+  const [result] = await pool.query(`
+    INSERT INTO admin (user_id, status)
+    VALUES (?, ?)`, [user_id, status]
+  );
+  return result.insertId;
+}
 
-//Chave estrangeira users
-/*idUsers: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+//Read
+async function getAdmin() {
+  getUser("admin");
+}
 
-module.exports = Admins;
+//Update
+async function updateAdmin(status) {
+    const [result] = await pool.query(`
+    UPDATE admin
+    SET status = ?
+  `, [status]);
+
+  return result.affectedRows > 0;
+}
+
+module.exports = { createAdmin, getAdmin, updateAdmin };

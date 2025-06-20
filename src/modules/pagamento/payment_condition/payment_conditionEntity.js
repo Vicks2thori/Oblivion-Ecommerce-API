@@ -1,25 +1,31 @@
-//paymentConditionEntity.js
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//payment_conditionEntity.js
+const pool = require('../../../model/conection_db');
 
-const PaymentCondition = sequelize.define('PaymentCondition', {
-  idPaymentCondition: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  namePaymentCondition: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-  },
-  statusPaymentCondition: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true,
-  },
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+//Create
+async function createPaymentCondition(name, status) {
+  const [result] = await pool.query(`
+    INSERT INTO payment_condition (name, status)
+    VALUES (?, ?)`, [name, status]
+  );
+  return result.insertId;
+}
 
-module.exports = PaymentCondition;
+//Read
+async function getPaymentCondition(name) {
+  const [rows] = await pool.query(`
+    SELECT * FROM payment_condition WHERE name = ?`, [name]
+  );
+  return rows[0];
+}
+
+//Update
+async function updatePaymentCondition(name, status) {
+  const [result] = await pool.query(`
+    UPDATE payment_condition
+    SET name = ?, status = ?
+  `, [name, status]);
+
+  return result.affectedRows > 0;
+}
+
+module.exports = { createPaymentCondition, getPaymentCondition, updatePaymentCondition };

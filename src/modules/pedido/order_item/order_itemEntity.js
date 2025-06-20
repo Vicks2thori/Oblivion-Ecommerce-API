@@ -1,62 +1,21 @@
-//productEntity.js
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//order_itemEntity.js
+const pool = require('../../../model/conection_db');
 
-const Orders = sequelize.define('Orders', {
-  idOrders: {
-    type: DataTypes.SMALLINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  dateOrders: {
-    type: DataTypes.DATE, //vou ver isso aqui
-    allowNull: false,
-  },
-  codOrders: {
-    type: DataTypes.STRING(5), //vou ver isso aqui
-    //colocar aqui o UNIQUE  
-    allowNull: false,
-  }, 
+//Create
+async function createOrderItem(order_id, product_id, quantity, subtotal) {
+  const [result] = await pool.query(`
+    INSERT INTO order_item (order_id, product_id, quantity, subtotal)
+    VALUES (?, ?, ?, ?)`, [order_id, product_id, quantity, subtotal]
+  );
+  return result.insertId;
+}
 
-//Chave estrangeira clients
-/*idClients: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
+//Read
+async function getOrderItem(order_id) {
+  const [rows] = await pool.query(`
+    SELECT * FROM order_item WHERE order_id = ?`, [order_id]
+  );
+  return rows[0];
+}
 
-//Chave estrangeira produto (tenho que criar um intermediário)
-/*idProduct: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-
-//Chave estrangeira pagamento
-/*idPayment: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-
-//Chave estrangeira condição de pagamento
-/*idPaymentCondition: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-  totalityOrders: {
-    type: DataTypes.SMALLINT.UNSIGNED,
-    allowNull: false,
-  },
-  descriptionOrders: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  statusOrders: {
-    type: DataTypes.STRING, //??? tenho que colocar os valores aceitos... se bem que ja ta no DTO
-    allowNull: false,
-    defaultValue: 'pending',
-  },
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
-
-module.exports = Orders;
+module.exports = { createOrder, getOrder };

@@ -1,37 +1,31 @@
 //paymentEntity.js
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+const pool = require('../../../model/conection_db');
 
-const Payment = sequelize.define('Payment', {
-  idPayment: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  namePayment: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-  },
+//Create
+async function createPayment(name, image_id, condition_id, status) {
+  const [result] = await pool.query(`
+    INSERT INTO payment (name, image_id, condition_id, status)
+    VALUES (?, ?, ?, ?)`, [name, image_id, condition_id, status]
+  );
+  return result.insertId;
+}
 
-//Chave estrangeira imagem
-/*idImgPayment: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
+//Read
+async function getPayment(name) {
+  const [rows] = await pool.query(`
+    SELECT * FROM payment WHERE name = ?`, [name]
+  );
+  return rows[0];
+}
 
-//Chave estrangeira condição de pagamento
-/*idPaymentCondition: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-  statusPayment: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true,
-  },
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
+//Update
+async function updatePayment(name, image_id, condition_id, status) {
+  const [result] = await pool.query(`
+    UPDATE payment
+    SET name = ?, image_id = ?, condition_di = ?, status = ?
+  `, [name, image_id, condition_id, status]);
 
-module.exports = Payment;
+  return result.affectedRows > 0;
+}
+
+module.exports = { createPayment, getPayment, updatePayment };

@@ -1,48 +1,21 @@
-//productEntity.js esqueci de alterar os nomes em cima uadfhcaehfc\ea
-const { DataTypes } = require('sequelize');
-const pool = require('../../../model/conection_db'); // Ajuste o caminho conforme sua estrutura
+//stock_movement.js
+const pool = require('../../../model/conection_db');
 
-const StockMoviment = sequelize.define('StockMoviment', { //ta assim no BD depois eu choro aqui
-  idStockMoviment: {
-    type: DataTypes.SMALLINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  nameStockMoviment: {
-    type: DataTypes.STRING(50), 
-    allowNull: false,
-  },
-  dateStockMoviment: { //ver certinho sobre data
-    type: DataTypes.DATE,
-    allowNull: false,
-  }, 
+//Create
+async function createStockMovement(name, date, category_id, admin_id, type) {
+  const [result] = await pool.query(`
+    INSERT INTO stock_movement (name, date, category_id, admin_id, type)
+    VALUES (?, ?, ?, ?, ?, ?)`, [name, date, category_id, admin_id, type]
+  );
+  return result.insertId;
+}
 
-//Chave estrangeira categoria de estoque hfbehr
-/*idStockCategory: {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
+//Read
+async function getStockMovement(name) {
+  const [rows] = await pool.query(`
+    SELECT * FROM stock_movement WHERE name = ?`, [name]
+  );
+  return rows[0];
+}
 
-  typeStockMoviment: {
-    type: DataTypes.SMALLINT.UNSIGNED,
-    allowNull: false,
-    //mesmo esquema do valor padrão exit, entry, definition
-  },
-
-//Chave estrangeira produto (tenho que criar um intermediário)
-/*idProduct: {
-    type: DataTypes.SMALLINT.UNSIGNED,
-    allowNull: false,
-  }, */
-
-//Chave estrangeira admin
-/*idAdmins  : {
-    type: DataTypes.TINYINT.UNSIGNED,
-    allowNull: false,
-  }, */
-}, {
-  freezeTableName: true,
-  timestamps: false, //depois altero e testo Vai guardar a hora que foi criado e atualizado
-});
-
-module.exports = StockMoviment;
+module.exports = { createStockMovement, getStockMovement };
