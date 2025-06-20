@@ -7,64 +7,172 @@ const { dirname } = require('path');
 const router = express.Router(); // instanciando
 
 //pagina de gestor de pedidos
-router.get("/retaguarda/ordermanegement", (req, res) => {
-    res.send("A pagina de central de pedidos")
-})
-router.post("/retaguarda/ordermanegement", (req, res) => {
-    res.send("posta os pedidos")
-})
+//preciso entender como que o pedido vai se relacionar
+router.patch("/retaguarda/ordermanegement", (req, res) => {
+    res.send("updateOrder") //pending, in converse, cancel, aproved
+});
 
 //pagina de cardápio
-router.get("/retaguarda/menulist", (req, res) => {
-    res.send("A pagina de cardápio")
-})
-router.post("/retaguarda/menulist", (req, res) => {
-    res.send("POSTOU pagina de cardápio")
-})
-router.patch("/retaguarda/menulist", (req, res) => {
-    res.send("MODIFICOU pagina de cardápio")
-})
+//CATEGORY
+router.get("/retaguarda/menulist/category", (req, res) => {
+    res.send("getCategory")
+});
+router.post("/retaguarda/menulist/category", (req, res) => {
+    res.send("createCategory")
+});
+router.patch("/retaguarda/menulist/category", (req, res) => {
+    res.send("updateCategory")
+});
+
+//PRODUCT
+router.get("/retaguarda/menulist/product", (req, res) => {
+    res.send("getProduct")
+});
+router.post("/retaguarda/menulist/product", (req, res) => {
+    res.send("createProduct")
+});
+router.patch("/retaguarda/menulist/product", (req, res) => {
+    res.send("updateProduct")
+});
+router.delete("/retaguarda/menulist/product", (req, res) => {
+    res.send("deleteProduct")
+});
+
+//IMAGE
+router.get("/retaguarda/menulist/product/image", (req, res) => {
+    res.send("getImage")
+});
+router.post("/retaguarda/menulist/product/image", (req, res) => {
+    res.send("createImage")
+});
+router.patch("/retaguarda/menulist/product/image", (req, res) => {
+    res.send("updateImage")
+});
+router.delete("/retaguarda/menulist/product/image", (req, res) => {
+    res.send("deleteImage")
+});
 
 //pagina de estoque
-router.get("/retaguarda/stock", (req, res) => {
-    res.send("A pagina de estoque")
-})
-router.post("/retaguarda/stock", (req, res) => {
-    res.send("Postou estoque")
-})
-router.patch("/retaguarda/stock", (req, res) => {
-    res.send("modifica o estoque")
-})
+//STOCK_CATEGORY
+router.get("/retaguarda/stock/stockcategory", (req, res) => {
+    res.send("getStockCategory")
+});
+router.post("/retaguarda/stock/stockcategory", (req, res) => {
+    res.send("createStockCategory")
+});
+router.patch("/retaguarda/stock/stockcategory", (req, res) => {
+    res.send("updateStockCategory")
+});
+//se o produto oficializar o delete esse tambem pode ter
 
-//pagina de formas de pagamento
-router.get("/retaguarda/payment", (req, res) => {
-    res.send("A pagina de pagamentos")
-})
-router.post("/retaguarda/payment", (req, res) => {
-    res.send("POSTOU pagina de pagamentos")
-})
-router.patch("/retaguarda/payment", (req, res) => {
-    res.send("Modifica pagamento")
-})
+//STOCK_MOVEMENT
+router.get("/retaguarda/stock/stockmovement", (req, res) => {
+    res.send("getStockMovement")
+});
+router.post("/retaguarda/stock/stockmovement", (req, res) => {
+    res.send("createStockMovement")
+});
+router.patch("/retaguarda/stock/stockmovement", (req, res) => {
+    res.send("updateStockMovement")
+});
 
-//pagina de editar site
-router.get("/retaguarda/editsite", (req, res) => {
-    const editsite = path.resolve(__dirname, '../view/enterprise/site'); //pagina estatica só para testes
-    res.sendFile(editsite);
-})
-router.post("/retaguarda/editsite", (req, res) => {
-    res.send("posta Edita o site")
-})
-router.patch("/retaguarda/editsite", (req, res) => {
-    res.send("Edita o site")
-})
+//STOCK_MOVEMENT_ITEM
+router.get("/retaguarda/stock/stockmovement/stockmovementitem", (req, res) => {
+    res.send("getStockMovementItem")
+});
+router.post("/retaguarda/stock/stockmovement/stockmovementitem", (req, res) => {
+    res.send("createStockMovementItem")
+});
 
-//pagina de configurações
-router.get("/retaguarda/config", (req, res) => {
-    res.send("A pagina de configurações")
-})
-router.post("/retaguarda/config", (req, res) => {
-    res.send("postou pagina de configurações")
-})
+//pagina de pagamento
+//PAYMENT_CONDITION
+router.get("/retaguarda/finance/paymentcondition", (req, res) => {
+    res.send("getPaymentCondition")
+});
+router.post("/retaguarda/finance/paymentcondition", (req, res) => {
+    res.send("postPaymentCondition")
+});
+router.patch("/retaguarda/finance/paymentcondition", (req, res) => {
+    res.send("updatePaymentCondition")
+});
+//mesmo esquema do produto, se puder deletar esse tambem pode (criar snapchot de pedido)
+
+//PAYMENT
+router.get("/retaguarda/finance/payment", (req, res) => {
+    res.send("getPayment")
+});
+router.post("/retaguarda/finance/payment", (req, res) => {
+    res.send("postPayment")
+});
+router.patch("/retaguarda/finance/payment", (req, res) => {
+    res.send("updatePayment")
+});
+
+//IMG_PAYMENT
+router.get("/retaguarda/finance/payment/imgpayment", (req, res) => {
+    res.send("getImgPayment")
+});
+router.post("/retaguarda/finance/payment/imgpayment", (req, res) => {
+    res.send("defaultImgPayment") //??post??
+});
+
+//PAYMENT_HAS_CONDITION
+//vou separar por enquanto para seguir
+router.get("/retaguarda/finance/payment/paymenthascondition", (req, res) => {
+    res.send("getPaymentHasCondition")
+});
+router.post("/retaguarda/finance/payment/paymenthascondition", (req, res) => {
+    res.send("postPaymentHasCondition")
+});
+router.patch("/retaguarda/finance/payment/paymenthascondition", (req, res) => {
+    res.send("updatePaymentHasCondition")
+});
+router.delete("/retaguarda/finance/payment/paymenthascondition", (req, res) => {
+    res.send("deletePaymentHasCondition")
+});
+
+//pagina do site
+//SITE
+router.get("/retaguarda/site", (req, res) => {
+    res.send("getSite")
+});
+router.patch("/retaguarda/site", (req, res) => {
+    res.send("updateSite")
+});
+
+//pagina de configuração
+//ENTERPRISE
+router.get("/retaguarda/config/enterprise", (req, res) => {
+    res.send("getEnterprise")
+});
+router.patch("/retaguarda/config/enterprise", (req, res) => {
+    res.send("updateEnterprise")
+});
+
+//USER
+//vou fazer a mesma coisa de payment_has_condition pois não sei como fazer
+router.get("/retaguarda/config/user", (req, res) => {
+    res.send("getUser('admin')")
+});
+router.post("/retaguarda/config/user", (req, res) => {
+    res.send("postUser")
+});
+router.patch("/retaguarda/config/user", (req, res) => {
+    res.send("updateUser")
+});
+
+//nn entendi como posso criar user/admin ou admin/user
+
+//ADMIN
+router.get("/retaguarda/config/admin", (req, res) => {
+    res.send("getUser('admin')")
+});
+router.post("/retaguarda/config/admin", (req, res) => {
+    res.send("postAdmin")
+});
+router.patch("/retaguarda/config/admin", (req, res) => {
+    res.send("updateAdmin")
+});
+//se for possivel o delete
 
 export default router;
