@@ -20,22 +20,22 @@ delete - deleta alguma informação
 */
 
 //pagina do ecommerce
-router.get(`/ecommerce`, (req, res) => {
-    res.send("pagina do ecommerce do cliente")
+//Mostrar categorias
+router.get(`/ecommerce/category`, (req, res) => {
+    res.send("getCategory")
 })
-router.post(`/ecommerce/`, (req, res) => {
-    res.send("enviar pedido")
-})
-router.patch(`/ecommerce/`, (req, res) => {
-    res.send("Mudar opções de cadastros")
+//Mostrar produtos
+router.get(`/ecommerce/category/product`, (req, res) => {
+    res.send("getProduct") //Criar o byCategory?
 })
 
 //pagina de login
 router.get(`/ecommerce/login`, (req, res) => {
     const login = path.resolve(__dirname, '../view/ecommerce/login.html'); //pagina estatica só para testes
     res.sendFile(login);
+    res.sendFile("Middleware?")
 })
-router.post("/ecommerce/login", (req, res) => {
+router.post("/ecommerce/login", (req, res) => { //não entendi muito bem a esquematica dessa parte
     res.send("Postou!!! login")
 
     const typeUser = client;
@@ -54,19 +54,24 @@ router.post("/ecommerce/login", (req, res) => {
 router.get("/ecommerce/register", (req, res) => {
     const register = path.resolve(__dirname, '../view/users/client.html'); //pagina estatica só para testes
     res.sendFile(register);
-
-    /*const scrr = false;
-
-    if (scrr == true) {
-        res.redirect("/login")
-    }*/
+    //assim que confirmar redireciona
 })
-
+//posta o usuário client
 router.post("/ecommerce/register", (req, res) => {
     res.send("Postou!!! cadastro")
     const {names, emails, passwords, cpfs, cells} = req.body;
     type = "client";
+});
 
+router.patch("/ecommerce/client", (req, res) => {
+    res.send("updateClient")
+    const {names, emails, passwords, cpfs, cells} = req.body;
+    type = "client";
+});
+
+//pedidos que vai puxar (produto, forma de pagamento e respectivas condições...)
+router.post("/ecommerce/order", (req, res) => {
+    res.send("createOrder")
 });
 
 module.exports = router;
