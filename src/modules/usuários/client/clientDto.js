@@ -12,4 +12,6 @@ const updateClientSchema = Joi.object({
   phone: Joi.string().length(11).optional()
 });
 
-module.exports = { createClientSchema, updateClientSchema };
+module.exports = { 
+  createClientSchema, 
+  updateClientSchema };

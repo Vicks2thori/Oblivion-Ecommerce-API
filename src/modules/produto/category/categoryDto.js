@@ -11,4 +11,6 @@ const updateCategorySchema = Joi.object({
   status: Joi.boolean().optional()
 });
 
-module.exports = { createCategorySchema, updateCategorySchema };
+module.exports = { 
+  createCategorySchema, 
+  updateCategorySchema };

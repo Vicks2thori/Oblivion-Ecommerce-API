@@ -15,4 +15,6 @@ const updatePaymentSchema = Joi.object({
   statusPayment: Joi.boolean().optional()
 });
 
-module.exports = { createPaymentSchema, updatePaymentSchema };
+module.exports = { 
+  createPaymentSchema, 
+  updatePaymentSchema };

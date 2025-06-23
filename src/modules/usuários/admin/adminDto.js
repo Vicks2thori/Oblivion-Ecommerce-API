@@ -11,4 +11,6 @@ const updateAdminSchema = Joi.object({
   status: Joi.boolean().optional()
 });
 
-module.exports = { createAdminSchema, updateAdminSchema };
+module.exports = { 
+  createAdminSchema, 
+  updateAdminSchema };

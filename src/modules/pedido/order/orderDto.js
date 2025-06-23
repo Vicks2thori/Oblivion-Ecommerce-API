@@ -16,4 +16,6 @@ const updateOrderSchema = Joi.object({
   status: Joi.string().valid('pending','cancel','approved').required()
 });
 
-module.exports = { createOrderSchema, updateOrderSchema };
+module.exports = { 
+  createOrderSchema, 
+  updateOrderSchema };

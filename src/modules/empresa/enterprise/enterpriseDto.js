@@ -19,4 +19,6 @@ const updateEnterpriseSchema = Joi.object({
   email: Joi.string().email().min(6).max(50).optional()
 });
 
-module.exports = { createEnterpriseSchema, updateEnterpriseSchema};
+module.exports = { 
+  createEnterpriseSchema, 
+  updateEnterpriseSchema };

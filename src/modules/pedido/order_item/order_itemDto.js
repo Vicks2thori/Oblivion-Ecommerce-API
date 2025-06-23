@@ -11,4 +11,5 @@ const createOrderItemSchema = Joi.object({
 
 //preciso pensar como vou fazer o update aqui
 
-module.exports = { createOrderItemSchema };
+module.exports = { 
+  createOrderItemSchema };

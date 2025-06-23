@@ -11,4 +11,6 @@ const updatePaymentHasConditionSchema = Joi.object({
   idPaymentCondition: Joi.number().min(1).max(255).optional()
 });
 
-module.exports = { createPaymentHasConditionSchema, updatePaymentHasConditionSchema };
+module.exports = { 
+  createPaymentHasConditionSchema, 
+  updatePaymentHasConditionSchema };

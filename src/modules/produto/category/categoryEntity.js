@@ -28,4 +28,7 @@ async function updateCategory(name, status) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createCategory, getCategory, updateCategory};
+module.exports = { 
+  createCategory, 
+  getCategory, 
+  updateCategory };

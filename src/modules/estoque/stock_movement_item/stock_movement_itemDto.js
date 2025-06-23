@@ -9,4 +9,5 @@ const createStockMovementItemSchema = Joi.object({
 
 //Não tem Update, nem Delete
 
-module.exports = { createStockMovementItemSchema };
+module.exports = { 
+  createStockMovementItemSchema };

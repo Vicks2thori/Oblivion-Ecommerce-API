@@ -14,4 +14,6 @@ const updateUserSchema = Joi.object({
   password: Joi.string().min(8).max(255).optional()
 });
 
-module.exports = { createUserSchema, updateUserSchema};
+module.exports = { 
+  createUserSchema, 
+  updateUserSchema};

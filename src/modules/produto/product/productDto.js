@@ -22,4 +22,6 @@ const updateProductSchema = Joi.object({
   category_id: Joi.number().min(1).max(255).optional(),
   quantity: Joi.number().min(1).max(65535).optional()
 })
-module.exports = { createProductSchema, updateProductSchema };
+module.exports = { 
+  createProductSchema, 
+  updateProductSchema };

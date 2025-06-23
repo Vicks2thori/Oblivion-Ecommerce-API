@@ -13,4 +13,6 @@ const updateSiteSchema = Joi.object({
   text_color: Joi.string().length(6).optional(),
 });
 
-module.exports = { createSiteSchema, updateSiteSchema };
+module.exports = { 
+  createSiteSchema, 
+  updateSiteSchema };
