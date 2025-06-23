@@ -43,7 +43,7 @@ router.post("/ecommerce/login", (req, res) => { //não entendi muito bem a esque
     if (typeUser == client) {
         res.redirect("/")
     }
-    else if (typeUserr == admin) {
+    else if (typeUser == admin) {
         res.redirect("/retaguarda/ordermanegement")
     }
 
@@ -74,4 +74,4 @@ router.post("/ecommerce/order", (req, res) => {
     res.send("createOrder")
 });
 
-module.exports = router;
+module.exports = { router };

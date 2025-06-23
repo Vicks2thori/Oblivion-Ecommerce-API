@@ -16,6 +16,9 @@ router.patch("/retaguarda/ordermanegement", (req, res) => {
 //CATEGORY
 router.get("/retaguarda/menulist/category", (req, res) => {
     res.send("getCategory")
+    //depois pesquisar como que integra o frontend (react)
+    const category = path.resolve(__dirname, '../view/menu/category.html'); //pagina estatica só para testes
+    res.sendFile(category);
 });
 router.post("/retaguarda/menulist/category", (req, res) => {
     res.send("createCategory")
@@ -27,6 +30,8 @@ router.patch("/retaguarda/menulist/category", (req, res) => {
 //PRODUCT
 router.get("/retaguarda/menulist/product", (req, res) => {
     res.send("getProduct")
+    const product = path.resolve(__dirname, '../view/menu/porduct.html'); //pagina estatica só para testes
+    res.sendFile(product);
 });
 router.post("/retaguarda/menulist/product", (req, res) => {
     res.send("createProduct")
@@ -35,12 +40,13 @@ router.patch("/retaguarda/menulist/product", (req, res) => {
     res.send("updateProduct")
 });
 router.delete("/retaguarda/menulist/product", (req, res) => {
-    res.send("deleteProduct")
+    res.send("deleteProduct") //validando
 });
 
 //IMAGE
 router.get("/retaguarda/menulist/product/image", (req, res) => {
-    res.send("getImage")
+    res.send("getImage") //esta no cadastro do produto
+    //possoter varias ações em varias entidades na mesma rota?
 });
 router.post("/retaguarda/menulist/product/image", (req, res) => {
     res.send("createImage")
@@ -175,4 +181,4 @@ router.patch("/retaguarda/config/admin", (req, res) => {
 });
 //se for possivel o delete
 
-export default router;
+module.exports = { router };
