@@ -18,4 +18,6 @@ async function getStockMovementItem(stock_movement_id) {
   return rows[0];
 }
 
-module.exports = { createStockMovementItem, getStockMovementItem };
+module.exports = { 
+  createStockMovementItem, 
+  getStockMovementItem };

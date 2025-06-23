@@ -36,4 +36,7 @@ async function updateOrder(status) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createOrder, getOrder, updateOrder };
+module.exports = { 
+  createOrder, 
+  getOrder, 
+  updateOrder };

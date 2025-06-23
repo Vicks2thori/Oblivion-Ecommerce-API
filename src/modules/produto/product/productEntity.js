@@ -38,4 +38,8 @@ async function deleteProduct(code) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createProduct, getProduct, updateProduct, deleteProduct};
+module.exports = { 
+  createProduct, 
+  getProduct, 
+  updateProduct, 
+  deleteProduct};

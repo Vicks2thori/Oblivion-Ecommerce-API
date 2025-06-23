@@ -36,4 +36,6 @@ async function defaultImages() {
   }
 }
 
-module.exports = { getImage, defaultImages };
+module.exports = { 
+  getImage, 
+  defaultImages };

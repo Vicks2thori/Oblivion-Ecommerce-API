@@ -18,4 +18,6 @@ async function getOrderItem(order_id) {
   return rows[0];
 }
 
-module.exports = { createOrder, getOrder };
+module.exports = { 
+  createOrderItem, 
+  getOrderItem };

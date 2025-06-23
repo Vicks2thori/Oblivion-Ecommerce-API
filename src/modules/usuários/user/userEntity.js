@@ -13,7 +13,7 @@ async function createUser(name, email, password, type) {
 //tem que criar 2 gets, um que vai ser chamado na hora de exibir (geral)
 //outro que vai chamar na hora de fazer update (vai ser mandado pelo front espero eu)
 //Read
-async function getUser(type) {
+async function getUserType(type) {
   const [rows] = await pool.query(`
     SELECT * FROM user WHERE type = ?`, [type]
   );
@@ -30,4 +30,7 @@ async function updateUser(name, email, password) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createUser, getUser, updateUser, deleteProduct};
+module.exports = { 
+  createUser, 
+  getUserType, 
+  updateUser };

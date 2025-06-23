@@ -20,6 +20,7 @@ async function getPaymentCondition(name) {
 
 //Update
 async function updatePaymentCondition(name, status) {
+
   const [result] = await pool.query(`
     UPDATE payment_condition
     SET name = ?, status = ?
@@ -28,4 +29,7 @@ async function updatePaymentCondition(name, status) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createPaymentCondition, getPaymentCondition, updatePaymentCondition };
+module.exports = { 
+  createPaymentCondition, 
+  getPaymentCondition, 
+  updatePaymentCondition };

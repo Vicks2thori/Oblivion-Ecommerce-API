@@ -34,4 +34,8 @@ async function deleteImage(name) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createImage, getImage, updateImage, deleteImage, };
+module.exports = { 
+  createImage, 
+  getImage, 
+  updateImage, 
+  deleteImage };

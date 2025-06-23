@@ -38,4 +38,7 @@ async function updateSite({primary_color, secondary_color, text_color}) {
   return result.affectedRows > 0;
 }
 
-module.exports = { getSite, defaultSite, updateSite};
+module.exports = { 
+  getSite, 
+  defaultSite, 
+  updateSite };

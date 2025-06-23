@@ -28,4 +28,7 @@ async function updateAdmin(status) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createAdmin, getAdmin, updateAdmin };
+module.exports = { 
+  createAdmin, 
+  getAdmin, 
+  updateAdmin };

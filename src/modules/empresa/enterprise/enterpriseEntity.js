@@ -43,4 +43,7 @@ async function updateEnterprise({ name, phone, instagram, facebook, email, logo_
   return result.affectedRows > 0;
 }
 
-module.exports = { getEnterprise, defaultEnterprise, updateEnterprise};
+module.exports = { 
+  getEnterprise, 
+  defaultEnterprise, 
+  updateEnterprise };

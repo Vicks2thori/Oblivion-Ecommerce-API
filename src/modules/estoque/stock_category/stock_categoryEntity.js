@@ -28,4 +28,7 @@ async function updateStockCategory(name, status) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createStockCategory, getStockCategory, updateStockCategory};
+module.exports = { 
+  createStockCategory, 
+  getStockCategory, 
+  updateStockCategory };

@@ -18,4 +18,6 @@ async function getStockMovement(name) {
   return rows[0];
 }
 
-module.exports = { createStockMovement, getStockMovement };
+module.exports = { 
+  createStockMovement, 
+  getStockMovement };

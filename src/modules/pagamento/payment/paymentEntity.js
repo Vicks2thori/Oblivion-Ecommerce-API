@@ -18,6 +18,7 @@ async function getPayment(name) {
   return rows[0];
 }
 
+//agrupar com o payment_has_condition, tanto o update e o create (delete do payment_has)
 //Update
 async function updatePayment(name, image_id, condition_id, status) {
   const [result] = await pool.query(`
@@ -28,4 +29,7 @@ async function updatePayment(name, image_id, condition_id, status) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createPayment, getPayment, updatePayment };
+module.exports = { 
+  createPayment, 
+  getPayment, 
+  updatePayment };

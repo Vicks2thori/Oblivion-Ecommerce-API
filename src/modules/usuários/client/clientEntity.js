@@ -1,6 +1,6 @@
 //clientEntiy.js
 const pool = require('../../../model/conection_db');
-const { getUser, createUser, updateUser } = require('../user/userEntity');
+const { getUserType, createUser, updateUser } = require('../user/userEntity');
 
 //Create
 async function createClient(name, email, password, cpf, phone) {
@@ -15,7 +15,7 @@ async function createClient(name, email, password, cpf, phone) {
 
 //Read
 async function getClient() {
-  getUser("client");
+  getUserType("client");
 }
 
 //preciso buscar uma forma de buscar o user_id
@@ -32,4 +32,7 @@ async function updateClient(name, email, password, cpf, phone) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createAdmin, getAdmin, updateAdmin };
+module.exports = { 
+  createClient, 
+  getClient, 
+  updateClient };

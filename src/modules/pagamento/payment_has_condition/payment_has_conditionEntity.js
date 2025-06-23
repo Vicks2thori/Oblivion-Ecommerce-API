@@ -22,16 +22,18 @@ async function getPaymentHasCondition(payment_id) {
 }
 
 //Update (não faz nem sentido)
-/*async function updatePaymentHasCondition(name, status) {
+async function updatePaymentHasCondition(payment_id, condition_id) {
+  getPaymentHasCondition(payment_id)//.then()?
   const [result] = await pool.query(`
     UPDATE payment_has_condition
-    SET name = ?, status = ?
-  `, [name, status]);
+    SET condition_id = ?
+  `, [condition_id]);
 
   return result.affectedRows > 0;
-}*/
+}
 
 //Delete
+//não saquei ainda como fazer o relacionamento nos pagamentos
 async function deletePaymentHasCondition(payment_id, condition_id) {
   const [result] = await pool.query(`
     DELETE FROM payment_has_condition WHERE payment_id = ? AND condition_id = ?`, [payment_id, condition_id]
@@ -39,4 +41,8 @@ async function deletePaymentHasCondition(payment_id, condition_id) {
   return result.affectedRows > 0;
 }
 
-module.exports = { createPaymentHasCondition, getPaymentHasCondition, deletePaymentHasCondition };
+module.exports = { 
+  createPaymentHasCondition, 
+  getPaymentHasCondition, 
+  updatePaymentHasCondition,
+  deletePaymentHasCondition };
