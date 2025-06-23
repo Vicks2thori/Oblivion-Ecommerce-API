@@ -19,14 +19,33 @@ async function getPaymentCondition(name) {
 }
 
 //Update
-async function updatePaymentCondition(name, status) {
+async function updatePaymentCondition(id, name, status) {
+  // Filtra apenas campos que foram enviados (não undefined/null)
+  const fieldsToUpdate = {};
+  
+  if (name) fieldsToUpdate.name = name;
+  if (status !== undefined) fieldsToUpdate.status = status; // Boolean pode ser false
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return { success: false, message: 'Nenhum campo para atualizar' };
+  }
+
+  // Constrói query dinâmica
+  const fields = Object.keys(fieldsToUpdate);
+  const values = Object.values(fieldsToUpdate);
+  const setClause = fields.map(field => `${field} = ?`).join(', ');
 
   const [result] = await pool.query(`
     UPDATE payment_condition
-    SET name = ?, status = ?
-  `, [name, status]);
+    SET ${setClause}
+    WHERE id = ?
+    LIMIT 1
+  `, [...values, id]);
 
-  return result.affectedRows > 0;
+  return {
+    success: result.affectedRows > 0,
+    affectedRows: result.affectedRows
+  };
 }
 
 module.exports = { 

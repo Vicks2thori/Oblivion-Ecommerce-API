@@ -21,13 +21,38 @@ async function getProduct(name) {
 } // como que é melhor puxar?
 
 //Update
-async function updateProduct(name, status) {
-    const [result] = await pool.query(`
-    UPDATE product
-    SET name = ?, image_id = ?, description = ?, price = ?, code = ?, status = ?, category_id = ?
-  `, [name, image_id, description, price, code, status, category_id]);
+async function updateProduct(id, name, image_id, description, price, code, status, category_id) {
+// Filtra apenas campos que foram enviados (não undefined/null)
+  const fieldsToUpdate = {};
 
-  return result.affectedRows > 0;
+  if (name) fieldsToUpdate.name = name;
+  if (image_id) fieldsToUpdate.image_id = image_id;
+  if (description) fieldsToUpdate.description = description;
+  if (price) fieldsToUpdate.price = price;
+  if (code) fieldsToUpdate.code = code;
+  if (category_id) fieldsToUpdate.category_id = category_id;
+  if (status !== undefined) fieldsToUpdate.status = status;
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return { success: false, message: 'Nenhum campo para atualizar' };
+  }
+
+  // Constrói query dinâmica
+  const fields = Object.keys(fieldsToUpdate);
+  const values = Object.values(fieldsToUpdate);
+  const setClause = fields.map(field => `${field} = ?`).join(', ');
+
+  const [result] = await pool.query(`
+    UPDATE product
+    SET ${setClause}
+    WHERE id = ?
+    LIMIT 1
+  `, [...values, id]); //... "espalha" os arrays
+
+  return {
+    success: result.affectedRows > 0,
+    affectedRows: result.affectedRows
+  };
 }
 
 //Delete

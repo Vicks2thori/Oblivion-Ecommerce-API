@@ -19,13 +19,33 @@ async function getStockCategory(name) {
 }
 
 //Update
-async function updateStockCategory(name, status) {
-    const [result] = await pool.query(`
-    UPDATE stock_category
-    SET name = ?, status = ?
-  `, [name, status]);
+async function updateStockCategory(id, name, status) {
+  // Filtra apenas campos que foram enviados (não undefined/null)
+  const fieldsToUpdate = {};
+  
+  if (name) fieldsToUpdate.name = name;
+  if (status !== undefined) fieldsToUpdate.status = status; // Boolean pode ser false
 
-  return result.affectedRows > 0;
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return { success: false, message: 'Nenhum campo para atualizar' };
+  }
+
+  // Constrói query dinâmica
+  const fields = Object.keys(fieldsToUpdate);
+  const values = Object.values(fieldsToUpdate);
+  const setClause = fields.map(field => `${field} = ?`).join(', ');
+
+  const [result] = await pool.query(`
+    UPDATE stock_category
+    SET ${setClause}
+    WHERE id = ?
+    LIMIT 1
+  `, [...values, id]); //... "espalha" os arrays
+
+  return {
+    success: result.affectedRows > 0,
+    affectedRows: result.affectedRows
+  };
 }
 
 module.exports = { 

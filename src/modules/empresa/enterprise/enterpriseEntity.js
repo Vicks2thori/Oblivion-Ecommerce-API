@@ -34,11 +34,31 @@ async function defaultEnterprise({
 
 //Update
 async function updateEnterprise({ name, phone, instagram, facebook, email, logo_image }) {
+  // Filtra apenas campos que foram enviados (não são null/undefined)
+  const fieldsToUpdate = {};
+  
+  if (name) fieldsToUpdate.name = name;
+  if (phone) fieldsToUpdate.phone = phone;
+  if (instagram) fieldsToUpdate.instagram = instagram;
+  if (facebook) fieldsToUpdate.facebook = facebook;
+  if (email) fieldsToUpdate.email = email;
+  if (logo_image) fieldsToUpdate.logo_image = logo_image;
+
+  // Se não há campos para atualizar, retorna false
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return false;
+  }
+
+  // Constrói a query dinamicamente
+  const fields = Object.keys(fieldsToUpdate);
+  const values = Object.values(fieldsToUpdate);
+  const setClause = fields.map(field => `${field} = ?`).join(', ');
+
   const [result] = await pool.query(`
     UPDATE enterprise
-    SET name = ?, phone = ?, instagram = ?, facebook = ?, email = ?, logo_image = ?
+    SET ${setClause}
     LIMIT 1
-  `, [name, phone, instagram, facebook, email, logo_image]);
+  `, values);
 
   return result.affectedRows > 0;
 }

@@ -22,12 +22,33 @@ async function getUserType(type) {
 
 //Update
 async function updateUser(name, email, password) {
-    const [result] = await pool.query(`
-    UPDATE user
-    SET name = ?, email = ?, password = ?
-  `, [name, email, password]);
+// Filtra apenas campos que foram enviados (não undefined/null)
+  const fieldsToUpdate = {};
 
-  return result.affectedRows > 0;
+  if (name) fieldsToUpdate.name = name;
+  if (email) fieldsToUpdate.email = email;
+  if (password) fieldsToUpdate.password = password;
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return { success: false, message: 'Nenhum campo para atualizar' };
+  }
+
+  // Constrói query dinâmica
+  const fields = Object.keys(fieldsToUpdate);
+  const values = Object.values(fieldsToUpdate);
+  const setClause = fields.map(field => `${field} = ?`).join(', ');
+
+  const [result] = await pool.query(`
+    UPDATE user
+    SET ${setClause}
+    WHERE id = ?
+    LIMIT 1
+  `, [...values, id]); //... "espalha" os arrays
+
+  return {
+    success: result.affectedRows > 0,
+    affectedRows: result.affectedRows
+  };
 }
 
 module.exports = { 
