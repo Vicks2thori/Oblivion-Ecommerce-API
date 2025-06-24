@@ -2,7 +2,7 @@
 const pool = require('../../../model/conection_db');
 
 //Create
-async function createCategory(name, status) {
+async function createCategory({name, status}) {
   const [result] = await pool.query(`
     INSERT INTO category (name, status)
     VALUES (?, ?)`, [name, status]
@@ -11,7 +11,7 @@ async function createCategory(name, status) {
 }
 
 //Read
-async function getCategory(name) {
+async function getCategory({name}) {
   const [rows] = await pool.query(`
     SELECT * FROM category WHERE name = ?`, [name]
   );
@@ -19,7 +19,7 @@ async function getCategory(name) {
 }
 
 //Update
-async function updateCategory(id, name, status) {
+async function updateCategory({id, name, status}) {
 // Filtra apenas campos que foram enviados (não undefined/null)
   const fieldsToUpdate = {};
 

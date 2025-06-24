@@ -2,7 +2,7 @@
 const pool = require('../../../model/conection_db');
 
 //Create
-async function createUser(name, email, password, type) {
+async function createUser({name, email, password, type}) {
   const [result] = await pool.query(`
     INSERT INTO user (name, email, password, type)
     VALUES (?, ?, ?, ?)`, [name, email, password, type]
@@ -13,7 +13,7 @@ async function createUser(name, email, password, type) {
 //tem que criar 2 gets, um que vai ser chamado na hora de exibir (geral)
 //outro que vai chamar na hora de fazer update (vai ser mandado pelo front espero eu)
 //Read
-async function getUserType(type) {
+async function getUserType({type}) {
   const [rows] = await pool.query(`
     SELECT * FROM user WHERE type = ?`, [type]
   );
@@ -21,7 +21,7 @@ async function getUserType(type) {
 }
 
 //Update
-async function updateUser(name, email, password) {
+async function updateUser({name, email, password}) {
 // Filtra apenas campos que foram enviados (não undefined/null)
   const fieldsToUpdate = {};
 

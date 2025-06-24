@@ -2,7 +2,7 @@
 const pool = require('../../../model/conection_db');
 
 //Create
-async function createPaymentCondition(name, status) {
+async function createPaymentCondition({name, status}) {
   const [result] = await pool.query(`
     INSERT INTO payment_condition (name, status)
     VALUES (?, ?)`, [name, status]
@@ -11,7 +11,7 @@ async function createPaymentCondition(name, status) {
 }
 
 //Read
-async function getPaymentCondition(name) {
+async function getPaymentCondition({name}) {
   const [rows] = await pool.query(`
     SELECT * FROM payment_condition WHERE name = ?`, [name]
   );
@@ -19,7 +19,7 @@ async function getPaymentCondition(name) {
 }
 
 //Update
-async function updatePaymentCondition(id, name, status) {
+async function updatePaymentCondition({id, name, status}) {
   // Filtra apenas campos que foram enviados (não undefined/null)
   const fieldsToUpdate = {};
   

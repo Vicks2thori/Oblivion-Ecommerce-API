@@ -5,7 +5,7 @@ const pool = require('../../../model/conection_db');
 //E uma com DELETE para enviar os valores que não estão selecionados...
 
 //Create
-async function createPaymentHasCondition(payment_id, condition_id) {
+async function createPaymentHasCondition({payment_id, condition_id}) {
   const [result] = await pool.query(`
     INSERT INTO payment_has_condition (payment_id, condition_id)
     VALUES (?, ?)`, [payment_id, condition_id]
@@ -14,7 +14,7 @@ async function createPaymentHasCondition(payment_id, condition_id) {
 }
 
 //Read
-async function getPaymentHasCondition(payment_id) {
+async function getPaymentHasCondition({payment_id}) {
   const [rows] = await pool.query(`
     SELECT * FROM payment_has_condition WHERE name = ?`, [payment_id]
   );
@@ -22,7 +22,7 @@ async function getPaymentHasCondition(payment_id) {
 }
 
 //Update (não faz nem sentido)
-async function updatePaymentHasCondition(payment_id, condition_id) {
+async function updatePaymentHasCondition({payment_id, condition_id}) {
   getPaymentHasCondition(payment_id)//.then()?
   const [result] = await pool.query(`
     UPDATE payment_has_condition
@@ -34,7 +34,7 @@ async function updatePaymentHasCondition(payment_id, condition_id) {
 
 //Delete
 //não saquei ainda como fazer o relacionamento nos pagamentos
-async function deletePaymentHasCondition(payment_id, condition_id) {
+async function deletePaymentHasCondition({payment_id, condition_id}) {
   const [result] = await pool.query(`
     DELETE FROM payment_has_condition WHERE payment_id = ? AND condition_id = ?`, [payment_id, condition_id]
   );

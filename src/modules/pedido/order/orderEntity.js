@@ -2,7 +2,7 @@
 const pool = require('../../../model/conection_db');
 
 //Create
-async function createOrder(date, code, client_id, payment_id, payment_condition_id, total, status) {
+async function createOrder({date, code, client_id, payment_id, payment_condition_id, total, status}) {
   /*if (status === "pending") { //tenho que ver certinho se aqui eu valido...
     return
   }
@@ -18,7 +18,7 @@ async function createOrder(date, code, client_id, payment_id, payment_condition_
 
 //tenho que puxar o order_item tambem
 //Read
-async function getOrder(code) {
+async function getOrder({code}) {
   const [rows] = await pool.query(`
     SELECT * FROM order WHERE code = ?`, [code]
   );
@@ -27,7 +27,7 @@ async function getOrder(code) {
 
 //Depois de aprovado ele tambem da baixa no estoque
 //Update
-async function updateOrder(id, status) {
+async function updateOrder({id, status}) {
   // Filtra apenas campos que foram enviados (não undefined/null)
   const fieldsToUpdate = {};
 

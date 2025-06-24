@@ -2,7 +2,7 @@
 const pool = require('../../../model/conection_db');
 
 //Create
-async function createPayment(name, image_id, condition_id, status) {
+async function createPayment({name, image_id, condition_id, status}) {
   const [result] = await pool.query(`
     INSERT INTO payment (name, image_id, condition_id, status)
     VALUES (?, ?, ?, ?)`, [name, image_id, condition_id, status]
@@ -11,7 +11,7 @@ async function createPayment(name, image_id, condition_id, status) {
 }
 
 //Read
-async function getPayment(name) {
+async function getPayment({name}) {
   const [rows] = await pool.query(`
     SELECT * FROM payment WHERE name = ?`, [name]
   );

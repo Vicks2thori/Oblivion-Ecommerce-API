@@ -3,7 +3,7 @@ const pool = require('../../../model/conection_db');
 const { getUser, createUser } = require('../user/userEntity');
 
 //Create
-async function createAdmin(name, email, password, status) {
+async function createAdmin({name, email, password, status}) {
   const type = "admin";
   user_id = createUser(name, email, password, type)
   const [result] = await pool.query(`
@@ -19,12 +19,12 @@ async function getAdmin() {
 }
 
 //Update
-async function updateAdmin(id, user_id, name, email, password, status) {
+async function updateAdmin({id, user_id, name, email, password, status}) { //{flexibiliza as variaveis}
 // Filtra apenas campos que foram enviados (não undefined/null)
-  updateUser(user_id, name, email, password); //alteração da tabela users
+  updateUser({user_id, name, email, password}); //alteração da tabela users
   const fieldsToUpdate = {};
 
-  if (status !== undefined) fieldsToUpdate.phone = phone;
+  if (status !== undefined) fieldsToUpdate.status = status;
 
   if (Object.keys(fieldsToUpdate).length === 0) {
     return { success: false, message: 'Nenhum campo para atualizar' };

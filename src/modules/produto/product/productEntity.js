@@ -3,7 +3,7 @@ const pool = require('../../../model/conection_db');
 
 //vai criar junto o estoque
 //Create
-async function createProduct(name, image_id, description, price, code, status, category_id, quantity) {
+async function createProduct({name, image_id, description, price, code, status, category_id, quantity}) {
   const [result] = await pool.query(`
     INSERT INTO product (name, image_id, description, price, code, status, category_id, quantity)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [name, image_id, description, price, code, status, category_id, quantity]
@@ -13,7 +13,7 @@ async function createProduct(name, image_id, description, price, code, status, c
 
 //Tem que ter um get por categoria ja que vou apresentar no ecommerce
 //Read
-async function getProduct(name) {
+async function getProduct({name}) {
   const [rows] = await pool.query(`
     SELECT * FROM product WHERE name = ?`, [name]
   );
@@ -21,7 +21,7 @@ async function getProduct(name) {
 } // como que é melhor puxar?
 
 //Update
-async function updateProduct(id, name, image_id, description, price, code, status, category_id) {
+async function updateProduct({id, name, image_id, description, price, code, status, category_id}) {
 // Filtra apenas campos que foram enviados (não undefined/null)
   const fieldsToUpdate = {};
 
@@ -56,9 +56,9 @@ async function updateProduct(id, name, image_id, description, price, code, statu
 }
 
 //Delete
-async function deleteProduct(code) {
+async function deleteProduct({id}) {
   const [result] = await pool.query(`
-    DELETE FROM product WHERE code = ?`, [code]
+    DELETE FROM product WHERE id = ?`, [id]
   );
   return result.affectedRows > 0;
 }

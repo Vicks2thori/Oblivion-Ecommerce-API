@@ -2,7 +2,7 @@
 const pool = require('../../../model/conection_db');
 
 //Create
-async function createImage(name, patch) {
+async function createImage({name, patch}) {
   const [result] = await pool.query(`
     INSERT INTO image (name, patch)
     VALUES (?, ?)`, [name, patch]
@@ -11,7 +11,7 @@ async function createImage(name, patch) {
 }
 
 // Read
-async function getImage(name) {
+async function getImage({name}) {
   const [rows] = await pool.query(`
     SELECT * FROM image WHERE name = ?`, [name]
   );

@@ -2,7 +2,7 @@
 const pool = require('../../../model/conection_db');
 
 //Create
-async function createStockCategory(name, status) {
+async function createStockCategory({name, status}) {
   const [result] = await pool.query(`
     INSERT INTO stock_category (name, status)
     VALUES (?, ?)`, [name, status]
@@ -11,7 +11,7 @@ async function createStockCategory(name, status) {
 }
 
 //Read
-async function getStockCategory(name) {
+async function getStockCategory({name}) {
   const [rows] = await pool.query(`
     SELECT * FROM stock_category WHERE name = ?`, [name]
   );
@@ -19,7 +19,7 @@ async function getStockCategory(name) {
 }
 
 //Update
-async function updateStockCategory(id, name, status) {
+async function updateStockCategory({id, name, status}) {
   // Filtra apenas campos que foram enviados (não undefined/null)
   const fieldsToUpdate = {};
   
