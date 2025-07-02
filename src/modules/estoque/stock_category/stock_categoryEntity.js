@@ -1,4 +1,4 @@
-//stock_category.js
+//stock_categoryEntiry.js
 const mongoose = require('mongoose');
 
 const StockCategorySchema = new mongoose.Schema({
@@ -16,4 +16,4 @@ const StockCategorySchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Category', StockCategorySchema);
+module.exports = mongoose.model('StockCategory', StockCategorySchema);
