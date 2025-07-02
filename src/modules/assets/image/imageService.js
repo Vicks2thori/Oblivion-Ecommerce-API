@@ -1,2 +1,2 @@
-//Opcional
-//Se for manipulada diretamente (upload de imagens fora do produto)
+//Lógica de verificação
+//Verifica se já existe imagem antes de criar, substitui ou atualiza
