@@ -13,7 +13,83 @@ const CategorySchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: true 
+  },
+  deleted: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 }, { timestamps: true });
+
+//CRUD
+
+//Create
+CategorySchema.statics.createCategory = async function(data) {
+  const category = new this(data);
+  return await category.save();
+};
+
+
+//Read
+//All
+CategorySchema.statics.getAllCategory = async function() {
+  return await this.find({ delete: false }).sort({ name: 1 });
+};
+
+//by ID
+CategorySchema.statics.getCategoryById = async function(id) {
+  const category = await this.findById({
+    id: id,
+    deleted: false //não retornar itens deletados
+  });
+  if (!category) {
+    throw new Error('Categoria não encontrada');
+  }
+  return category;
+};
+
+
+//Update
+CategorySchema.statics.updateCategory = async function(id, validatedData) {
+  try {
+    const updated = await this.findOneAndUpdate(
+      { 
+        _id: id, 
+        isDeleted: false  //só atualiza se não foi deletado
+      },
+      validatedData, 
+      { 
+        new: true, 
+        runValidators: true 
+      }
+    );
+    
+    if (!updated) {
+      throw new Error('Categoria não encontrada');
+    }
+    
+    return updated;
+  } catch (error) {
+    throw new Error(`Erro ao atualizar categoria: ${error.message}`);
+  }
+};
+
+
+//Delete (soft delete)
+CategorySchema.statics.deleteCategory = async function(id) {
+  const deleted = await this.findByIdAndUpdate({
+    id: id,
+    deleted: false
+    }, 
+    { deleted: true }, 
+    { new: true }
+  );
+  
+  if (!deleted) {
+    throw new Error('Categoria não encontrada');
+  }
+  
+  return deleted;
+};
 
 module.exports = mongoose.model('Category', CategorySchema);
