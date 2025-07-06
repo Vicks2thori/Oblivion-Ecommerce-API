@@ -6,7 +6,7 @@ const Joi = require('joi');
 const createPaymentConditionSchema = Joi.object({
   name: Joi.string().min(2).max(50).required(),
   status: Joi.boolean().default(true).required(),
-  deleted: Joi.boolean().default(false).required()
+  //deleted não vem do front é controlado no back (pelo menos na hora de criar)
 });
 
 const updatePaymentConditionSchema = Joi.object({
