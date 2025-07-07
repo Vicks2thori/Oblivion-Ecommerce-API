@@ -1,4 +1,5 @@
 //responseHelpers.js
+//tenho que reformular melhor a lógica aqui, por enquanto vou apenas continuar
 
 const { response } = require("express");
 
@@ -115,6 +116,7 @@ const responseHelpersError = (res, statusCode, data, message) => {
 };
 
 module.exports = {
+    badRequest400,
     responseHelpersOk,
     responseHelpersError
 };
