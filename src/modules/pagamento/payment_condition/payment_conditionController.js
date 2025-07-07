@@ -1,6 +1,7 @@
 //payment_conditionController.js
 const { createPaymentConditionSchema, updatePaymentConditionSchema } = require('./payment_conditionDto');
 const PaymentCondition = require('./payment_conditionService');
+const { badRequest400, responseHelpersOk, responseHelpersError } = require("../../../routes/responseHelpers");
 
 //CRUD
 
@@ -87,17 +88,67 @@ async function create(req, res) {
 //All
 async function getAll(req, res) {
   try {
-    const paymentConditions = await PaymentCondition.getAllPaymentConditions();
+    const paymentCondition = await PaymentCondition.getAllPaymentConditions();
 
-    res.json({
+    //OK
+    //200 - Sucesso geral
+    res.status(200).json({
       success: true,
-      data: paymentConditions
+      message: '200 - Operação realizada com sucesso',
+      data: paymentCondition
+    });
+
+    //201 - Criado com sucesso
+    res.status(201).json({
+      success: true,
+      message: '201 - Condição de pagamento criada com sucesso',
+      data: paymentCondition
     });
 
   } catch (error) {
+
+    //ERROR
+    //400 - Dados inválidos
+    res.status(400).json({
+      success: false,
+      message: '400 - Dados inválidos',
+      errors: error.details.map(d => d.message) //extrai só as mensagens
+    });
+
+    //401 - Não autenticado (TEMPORÁRIO até a criação do middleware)
+    res.status(401).json({
+      success: false,
+      message: '401 - Não autenticado'
+    });
+
+    //403 - Não autorizado (TEMPORÁRIO até a criação do middleware)
+    res.status(403).json({
+      success: false,
+      message: '403 - Não autorizado'
+    });
+
+    //404 - Não encontrado
+    res.status(404).json({
+      success: false,
+      message: '404 - Não encontrado'
+    });
+
+    //409 - Conflito
+    res.status(409).json({
+      success: false,
+      message: '409 - Conflito com recurso existente'
+    });
+
+    //422 - Entidade não processavel
+    res.status(404).json({
+      success: false,
+      message: '422 - Não foi possivel processar requisição'
+    });
+
+    //500 - Erro interno do servidor
     res.status(500).json({
       success: false,
-      message: 'Erro ao buscar condições de pagamento'
+      message: '500 - Erro interno do servidor'
     });
   }
 }
@@ -107,15 +158,65 @@ async function getActive(req, res) {
   try {
     const activeConditions = await PaymentCondition.getActivePaymentConditions();
 
-    res.json({
+    //OK
+    //200 - Sucesso geral
+    res.status(200).json({
       success: true,
-      data: activeConditions
+      message: '200 - Operação realizada com sucesso',
+      data: paymentCondition
+    });
+
+    //201 - Criado com sucesso
+    res.status(201).json({
+      success: true,
+      message: '201 - Condição de pagamento criada com sucesso',
+      data: paymentCondition
     });
 
   }catch (error) {
+    
+    //ERROR
+    //400 - Dados inválidos
+    res.status(400).json({
+      success: false,
+      message: '400 - Dados inválidos',
+      errors: error.details.map(d => d.message) //extrai só as mensagens
+    });
+
+    //401 - Não autenticado (TEMPORÁRIO até a criação do middleware)
+    res.status(401).json({
+      success: false,
+      message: '401 - Não autenticado'
+    });
+
+    //403 - Não autorizado (TEMPORÁRIO até a criação do middleware)
+    res.status(403).json({
+      success: false,
+      message: '403 - Não autorizado'
+    });
+
+    //404 - Não encontrado
+    res.status(404).json({
+      success: false,
+      message: '404 - Não encontrado'
+    });
+
+    //409 - Conflito
+    res.status(409).json({
+      success: false,
+      message: '409 - Conflito com recurso existente'
+    });
+
+    //422 - Entidade não processavel
+    res.status(404).json({
+      success: false,
+      message: '422 - Não foi possivel processar requisição'
+    });
+
+    //500 - Erro interno do servidor
     res.status(500).json({
       success: false,
-      message: error.message
+      message: '500 - Erro interno do servidor'
     });
   }
 };
@@ -126,15 +227,64 @@ async function getById(req, res) {
     const { id } = req.params;
     const paymentCondition = await PaymentCondition.getPaymentConditionById(id);
 
-    res.json({
+    //OK
+    //200 - Sucesso geral
+    res.status(200).json({
       success: true,
+      message: '200 - Operação realizada com sucesso',
+      data: paymentCondition
+    });
+
+    //201 - Criado com sucesso
+    res.status(201).json({
+      success: true,
+      message: '201 - Condição de pagamento criada com sucesso',
       data: paymentCondition
     });
 
   }catch (error) {
+    //ERROR
+    //400 - Dados inválidos
+    res.status(400).json({
+      success: false,
+      message: '400 - Dados inválidos',
+      errors: error.details.map(d => d.message) //extrai só as mensagens
+    });
+
+    //401 - Não autenticado (TEMPORÁRIO até a criação do middleware)
+    res.status(401).json({
+      success: false,
+      message: '401 - Não autenticado'
+    });
+
+    //403 - Não autorizado (TEMPORÁRIO até a criação do middleware)
+    res.status(403).json({
+      success: false,
+      message: '403 - Não autorizado'
+    });
+
+    //404 - Não encontrado
     res.status(404).json({
       success: false,
-      message: error.message
+      message: '404 - Não encontrado'
+    });
+
+    //409 - Conflito
+    res.status(409).json({
+      success: false,
+      message: '409 - Conflito com recurso existente'
+    });
+
+    //422 - Entidade não processavel
+    res.status(404).json({
+      success: false,
+      message: '422 - Não foi possivel processar requisição'
+    });
+
+    //500 - Erro interno do servidor
+    res.status(500).json({
+      success: false,
+      message: '500 - Erro interno do servidor'
     });
   };
 };
@@ -155,16 +305,64 @@ async function update(req, res) {
 
     const updated = await PaymentCondition.updatePaymentCondition(id, value);
 
-    res.json({
+    //OK
+    //200 - Sucesso geral
+    res.status(200).json({
       success: true,
-      message: 'Condição atualizada com sucesso',
-      data: updated
+      message: '200 - Operação realizada com sucesso',
+      data: paymentCondition
+    });
+
+    //201 - Criado com sucesso
+    res.status(201).json({
+      success: true,
+      message: '201 - Condição de pagamento criada com sucesso',
+      data: paymentCondition
     });
 
   } catch (error) {
+    //ERROR
+    //400 - Dados inválidos
+    res.status(400).json({
+      success: false,
+      message: '400 - Dados inválidos',
+      errors: error.details.map(d => d.message) //extrai só as mensagens
+    });
+
+    //401 - Não autenticado (TEMPORÁRIO até a criação do middleware)
+    res.status(401).json({
+      success: false,
+      message: '401 - Não autenticado'
+    });
+
+    //403 - Não autorizado (TEMPORÁRIO até a criação do middleware)
+    res.status(403).json({
+      success: false,
+      message: '403 - Não autorizado'
+    });
+
+    //404 - Não encontrado
+    res.status(404).json({
+      success: false,
+      message: '404 - Não encontrado'
+    });
+
+    //409 - Conflito
+    res.status(409).json({
+      success: false,
+      message: '409 - Conflito com recurso existente'
+    });
+
+    //422 - Entidade não processavel
+    res.status(404).json({
+      success: false,
+      message: '422 - Não foi possivel processar requisição'
+    });
+
+    //500 - Erro interno do servidor
     res.status(500).json({
       success: false,
-      message: error.message
+      message: '500 - Erro interno do servidor'
     });
   }
 }
@@ -175,16 +373,64 @@ async function deletePaymentCondition(req, res) {
     const { id } = req.params;
     const deleted = await PaymentCondition.deletePaymentCondition(id);
 
-    res.json({
+    //OK
+    //200 - Sucesso geral
+    res.status(200).json({
       success: true,
-      message: 'Condição excluída com sucesso',
-      data: deleted
+      message: '200 - Operação realizada com sucesso',
+      data: paymentCondition
+    });
+
+    //201 - Criado com sucesso
+    res.status(201).json({
+      success: true,
+      message: '201 - Condição de pagamento criada com sucesso',
+      data: paymentCondition
     });
 
   } catch (error) {
+    //ERROR
+    //400 - Dados inválidos
+    res.status(400).json({
+      success: false,
+      message: '400 - Dados inválidos',
+      errors: error.details.map(d => d.message) //extrai só as mensagens
+    });
+
+    //401 - Não autenticado (TEMPORÁRIO até a criação do middleware)
+    res.status(401).json({
+      success: false,
+      message: '401 - Não autenticado'
+    });
+
+    //403 - Não autorizado (TEMPORÁRIO até a criação do middleware)
+    res.status(403).json({
+      success: false,
+      message: '403 - Não autorizado'
+    });
+
+    //404 - Não encontrado
+    res.status(404).json({
+      success: false,
+      message: '404 - Não encontrado'
+    });
+
+    //409 - Conflito
+    res.status(409).json({
+      success: false,
+      message: '409 - Conflito com recurso existente'
+    });
+
+    //422 - Entidade não processavel
+    res.status(404).json({
+      success: false,
+      message: '422 - Não foi possivel processar requisição'
+    });
+
+    //500 - Erro interno do servidor
     res.status(500).json({
       success: false,
-      message: error.message
+      message: '500 - Erro interno do servidor'
     });
   }
 }
@@ -192,6 +438,7 @@ async function deletePaymentCondition(req, res) {
 module.exports = {
   create,
   getAll,
+  getActive,
   getById,
   update,
   deletePaymentCondition
