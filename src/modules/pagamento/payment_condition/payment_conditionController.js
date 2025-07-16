@@ -1,7 +1,7 @@
 //payment_conditionController.js
 const { createPaymentConditionSchema, updatePaymentConditionSchema } = require('./payment_conditionDto');
 const PaymentCondition = require('./payment_conditionService');
-const { badRequest400, responseHelpersOk, responseHelpersError } = require("../../../routes/responseHelpers");
+//const { badRequest400, responseHelpersOk, responseHelpersError } = require("../../../routes/responseHelpers"); futuramente qando estiver funcionando
 
 //CRUD
 
