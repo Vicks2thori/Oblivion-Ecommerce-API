@@ -1,31 +1,32 @@
+//database.js
 const mongoose = require('mongoose');
-const dotenv = require("dotenv");
+require('dotenv').config();
 
-dotenv.config({ path: './model/db/conectiondb/process.env' }); 
-
-// String de conexão MongoDB
-const mongoURI = `mongodb://${process.env.HOST}:${process.env.PORT || 27017}/${process.env.DB}`;
-
-// Configurações otimizadas para MongoDB
+// Configurações do MongoDB
 const mongoOptions = {
-  maxPoolSize: 20, // Equivale ao pool do MySQL
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  maxPoolSize: 20,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
-  family: 4 // Força IPv4
 };
 
 // Função para conectar
 async function connectDB() {
   try {
+    // Usar MONGODB_URI do .env ou construir a partir de partes
+    const mongoURI = process.env.MONGODB_URI;
+    
     await mongoose.connect(mongoURI, mongoOptions);
     console.log('✅ Conectado ao MongoDB com sucesso!');
+    console.log(`📊 Database: ${mongoose.connection.name}`);
   } catch (error) {
     console.error('❌ Erro ao conectar MongoDB:', error.message);
     process.exit(1);
   }
 }
 
-// Event listeners
+// Event listeners para monitoramento
 mongoose.connection.on('connected', () => {
   console.log('🔗 Mongoose conectado ao MongoDB');
 });
@@ -41,7 +42,7 @@ mongoose.connection.on('disconnected', () => {
 // Graceful shutdown
 process.on('SIGINT', async () => {
   await mongoose.connection.close();
-  console.log('🔚 Conexão MongoDB fechada devido ao encerramento da aplicação');
+  console.log('🔚 Conexão MongoDB fechada');
   process.exit(0);
 });
 
