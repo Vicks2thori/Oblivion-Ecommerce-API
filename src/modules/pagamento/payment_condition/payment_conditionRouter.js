@@ -7,7 +7,8 @@ const publicRouter = express.Router();
 
 //Só rotas que o público pode acessar
 publicRouter.get('/active', payment_conditionController.getActive);  // Lista ativas
-publicRouter.get('/:id', payment_conditionController.getById);       // Buscar por ID (para pedidos)
+publicRouter.get('/:id', payment_conditionController.getById);       // Buscar por ID (para pedidos) 
+//para pedidos? não vai estar dentro de pagamento? preciso organizar melhor
 
 
 // ROUTER PRIVADO (Admin)
