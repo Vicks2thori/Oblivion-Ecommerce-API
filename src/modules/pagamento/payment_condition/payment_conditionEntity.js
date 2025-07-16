@@ -8,7 +8,7 @@ const PaymentConditionSchema = new mongoose.Schema({
     trim: true,  //Remove espaços inicio/fim
     minlength: [2, 'Nome deve ter um minímo de 2 caracteres'],
     maxlength: [50, 'Nome deve ter um máximo de 50 caracteres'],
-    unique: true, //validar no service
+    //unique: true, //Quando o unique esta ativo ele retorna um erro, mesmo quando o item foi "deletado"
   },
   status: { 
     type: Boolean,
