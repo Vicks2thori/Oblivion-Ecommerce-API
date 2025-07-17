@@ -51,26 +51,51 @@ const getPaymentById = async function(id) {
   }
 };
 
-
-//Update
+//Update com lógica de relacionamentos
 const updatePayment = async function(id, updateData) {
   try {
-    const updated = await Payment.findOneAndUpdate(
-      {_id: id, deleted: false }, //só atualiza se não foi deletado
-      updateData, 
-      {new: true, runValidators: true}
-    );
+    const payment = await Payment.findById(id);
     
-    if (!updated) {
-      throw new Error('Pagamento não encontrado'); //novo erro caso não encontre
+    if (!payment || payment.deleted) {
+      throw new Error('Pagamento não encontrado');
     }
+
+    // Processar condições de pagamento se existirem
+    if (updateData.paymentConditions && Array.isArray(updateData.paymentConditions)) {
+      for (const condition of updateData.paymentConditions) {
+        if (condition.action === 'add') {
+          // Verificar se já existe
+          const exists = payment.paymentConditions.some(
+            pc => pc.conditionsId.toString() === condition.conditionsId
+          );
+          
+          if (!exists) {
+            payment.paymentConditions.push({
+              conditionsId: condition.conditionsId,
+              referencing: true
+            });
+          }
+        } else if (condition.action === 'remove') {
+          // Remover se existir
+          payment.paymentConditions = payment.paymentConditions.filter(
+            pc => pc.conditionsId.toString() !== condition.conditionsId
+          );
+        }
+      }
+      
+      // Remover paymentConditions do updateData para não sobrescrever
+      delete updateData.paymentConditions;
+    }
+
+    // Atualizar outros campos
+    Object.assign(payment, updateData);
     
-    return updated;
+    return await payment.save();
+    
   } catch (error) {
     throw new Error(`Erro ao atualizar pagamento: ${error.message}`);
   }
 };
-
 
 //Delete (soft delete)
 const deletePayment = async function(id) {
