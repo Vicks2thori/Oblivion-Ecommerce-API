@@ -10,7 +10,7 @@ const createPaymentSchema = Joi.object({
     })
   ).min(1).required(),
   status: Joi.boolean().default(true).required()
-}).min(3); //ainda estou avaliando sobre a quantidade minima (condition vai ser obrigatório?)
+}).min(4).max(4); //ainda estou avaliando sobre a quantidade minima (condition vai ser obrigatório?)
 //máximo tambem, ja que vai ter várias condições
 
 const updatePaymentSchema = Joi.object({
@@ -24,7 +24,7 @@ const updatePaymentSchema = Joi.object({
   ).optional(),
   status: Joi.boolean().optional(),
   deleted: Joi.boolean().optional()
-}).min(1);
+}).min(1).max(5);
 
 module.exports = { 
   createPaymentSchema, 
