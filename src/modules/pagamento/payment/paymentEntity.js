@@ -32,6 +32,10 @@ const PaymentSchema = new mongoose.Schema({
       ref: 'PaymentCondition',
       required: [true, 'conditionsId é obrigatório']
       //para name e status vou usar o populate no controller
+    },
+    action: {
+      type: String,
+      enum: ["add", "remove"]
     }
     },
   ],
@@ -48,6 +52,22 @@ const PaymentSchema = new mongoose.Schema({
 }, { 
   timestamps: true, //controle automático de tempo
   versionKey: false, //remove campo inutil
+});
+
+// Validação customizada para garantir pelo menos uma condição
+PaymentSchema.pre('save', function(next) {
+  if (this.paymentConditions.length === 0) {
+    return next(new Error('Pagamento deve ter pelo menos uma condição de pagamento'));
+  }
+  next();
+});
+
+PaymentSchema.pre('findOneAndUpdate', function(next) {
+  const update = this.getUpdate();
+  if (update.paymentConditions && update.paymentConditions.length === 0) {
+    return next(new Error('Pagamento deve ter pelo menos uma condição de pagamento'));
+  }
+  next();
 });
 
 // Virtual para mapear imageId para URL real da imagem

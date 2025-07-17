@@ -18,9 +18,10 @@ const updatePaymentSchema = Joi.object({
   imageType: Joi.string().valid('Pix', 'Others', 'Money', 'Card', 'Voucher').optional(),
   paymentConditions: Joi.array().items( //para a validação de muitas condições de pagamento
     Joi.object({
-      conditionsId: Joi.string().length(24).hex().optional()
+      conditionsId: Joi.string().length(24).hex().required(),
+      action: Joi.string().valid('add', 'remove').required() // Ação para adicionar ou remover
     })
-  ).min(1).optional(),
+  ).optional(),
   status: Joi.boolean().optional(),
   deleted: Joi.boolean().optional()
 }).min(1);
