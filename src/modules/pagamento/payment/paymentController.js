@@ -1,4 +1,4 @@
-//payment_conditionController.js
+//paymentController.js
 const { createPaymentSchema, updatePaymentSchema } = require('./paymentDto');
 const Payment = require('./paymentService');
 
