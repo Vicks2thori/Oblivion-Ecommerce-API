@@ -1,4 +1,4 @@
-//stock_categoryEntiry.js
+//stock_categoryEntity.js
 const mongoose = require('mongoose');
 
 const StockCategorySchema = new mongoose.Schema({
@@ -8,6 +8,7 @@ const StockCategorySchema = new mongoose.Schema({
     trim: true,  //Remove espaços inicio/fim
     minlength: [3, 'Nome deve ter um minímo de 3 caracteres'],
     maxlength: [50, 'Nome deve ter um máximo de 50 caracteres']
+    //unique: true, //Quando o unique esta ativo ele retorna um erro, mesmo quando o item foi "deletado"
   },
   status: { 
     type: Boolean,
@@ -19,77 +20,13 @@ const StockCategorySchema = new mongoose.Schema({
     required: true,
     default: false
   }
-}, { timestamps: true });
+}, { 
+  timestamps: true, //controle automático de tempo
+  versionKey: false //remove campo inutil
+});
 
-//CRUD
-
-//Create
-StockCategorySchema.statics.createStockCategory = async function(data) {
-  const stockCategory = new this(data);
-  return await stockCategory.save();
-};
-
-
-//Read
-//All
-StockCategorySchema.statics.getAllStockCategory = async function() {
-  return await this.find({ delete: false }).sort({ name: 1 });
-};
-
-//by ID
-StockCategorySchema.statics.getStockCategoryById = async function(id) {
-  const stockCategory = await this.findById({
-    id: id,
-    deleted: false //não retornar itens deletados
-  });
-  if (!stockCategory) {
-    throw new Error('Categoria de estoque não encontrada');
-  }
-  return stockCategory;
-};
-
-
-//Update
-StockCategorySchema.statics.updateStockCategory = async function(id, validatedData) {
-  try {
-    const updated = await this.findOneAndUpdate(
-      { 
-        _id: id, 
-        isDeleted: false  //só atualiza se não foi deletado
-      },
-      validatedData, 
-      { 
-        new: true, 
-        runValidators: true 
-      }
-    );
-    
-    if (!updated) {
-      throw new Error('Categoria de estoque não encontrada');
-    }
-    
-    return updated;
-  } catch (error) {
-    throw new Error(`Erro ao atualizar categoria de estoque: ${error.message}`);
-  }
-};
-
-
-//Delete (soft delete)
-StockCategorySchema.statics.deleteStockCategory = async function(id) {
-  const deleted = await this.findByIdAndUpdate({
-    id: id,
-    deleted: false
-    }, 
-    { deleted: true }, 
-    { new: true }
-  );
-  
-  if (!deleted) {
-    throw new Error('Categoria de estoque não encontrada');
-  }
-  
-  return deleted;
-};
+//indexação para performance
+StockCategorySchema.index({name: 1})
+StockCategorySchema.index({status: 1, deleted: 1}) //melhorar
 
 module.exports = mongoose.model('StockCategory', StockCategorySchema);
