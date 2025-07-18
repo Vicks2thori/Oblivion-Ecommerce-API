@@ -2,7 +2,8 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
-const { connectDB } = require('./src/model/database'); // ✅ Importar funçãoc
+const { connectDB } = require('./src/model/database'); // ✅ Importar função
+const { initializeSite } = require('./src/modules/empresa/site/siteService'); // ✅ Importar inicialização do Site
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -25,13 +26,27 @@ app.use((req, res) => {
     });
 });
 
+// ✅ FUNÇÃO PARA INICIALIZAR DADOS PADRÃO
+async function initializeDefaultData() {
+    try {
+        // Inicializar Site com configuração padrão
+        await initializeSite();
+        console.log('🎨 Dados padrão inicializados');
+    } catch (error) {
+        console.error('❌ Erro ao inicializar dados padrão:', error.message);
+    }
+}
+
 // ✅ FUNÇÃO PARA INICIAR SERVIDOR
 async function startServer() {
     try {
         // 1. Conectar banco PRIMEIRO
         await connectDB();
         
-        // 2. Depois iniciar servidor
+        // 2. Inicializar dados padrão
+        await initializeDefaultData();
+        
+        // 3. Depois iniciar servidor
         app.listen(PORT, () => {
             console.log(`🚀 Servidor rodando: http://localhost:${PORT}`);
             console.log(`📱 Público: http://localhost:${PORT}/api/public`);
