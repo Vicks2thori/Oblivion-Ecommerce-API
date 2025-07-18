@@ -3,10 +3,10 @@ const Joi = require('joi');
 
 const createCategorySchema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
-  status: Joi.boolean().default(true).required(),
+  status: Joi.boolean().default(true).optional(), //tirei para testar se a resposta viria do Entity
   //na hora de criar a categoria não se vincula produto, só na hora de criar produto (atualizar)
   //não se cria deleted isso é o backend que faz
-}).min(2).max(2);
+}); //tirei para testar se a resposta viria do Entity
 
 const updateCategorySchema = Joi.object({
   name: Joi.string().min(3).max(50).optional(),
