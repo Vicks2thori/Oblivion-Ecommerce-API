@@ -5,6 +5,7 @@ const paymentRoutes = require("../modules/pagamento/payment/paymentRouter");
 const categoryRoutes = require('../modules/produto/category/categoryRouter');
 const productRoutes = require('../modules/produto/product/productRouter');
 const siteRoutes = require('../modules/empresa/site/siteRouter');
+const enterpriseRoutes = require('../modules/empresa/enterprise/enterpriseRouter');
 
 const publicRouter = express.Router();
 
@@ -15,5 +16,6 @@ publicRouter.use('/payments', paymentRoutes.public);
 publicRouter.use('/categories', categoryRoutes.public);
 publicRouter.use('/products', productRoutes.public);
 publicRouter.use('/site', siteRoutes.public);
+publicRouter.use('/enterprise', enterpriseRoutes.public);
 
 module.exports = publicRouter;
