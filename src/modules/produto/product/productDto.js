@@ -20,7 +20,8 @@ const updateProductSchema = Joi.object({
   code: Joi.number().min(1).max(9223372036854775807).optional(),
   categoryId: Joi.string().length(24).hex().optional(),
   quantity: Joi.number().min(1).max(65535).optional(),
-  status: Joi.boolean().optional()
+  status: Joi.boolean().optional(),
+  deleted: Joi.boolean().optional()
 })
 module.exports = { 
   createProductSchema, 
