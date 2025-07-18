@@ -7,7 +7,7 @@ const createProductSchema = Joi.object({
   description: Joi.string().max(65535).optional(),
   price: Joi.number().precision(2).min(0.01).max(999999.99).required(),
   code: Joi.number().min(1).max(9223372036854775807).required(),
-  categoryId: string().length(24).hex().optional(),
+  categoryId: Joi.string().length(24).hex().optional(),
   quantity: Joi.number().min(1).max(65535).required(),
   status: Joi.boolean().default(true).required()
 })
