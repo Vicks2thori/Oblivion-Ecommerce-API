@@ -9,8 +9,8 @@ const createPaymentSchema = Joi.object({
       conditionsId: Joi.string().length(24).hex().required() //um id no mango é uma string de 24 digitos hexadecimal
     })
   ).min(1).required(),
-  status: Joi.boolean().default(true).required()
-}).min(4).max(4); //ainda estou avaliando sobre a quantidade minima (condition vai ser obrigatório?)
+  status: Joi.boolean().default(true).optional()
+}).min(3).max(4); //ainda estou avaliando sobre a quantidade minima (condition vai ser obrigatório?)
 //máximo tambem, ja que vai ter várias condições
 
 const updatePaymentSchema = Joi.object({

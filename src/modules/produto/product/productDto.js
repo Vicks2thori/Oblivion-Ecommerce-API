@@ -9,8 +9,8 @@ const createProductSchema = Joi.object({
   code: Joi.number().min(1).max(9223372036854775807).required(),
   categoryId: Joi.string().length(24).hex().required(),
   quantity: Joi.number().min(1).max(65535).required(),
-  status: Joi.boolean().default(true).required() //se o status é obrigatório mas o default é true como o front manda? e sim da conflito
-}).min(7).max(8);
+  status: Joi.boolean().default(true).optional()
+}).min(6).max(8);
 
 const updateProductSchema = Joi.object({
   name: Joi.string().min(1).max(100).optional(),
