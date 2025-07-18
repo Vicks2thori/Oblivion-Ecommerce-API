@@ -11,7 +11,7 @@ const updateSiteSchema = Joi.object({
   primaryColor: Joi.string().length(6).hex().optional(),
   secondColor: Joi.string().length(6).hex().optional(),
   textColor: Joi.string().length(6).hex().optional()
-}).min(1); // Pelo menos um campo deve ser fornecido
+}).min(1).max(3); // Pelo menos um campo deve ser fornecido
 
 module.exports = { 
   createSiteSchema, 
