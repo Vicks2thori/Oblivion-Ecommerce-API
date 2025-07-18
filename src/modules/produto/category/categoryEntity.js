@@ -15,6 +15,22 @@ const CategorySchema = new mongoose.Schema({
     required: true,
     default: true 
   },
+  //REFERENCING - subdocumentos
+  products: [
+    {
+    _id: false, //Impede que o Mongo gere um _id para o subdocumento
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: [true, 'productId é obrigatório']
+      //para os atributos vou usar o populate no controller
+    },
+    action: {
+      type: String,
+      enum: ["add", "remove"]
+    }
+    },
+  ],
   deleted: {
     type: Boolean,
     required: true,
