@@ -4,6 +4,7 @@ const paymentConditionRoutes = require('../modules/pagamento/payment_condition/p
 const paymentRoutes = require("../modules/pagamento/payment/paymentRouter");
 const stockCategoryRoutes = require('../modules/estoque/stock_category/stock_categoryRouter');
 const categoryRoutes = require('../modules/produto/category/categoryRouter');
+const productRoutes = require('../modules/produto/product/productRouter');
 
 const privateRouter = express.Router();
 
@@ -13,5 +14,6 @@ privateRouter.use('/payment-conditions', paymentConditionRoutes.private);
 privateRouter.use('/payments', paymentRoutes.private)
 privateRouter.use('/stock-categories', stockCategoryRoutes.private);
 privateRouter.use('/categories', categoryRoutes.private);
+privateRouter.use('/products', productRoutes.private);
 
 module.exports = privateRouter;
