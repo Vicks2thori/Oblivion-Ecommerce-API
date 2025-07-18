@@ -1,61 +1,56 @@
 //siteEntity.js
-const pool = require('../../../model/conection_db');
+const mongoose = require('mongoose');
 
-//Read
-async function getSite() {
-  const [rows] = await pool.query(`SELECT * FROM site LIMIT 1`);
-  return rows[0];
-}
-
-//CreateDefault (só existe um site)
-async function defaultSite({
-  primary_color = "000000",
-  secondary_color = "123456",
-  text_color = "FFFFFF"
-}) {
-  const existing = await getEnterprise();
-
-  if (existing) {
-    return existing.id;
+const SiteSchema = new mongoose.Schema({
+  // Campo especial para garantir unicidade - apenas um registro pode existir
+  singleton: {
+    type: String,
+    default: 'singleton',
+    unique: true,
+    required: true,
+    immutable: true // Impede modificação após criação
+  },
+  primaryColor: { 
+    type: String, 
+    required: [true, 'primaryColor é obrigatório'], //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [6, 'primaryColor deve exatamente 6 caracteres'],
+    maxlength: [6, 'primaryColor deve exatamente 6 caracteres'], //isso no caso de não receber #
+    match: [/^[0-9A-Fa-f]{6}$/, 'primaryColor deve ser um hexadecimal válido']
+  },
+  secondColor: { 
+    type: String, 
+    required: [true, 'secondColor é obrigatório'], //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [6, 'secondColor deve exatamente 6 caracteres'],
+    maxlength: [6, 'secondColor deve exatamente 6 caracteres'], //isso no caso de não receber #
+    match: [/^[0-9A-Fa-f]{6}$/, 'secondColor deve ser um hexadecimal válido']
+  },
+  textColor: {
+    type: String, 
+    required: [true, 'textColor é obrigatório'], //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [6, 'textColor deve exatamente 6 caracteres'],
+    maxlength: [6, 'textColor deve exatamente 6 caracteres'], //isso no caso de não receber #
+    match: [/^[0-9A-Fa-f]{6}$/, 'textColor deve ser um hexadecimal válido']
   }
+}, { 
+  timestamps: true, //controle automático de tempo
+  versionKey: false //remove campo inutil
+});
 
-  const [create] = await pool.query(`
-    INSERT INTO enterprise (primary_color, secondary_color, text_color)
-    VALUES (?, ?, ?)`,
-    [primary_color, secondary_color, text_color]);
+// Índice único para garantir apenas um registro
+SiteSchema.index({ singleton: 1 }, { unique: true });
 
-  return create.insertId;
-}
-
-//Update
-async function updateSite({ primary_color, secondary_color, text_color }) {
-  // Filtra apenas campos que foram enviados (não são null/undefined)
-  const fieldsToUpdate = {};
-  
-  if (primary_color) fieldsToUpdate.primary_color = primary_color;
-  if (secondary_color) fieldsToUpdate.secondary_color = secondary_color;
-  if (text_color) fieldsToUpdate.text_color = text_color;
-
-  // Se não há campos para atualizar, retorna false
-  if (Object.keys(fieldsToUpdate).length === 0) {
-    return false;
+// Middleware para prevenir criação de múltiplos registros (vou criar um arquivo para isso?)
+SiteSchema.pre('save', async function(next) {
+  if (this.isNew) {
+    const existingSite = await this.constructor.findOne({});
+    if (existingSite) {
+      throw new Error('Apenas um registro Site pode existir');
+    }
   }
+  next();
+});
 
-  // Constrói a query dinamicamente
-  const fields = Object.keys(fieldsToUpdate);
-  const values = Object.values(fieldsToUpdate);
-  const setClause = fields.map(field => `${field} = ?`).join(', ');
-
-  const [result] = await pool.query(`
-    UPDATE site
-    SET ${setClause}
-    LIMIT 1
-  `, values);
-
-  return result.affectedRows > 0;
-}
-
-module.exports = { 
-  getSite, 
-  defaultSite, 
-  updateSite };
+module.exports = mongoose.model('Site', SiteSchema);
