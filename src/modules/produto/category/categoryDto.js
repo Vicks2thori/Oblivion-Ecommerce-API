@@ -13,8 +13,7 @@ const updateCategorySchema = Joi.object({
   status: Joi.boolean().optional(),
   products: Joi.array().items( //para a validação de muitos produtos
     Joi.object({
-      productId: Joi.string().length(24).hex().required(),
-      action: Joi.string().valid('add', 'remove').required() // Ação para adicionar ou remover
+      productId: Joi.string().length(24).hex().required()
     })
   ).optional(),
   deleted: Joi.boolean().optional()

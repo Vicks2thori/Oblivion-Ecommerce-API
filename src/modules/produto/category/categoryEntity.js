@@ -24,10 +24,6 @@ const CategorySchema = new mongoose.Schema({
       ref: 'Product',
       required: [true, 'productId é obrigatório']
       //para os atributos vou usar o populate no controller
-    },
-    action: {
-      type: String,
-      enum: ["add", "remove"]
     }
     },
   ],
@@ -43,6 +39,7 @@ const CategorySchema = new mongoose.Schema({
 
 //indexação para performance
 CategorySchema.index({name: 1})
-CategorySchema.index({status: 1, deleted: 1}) //melhorar
+CategorySchema.index({status: 1, deleted: 1})
+CategorySchema.index({'products.productId': 1, deleted: 1}) // Para busca de categoria por produto
 
 module.exports = mongoose.model('Category', CategorySchema);
