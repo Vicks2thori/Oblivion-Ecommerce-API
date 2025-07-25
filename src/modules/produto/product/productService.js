@@ -1,5 +1,6 @@
 //productService.js
 const Product = require("./productEntity");
+const { addProductToCategoryWithTransfer, removeProductFromAllCategories } = require("../category/categoryUtills");
 
 //CRUD
 
@@ -7,7 +8,12 @@ const Product = require("./productEntity");
 const createProduct = async function(data) {
   try { 
     const product = new Product(data); //cria um novo
-    return await product.save(); //salva no banco
+    const savedProduct = await product.save(); //salva no banco
+    
+    // Adicionar produto à categoria (com verificação de transferência)
+    await addProductToCategoryWithTransfer(data.categoryId, savedProduct._id);
+    
+    return savedProduct;
   }catch (error) {
     throw new Error(`Erro ao criar produto: ${error.message}`);
   }
@@ -18,28 +24,18 @@ const createProduct = async function(data) {
 //All
 const getAllProducts = async function() {
   try {
-    return await Product.find({deleted: false}).sort({name: 1});
+    return await Product.find({deleted: false})
+      .populate('categoryId', 'name')
+      .sort({name: 1});
   }catch (error) {
     throw new Error(`Erro ao buscar todos os produtos: ${error.message}`);
   }
 };
 
-//Active
-const getActiveProducts = async function() { //faz sentido se eu relacionar na categoria?
-  try {
-    return await Product.find({
-      deleted: false,
-      status: true 
-    }).sort({ name: 1 });
-  }catch (error) {
-    throw new Error(`Erro ao buscar produtos ativos: ${error.message}`);
-  }
-};
-
 //By ID
-const getProductById = async function(id) {
+const getProductById = async function(id) { //preciso validar como vou incrementar no order
   try {
-    const getById = await Product.findById(id);
+    const getById = await Product.findById(id)
     
     if (!getById || getById.deleted) { //se não encontrou ou encontrou e esta deletada
       throw new Error('Produto não encontrado'); //cria um novo erro
@@ -52,17 +48,26 @@ const getProductById = async function(id) {
 };
 
 
-//Update
+//Update com lógica de relacionamentos
 const updateProduct = async function(id, updateData) {
   try {
-    const updated = await Product.findOneAndUpdate(
-      {_id: id, deleted: false }, //só atualiza se não foi deletado
-      updateData, 
-      {new: true, runValidators: true})
+    const product = await Product.findById(id);
     
-    if (!updated) {
-      throw new Error('Produto não encontrado'); //novo erro caso não encontre
+    if (!product || product.deleted) {
+      throw new Error('Produto não encontrado');
     }
+
+    // Se a categoria mudou, transferir produto
+    if (updateData.categoryId && updateData.categoryId.toString() !== product.categoryId.toString()) {
+      await addProductToCategoryWithTransfer(updateData.categoryId, product._id);
+    }
+
+    // Atualizar outros campos
+    const updated = await Product.findOneAndUpdate(
+      {_id: id, deleted: false },
+      updateData, 
+      {new: true, runValidators: true}
+    );
     
     return updated;
   } catch (error) {
@@ -74,15 +79,20 @@ const updateProduct = async function(id, updateData) {
 //Delete (soft delete)
 const deleteProduct = async function(id) {
  try {
+    const product = await Product.findById(id);
+    
+    if (!product || product.deleted) {
+      throw new Error('Produto não encontrado');
+    }
+    
+    // Remover produto de todas as categorias
+    await removeProductFromAllCategories(product._id);
+    
     const deleted = await Product.findOneAndUpdate(
       {_id: id, deleted: false},
       {deleted: true},
       {new: true}
     );
-    
-    if (!deleted) {
-      throw new Error('Produto não encontrado');
-    }
     
     return deleted;
   } catch (error) {
@@ -92,8 +102,7 @@ const deleteProduct = async function(id) {
 
 module.exports = {
     createProduct,
-    getAllProducts,
-    getActiveProducts,
+    getAllProducts, 
     getProductById,
     updateProduct,
     deleteProduct
