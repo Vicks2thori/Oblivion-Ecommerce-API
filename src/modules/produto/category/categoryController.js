@@ -85,29 +85,6 @@ async function getActive(req, res) {
   }
 };
 
-//By ID
-async function getById(req, res) {
-  try {
-    const { id } = req.params;
-    const category = await Category.getCategoryById(id);
-
-    //200 - Sucesso geral
-    res.status(200).json({
-      success: true,
-      message: '200 - Operação realizada com sucesso',
-      data: category
-    });
-
-  }catch (error) {
-    //500 - Erro interno do servidor
-    return res.status(500).json({
-      success: false,
-      message: error.message 
-    });
-  };
-};
-
-
 //Update
 async function update(req, res) {
   try {
@@ -164,7 +141,6 @@ module.exports = {
   create,
   getAll,
   getActive,
-  getById,
   update,
   deleteCategory
 };
