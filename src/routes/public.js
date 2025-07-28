@@ -74,4 +74,4 @@ router.post("/ecommerce/order", (req, res) => {
     res.send("createOrder")
 });
 
-module.exports = { router };
+module.exports = router;

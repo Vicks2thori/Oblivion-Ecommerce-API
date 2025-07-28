@@ -1,0 +1,338 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sistema de Gestão",
+    "version": "1.0.0",
+    "description": "Documentação para as APIs para a gestão da retaguarda (pedido, cardápio, estoque, pagamento, configuração empresarial) e front‑end e‑commerce."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "servidor rodando em localhost"
+    }
+  ],
+  "tags": [
+    {
+      "name": "pedidos",
+      "description": "Endpoints para gestão de pedidos"
+    },
+    {
+      "name": "cardápio",
+      "description": "Endpoints para gestão do cardápio (categorias e produtos)"
+    },
+    {
+      "name": "estoque",
+      "description": "Endpoints para gestão de estoque"
+    },
+    {
+      "name": "financeiro",
+      "description": "Endpoints para gestão financeira e pagamentos"
+    },
+    {
+      "name": "configurações",
+      "description": "Endpoints para configuração do sistema e empresa"
+    },
+    {
+      "name": "e-commerce",
+      "description": "Endpoints para o front-end do e-commerce"
+    }
+  ],
+  "paths": {
+    "/retaguarda/ordermanegement": {
+      "patch": {
+        "tags": ["pedidos"],
+        "summary": "atualiza os status dos pedidos como (pending, in converse, cancel, approved)",
+        "responses": {
+          "200": {
+            "description": "pedido atualizado com sucesso"
+          }
+        }
+      }
+    },
+    "/retaguarda/menulist/category": {
+      "get": {
+        "tags": ["cardápio"],
+        "summary": "retorna lista de categorias do cardápio",
+        "responses": { "200": { "description": "Lista de categorias" } }
+      },
+      "post": {
+        "tags": ["cardápio"],
+        "summary": "cria nova categoria de cardápio",
+        "responses": { "201": { "description": "Categoria criada" } }
+      },
+      "patch": {
+        "tags": ["cardápio"],
+        "summary": "atualiza categoria existente",
+        "responses": { "200": { "description": "Categoria atualizada" } }
+      }
+    },
+    "/retaguarda/menulist/product": {
+      "get": {
+        "tags": ["cardápio"],
+        "summary": "retorna lista de produtos",
+        "responses": { "200": { "description": "Lista de produtos" } }
+      },
+      "post": {
+        "tags": ["cardápio"],
+        "summary": "Cria novo produto",
+        "responses": { "201": { "description": "Produto criado" } }
+      },
+      "patch": {
+        "tags": ["cardápio"],
+        "summary": "Atualiza produto existente",
+        "responses": { "200": { "description": "Produto atualizado" } }
+      },
+      "delete": {
+        "tags": ["cardápio"],
+        "summary": "Deleta produto",
+        "responses": { "200": { "description": "Produto deletado" } }
+      }
+    },
+    "/retaguarda/menulist/product/image": {
+      "get": {
+        "tags": ["cardápio"],
+        "summary": "Retorna imagens associadas a cada produto",
+        "responses": { "200": { "description": "Lista de imagens" } }
+      },
+      "post": {
+        "tags": ["cardápio"],
+        "summary": "Adiciona nova imagem a produto",
+        "responses": { "201": { "description": "Imagem criada" } }
+      },
+      "patch": {
+        "tags": ["cardápio"],
+        "summary": "Atualiza imagem de produto",
+        "responses": { "200": { "description": "Imagem atualizada" } }
+      },
+      "delete": {
+        "tags": ["cardápio"],
+        "summary": "Remove imagem de produto",
+        "responses": { "200": { "description": "Imagem removida" } }
+      }
+    },
+    "/retaguarda/stock/stockcategory": {
+      "get": {
+        "tags": ["estoque"],
+        "summary": "Lista categorias de estoque",
+        "responses": { "200": { "description": "Lista de stock categories" } }
+      },
+      "post": {
+        "tags": ["estoque"],
+        "summary": "Cria categoria de estoque",
+        "responses": { "201": { "description": "Stock category criada" } }
+      },
+      "patch": {
+        "tags": ["estoque"],
+        "summary": "Atualiza categoria de estoque",
+        "responses": { "200": { "description": "Stock category atualizada" } }
+      }
+    },
+    "/retaguarda/stock/stockmovement": {
+      "get": {
+        "tags": ["estoque"],
+        "summary": "Retorna movimentos de estoque",
+        "responses": { "200": { "description": "Lista de stock movements" } }
+      },
+      "post": {
+        "tags": ["estoque"],
+        "summary": "Cria movimento de estoque",
+        "responses": { "201": { "description": "Stock movement criado" } }
+      },
+      "patch": {
+        "tags": ["estoque"],
+        "summary": "Atualiza movimento de estoque",
+        "responses": { "200": { "description": "Stock movement atualizado" } }
+      }
+    },
+    "/retaguarda/stock/stockmovement/stockmovementitem": {
+      "get": {
+        "tags": ["estoque"],
+        "summary": "Itens de um movimento de estoque",
+        "responses": { "200": { "description": "Lista de itens" } }
+      },
+      "post": {
+        "tags": ["estoque"],
+        "summary": "Adiciona item a um movimento de estoque",
+        "responses": { "201": { "description": "Item criado" } }
+      }
+    },
+    "/retaguarda/finance/paymentcondition": {
+      "get": {
+        "tags": ["financeiro"],
+        "summary": "Lista condições de pagamento",
+        "responses": { "200": { "description": "Lista de condições" } }
+      },
+      "post": {
+        "tags": ["financeiro"],
+        "summary": "Cria condição de pagamento",
+        "responses": { "201": { "description": "Condição criada" } }
+      },
+      "patch": {
+        "tags": ["financeiro"],
+        "summary": "Atualiza condição de pagamento",
+        "responses": { "200": { "description": "Condição atualizada" } }
+      }
+    },
+    "/retaguarda/finance/payment": {
+      "get": {
+        "tags": ["financeiro"],
+        "summary": "Lista tipos de pagamento",
+        "responses": { "200": { "description": "Lista de pagamentos" } }
+      },
+      "post": {
+        "tags": ["financeiro"],
+        "summary": "Cria novo tipo de pagamento",
+        "responses": { "201": { "description": "Pagamento criado" } }
+      },
+      "patch": {
+        "tags": ["financeiro"],
+        "summary": "Atualiza pagamento",
+        "responses": { "200": { "description": "Pagamento atualizado" } }
+      }
+    },
+    "/retaguarda/finance/payment/imgpayment": {
+      "get": {
+        "tags": ["financeiro"],
+        "summary": "Lista imagens de pagamento",
+        "responses": { "200": { "description": "Lista de img_payment" } }
+      },
+      "post": {
+        "tags": ["financeiro"],
+        "summary": "Adiciona imagem de pagamento",
+        "responses": { "201": { "description": "Imagem criada" } }
+      }
+    },
+    "/retaguarda/finance/payment/paymenthascondition": {
+      "get": {
+        "tags": ["financeiro"],
+        "summary": "Lista associação pagamento‑condição",
+        "responses": { "200": { "description": "Lista croada" } }
+      },
+      "post": {
+        "tags": ["financeiro"],
+        "summary": "Cria associação pagamento‑condição",
+        "responses": { "201": { "description": "Associação criada" } }
+      },
+      "patch": {
+        "tags": ["financeiro"],
+        "summary": "Atualiza associação pagamento‑condição",
+        "responses": { "200": { "description": "Associação atualizada" } }
+      },
+      "delete": {
+        "tags": ["financeiro"],
+        "summary": "Remove associação pagamento‑condição",
+        "responses": { "200": { "description": "Associação removida" } }
+      }
+    },
+    "/retaguarda/site": {
+      "get": {
+        "tags": ["configurações"],
+        "summary": "Retorna configurações do site",
+        "responses": { "200": { "description": "Dados do site" } }
+      },
+      "patch": {
+        "tags": ["configurações"],
+        "summary": "Atualiza configurações do site",
+        "responses": { "200": { "description": "Site atualizado" } }
+      }
+    },
+    "/retaguarda/config/enterprise": {
+      "get": {
+        "tags": ["configurações"],
+        "summary": "Retorna dados da empresa",
+        "responses": { "200": { "description": "Enterprise data" } }
+      },
+      "patch": {
+        "tags": ["configurações"],
+        "summary": "Atualiza dados da empresa",
+        "responses": { "200": { "description": "Enterprise atualizado" } }
+      }
+    },
+    "/retaguarda/config/user": {
+      "get": {
+        "tags": ["configurações"],
+        "summary": "Retorna dados do usuário (admin)",
+        "responses": { "200": { "description": "Dados do usuário" } }
+      },
+      "post": {
+        "tags": ["configurações"],
+        "summary": "Cria usuário",
+        "responses": { "201": { "description": "Usuário criado" } }
+      },
+      "patch": {
+        "tags": ["configurações"],
+        "summary": "Atualiza usuário",
+        "responses": { "200": { "description": "Usuário atualizado" } }
+      }
+    },
+    "/retaguarda/config/admin": {
+      "get": {
+        "tags": ["configurações"],
+        "summary": "Retorna dados do admin",
+        "responses": { "200": { "description": "Dados do admin" } }
+      },
+      "post": {
+        "tags": ["configurações"],
+        "summary": "Cria administrador",
+        "responses": { "201": { "description": "Admin criado" } }
+      },
+      "patch": {
+        "tags": ["configurações"],
+        "summary": "Atualiza administrador",
+        "responses": { "200": { "description": "Admin atualizado" } }
+      }
+    },
+    "/ecommerce/category": {
+      "get": {
+        "tags": ["e-commerce"],
+        "summary": "Lista categorias no e‑commerce",
+        "responses": { "200": { "description": "Categorias retornadas" } }
+      }
+    },
+    "/ecommerce/category/product": {
+      "get": {
+        "tags": ["e-commerce"],
+        "summary": "Lista produtos por categoria e‑commerce",
+        "responses": { "200": { "description": "Produtos retornados" } }
+      }
+    },
+    "/ecommerce/login": {
+      "get": {
+        "tags": ["e-commerce"],
+        "summary": "Página de login (e‑commerce)",
+        "responses": { "200": { "description": "HTML da página" } }
+      },
+      "post": {
+        "tags": ["e-commerce"],
+        "summary": "Autentica usuário no e‑commerce",
+        "responses": { "200": { "description": "Login bem‑sucedido" } }
+      }
+    },
+    "/ecommerce/register": {
+      "get": {
+        "tags": ["e-commerce"],
+        "summary": "Página de cadastro",
+        "responses": { "200": { "description": "HTML da página" } }
+      },
+      "post": {
+        "tags": ["e-commerce"],
+        "summary": "Cria novo usuário cliente",
+        "responses": { "201": { "description": "Cliente cadastrado" } }
+      }
+    },
+    "/ecommerce/client": {
+      "patch": {
+        "tags": ["e-commerce"],
+        "summary": "Atualiza dados do cliente",
+        "responses": { "200": { "description": "Clente atualizado" } }
+      }
+    },
+    "/ecommerce/order": {
+      "post": {
+        "tags": ["e-commerce"],
+        "summary": "Cria novo pedido para o ecommerce",
+        "responses": { "201": { "description": "Pedido criado" } }
+      }
+    }
+  }
+}
