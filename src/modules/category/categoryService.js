@@ -1,6 +1,9 @@
 //categoryService.js
 const Category = require("./categoryEntity");
+<<<<<<< Updated upstream
 const { filterActiveProducts, addProductToCategoryWithTransfer } = require("./categoryUtills");
+=======
+>>>>>>> Stashed changes
 
 //CRUD
 
@@ -19,6 +22,7 @@ const createCategory = async function(data) {
 //All
 const getAllCategories = async function() {
   try {
+<<<<<<< Updated upstream
     return await Category.find({deleted: false})
       .populate({
         path: 'products.productId',
@@ -41,19 +45,27 @@ const getAllCategories = async function() {
           };
         });
       });
+=======
+    return await Category.find({deleted: false}).sort({name: 1});
+>>>>>>> Stashed changes
   }catch (error) {
     throw new Error(`Erro ao buscar todas as categorias: ${error.message}`);
   }
 };
 
+<<<<<<< Updated upstream
 
 //Active - Categorias ativas com produtos ativos (E-commerce)
 // Função para buscar categorias ativas com produtos ativos (E-commerce)
+=======
+//Active
+>>>>>>> Stashed changes
 const getActiveCategories = async function() {
   try {
     return await Category.find({
       deleted: false,
       status: true 
+<<<<<<< Updated upstream
     })
     .populate({
       path: 'products.productId',
@@ -72,11 +84,15 @@ const getActiveCategories = async function() {
         };
       });
     });
+=======
+    }).sort({ name: 1 });
+>>>>>>> Stashed changes
   }catch (error) {
     throw new Error(`Erro ao buscar categorias ativas: ${error.message}`);
   }
 };
 
+<<<<<<< Updated upstream
 //Update com lógica de relacionamentos
 const updateCategory = async function(id, updateData) {
   try {
@@ -102,6 +118,37 @@ const updateCategory = async function(id, updateData) {
     
     return await category.save();
     
+=======
+//By ID
+const getCategoryById = async function(id) {
+  try {
+    const getById = await Category.findById(id);
+    
+    if (!getById || getById.deleted) { //se não encontrou ou encontrou e esta deletada
+      throw new Error('Categoria não encontrada'); //cria um novo erro
+    }
+    
+    return getById;
+  } catch (error) {
+    throw new Error(`Erro ao buscar categoria: ${error.message}`);
+  }
+};
+
+
+//Update
+const updateCategory = async function(id, updateData) {
+  try {
+    const updated = await Category.findOneAndUpdate(
+      {_id: id, deleted: false }, //só atualiza se não foi deletado
+      updateData, 
+      {new: true, runValidators: true})
+    
+    if (!updated) {
+      throw new Error('Categoria não encontrada'); //novo erro caso não encontre
+    }
+    
+    return updated;
+>>>>>>> Stashed changes
   } catch (error) {
     throw new Error(`Erro ao atualizar categoria: ${error.message}`);
   }
@@ -111,6 +158,7 @@ const updateCategory = async function(id, updateData) {
 //Delete (soft delete)
 const deleteCategory = async function(id) {
  try {
+<<<<<<< Updated upstream
     // Popula o campo products.productId para garantir que está vendo os produtos vinculados
     const category = await Category.findById(id).populate('products.productId');
     if (!category) {
@@ -126,6 +174,8 @@ const deleteCategory = async function(id) {
       throw new Error('Categoria não pode ser deletada pois possui produtos vinculados');
     }
 
+=======
+>>>>>>> Stashed changes
     const deleted = await Category.findOneAndUpdate(
       {_id: id, deleted: false},
       {deleted: true},
@@ -146,6 +196,10 @@ module.exports = {
     createCategory,
     getAllCategories,
     getActiveCategories,
+<<<<<<< Updated upstream
+=======
+    getCategoryById,
+>>>>>>> Stashed changes
     updateCategory,
     deleteCategory
 };
