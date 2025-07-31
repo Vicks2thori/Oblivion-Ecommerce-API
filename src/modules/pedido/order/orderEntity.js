@@ -1,6 +1,6 @@
 //orderEntity.js
 const mongoose = require('mongoose');
-const { generateOrderCode } = require('./orderUtills'); //importa utilitário para geração de códigos de pedido
+const { generateOrderCode } = require('./orderUtils'); //importa utilitário para geração de códigos de pedido
 
 const OrderSchema = new mongoose.Schema({
   date: { 
@@ -14,10 +14,22 @@ const OrderSchema = new mongoose.Schema({
     unique: true, //garante que o código seja único
     default: null //será gerado automaticamente
   },
-  clientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'userId é obrigatório']
+  client: { //armazenar tanto o id quanto os atributos é para manter a integridade dos dados e garantir a vinculação
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'userId é obrigatório']
+    },
+    client_name: {
+      type: String,
+      required: [true, 'Nome é obrigatório'],
+      trim: true
+    },
+    client_phone: {
+      type: String,
+      required: [true, 'Telefone é obrigatório'],
+      trim: true
+    }
   },
     //REFERENCING - subdocumentos
     products: [
@@ -29,6 +41,12 @@ const OrderSchema = new mongoose.Schema({
         required: [true, 'productId é obrigatório']
         //para os atributos vou usar o populate no controller
       },
+      quantity: {
+        type: Number,
+        required: [true, 'quantity é obrigatório'],
+        //max deveria ser o estoque do produto (mas isso só se o admin quiser, mas seria mais um campo para colocar)
+        min: [1, 'quantity deve ser maior que 0']
+      },
       product_name: {
         type: String,
         required: [true, 'Nome do produto é obrigatório'],
@@ -38,12 +56,6 @@ const OrderSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Preço do produto é obrigatório'],
         min: [0, 'Preço deve ser maior ou igual a 0']
-      },
-      product_quantity: {
-        type: Number,
-        required: [true, 'quantity é obrigatório'],
-        //max deveria ser o estoque do produto (mas isso só se o admin quiser, mas seria mais um campo para colocar)
-        min: [1, 'quantity deve ser maior que 0']
       },
       product_subtotal: {
         type: Number,
