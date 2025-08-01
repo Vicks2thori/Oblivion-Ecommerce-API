@@ -65,6 +65,7 @@ const OrderSchema = new mongoose.Schema({
       },
     ],
   payment: {
+    _id: false,
     methodId: { //faz sentido usar o methodId? se eu posso só puxar os atributos?
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Payment',
