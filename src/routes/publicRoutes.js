@@ -6,6 +6,7 @@ const categoryRoutes = require('../modules/produto/category/categoryRouter');
 const productRoutes = require('../modules/produto/product/productRouter');
 const siteRoutes = require('../modules/empresa/site/siteRouter');
 const enterpriseRoutes = require('../modules/empresa/enterprise/enterpriseRouter');
+const orderRoutes = require('../modules/pedido/order/orderRouter');
 
 const publicRouter = express.Router();
 
@@ -17,5 +18,6 @@ publicRouter.use('/categories', categoryRoutes.public);
 publicRouter.use('/products', productRoutes.public);
 publicRouter.use('/site', siteRoutes.public);
 publicRouter.use('/enterprise', enterpriseRoutes.public);
+publicRouter.use('/orders', orderRoutes.public);
 
 module.exports = publicRouter;
