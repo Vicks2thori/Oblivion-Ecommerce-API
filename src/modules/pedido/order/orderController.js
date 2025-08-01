@@ -45,7 +45,8 @@ async function create(req, res) {
 //Orders by status
 async function getOrdersByStatus(req, res) {
   try {
-    const order = await Order.getOrdersByStatus();
+    const { status } = req.params;
+    const order = await Order.getOrdersByStatus(status);
 
     //OK
     //200 - Sucesso geral
@@ -67,7 +68,8 @@ async function getOrdersByStatus(req, res) {
 //Orders by client
 async function getOrdersByClient(req, res) {
   try {
-    const order = await Order.getOrdersByClient();
+    const clientId = req.user.id; // Assumindo que o middleware de auth coloca o user na req
+    const order = await Order.getOrdersByClient(clientId);
 
     //200 - Sucesso geral
     res.status(200).json({
@@ -98,7 +100,7 @@ async function update(req, res) {
       });
     }
     
-    const result = await Order.updateOrder(id, value);
+    const result = await Order.updateOrder(id, value.status);
     
     //200 - Sucesso geral
     return res.status(200).json({
