@@ -38,10 +38,14 @@ const getClientSnapshot = async (clientId) => {
       throw new Error(`Cliente com ID ${clientId} não encontrado`);
     }
     
+    if (client.type !== 'client') {
+      throw new Error(`Usuário com ID ${clientId} não é um cliente`);
+    }
+    
     return {
       clientId: client._id,
       client_name: client.name,
-      client_phone: client.phone
+      client_phone: client.clientDetails.type.phone
     };
   } catch (error) {
     throw new Error(`Erro ao buscar dados do cliente: ${error.message}`);
