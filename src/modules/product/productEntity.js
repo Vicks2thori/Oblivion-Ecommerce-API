@@ -42,12 +42,11 @@ const ProductSchema = new mongoose.Schema({
     min: [1, 'Quantidade deve ser maior que 0'],
     max: [65535, 'Quantidade deve ser menor que 65535'] //Fiz com base no tipo do SQL SmallInt
   },
-  categoryId: { //Vou fazer um relacionamento bidirecional? na categoria vai ter uma lista de produtos?
+  //REFERENCING - Bidirecional
+  categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
-    required: [true, 'Categoria é obrigatória'],
-    min: [1, 'Categoria deve ser igual a 1'],
-    max: [1, 'Categoria deve ser igual a 1']
+    required: [true, 'Categoria é obrigatória']
   },
   status: { 
     type: Boolean,

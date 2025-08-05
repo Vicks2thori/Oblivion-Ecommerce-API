@@ -1,6 +1,6 @@
-//productController.js
-const { createProductSchema, updateProductSchema } = require('./productDto');
-const Product = require('./productService');
+//categoryController.js
+const { createCategorySchema, updateCategorySchema } = require('./categoryDto');
+const Category = require('./categoryService');
 //const { badRequest400, responseHelpersOk, responseHelpersError } = require("../../../routes/responseHelpers"); futuramente qando estiver funcionando
 
 //CRUD
@@ -9,7 +9,7 @@ const Product = require('./productService');
 async function create(req, res) {
   try {
     //Validar DTO
-    const { error, value } = createProductSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
+    const { error, value } = createCategorySchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
     if (error) {
       //400 - Dados inválidos
       return res.status(400).json({
@@ -20,13 +20,13 @@ async function create(req, res) {
     };
 
     //Criar através do Service
-    const product = await Product.createProduct(value);
+    const category = await Category.createCategory(value);
 
     //200 - Sucesso geral
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: product
+      data: category
     });
 
 
@@ -45,14 +45,14 @@ async function create(req, res) {
 //All
 async function getAll(req, res) {
   try {
-    const product = await Product.getAllProducts();
+    const category = await Category.getAllCategories();
 
     //OK
     //200 - Sucesso geral
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: product
+      data: category
     });
 
   } catch (error) {
@@ -67,13 +67,13 @@ async function getAll(req, res) {
 //Active
 async function getActive(req, res) {
   try {
-    const activeProducts = await Product.getActiveProducts();
+    const activeCategories = await Category.getActiveCategories();
 
     //200 - Sucesso geral
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: activeProducts
+      data: activeCategories
     });
 
   }catch (error) {
@@ -85,35 +85,12 @@ async function getActive(req, res) {
   }
 };
 
-//By ID
-async function getById(req, res) {
-  try {
-    const { id } = req.params;
-    const product = await Product.getProductById(id);
-
-    //200 - Sucesso geral
-    res.status(200).json({
-      success: true,
-      message: '200 - Operação realizada com sucesso',
-      data: product
-    });
-
-  }catch (error) {
-    //500 - Erro interno do servidor
-    return res.status(500).json({
-      success: false,
-      message: error.message 
-    });
-  };
-};
-
-
 //Update
 async function update(req, res) {
   try {
     const { id } = req.params;
 
-    const { error, value } = updateProductSchema.validate(req.body);
+    const { error, value } = updateCategorySchema.validate(req.body);
     if (error) {
       return res.status(400).json({
         success: false,
@@ -121,7 +98,7 @@ async function update(req, res) {
       });
     }
     
-    const result = await Product.updateProduct(id, value);
+    const result = await Category.updateCategory(id, value);
     
     //200 - Sucesso geral
     return res.status(200).json({
@@ -139,10 +116,10 @@ async function update(req, res) {
 }
 
 //Delete
-async function deleteProduct(req, res) {
+async function deleteCategory(req, res) {
   try {
     const { id } = req.params;
-    const deleted = await Product.deleteProduct(id);
+    const deleted = await Category.deleteCategory(id);
 
     //200 - Sucesso geral
     res.status(200).json({
@@ -164,7 +141,6 @@ module.exports = {
   create,
   getAll,
   getActive,
-  getById,
   update,
-  deleteProduct
+  deleteCategory
 };
