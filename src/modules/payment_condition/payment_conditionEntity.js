@@ -1,30 +1,25 @@
-<<<<<<< Updated upstream
-//stock_category.js
+//payment_conditionEntity.js
 const pool = require('../../../model/conection_db');
-=======
-//stock_categoryEntity.js
-const mongoose = require('mongoose');
->>>>>>> Stashed changes
 
 //Create
-async function createStockCategory({name, status}) {
+async function createPaymentCondition({name, status}) {
   const [result] = await pool.query(`
-    INSERT INTO stock_category (name, status)
+    INSERT INTO payment_condition (name, status)
     VALUES (?, ?)`, [name, status]
   );
   return result.insertId;
 }
 
 //Read
-async function getStockCategory({name}) {
+async function getPaymentCondition({name}) {
   const [rows] = await pool.query(`
-    SELECT * FROM stock_category WHERE name = ?`, [name]
+    SELECT * FROM payment_condition WHERE name = ?`, [name]
   );
   return rows[0];
 }
 
 //Update
-async function updateStockCategory({id, name, status}) {
+async function updatePaymentCondition({id, name, status}) {
   // Filtra apenas campos que foram enviados (não undefined/null)
   const fieldsToUpdate = {};
   
@@ -35,18 +30,17 @@ async function updateStockCategory({id, name, status}) {
     return { success: false, message: 'Nenhum campo para atualizar' };
   }
 
-<<<<<<< Updated upstream
   // Constrói query dinâmica
   const fields = Object.keys(fieldsToUpdate);
   const values = Object.values(fieldsToUpdate);
   const setClause = fields.map(field => `${field} = ?`).join(', ');
 
   const [result] = await pool.query(`
-    UPDATE stock_category
+    UPDATE payment_condition
     SET ${setClause}
     WHERE id = ?
     LIMIT 1
-  `, [...values, id]); //... "espalha" os arrays
+  `, [...values, id]);
 
   return {
     success: result.affectedRows > 0,
@@ -55,9 +49,6 @@ async function updateStockCategory({id, name, status}) {
 }
 
 module.exports = { 
-  createStockCategory, 
-  getStockCategory, 
-  updateStockCategory };
-=======
-module.exports = mongoose.model('StockCategory', StockCategorySchema);
->>>>>>> Stashed changes
+  createPaymentCondition, 
+  getPaymentCondition, 
+  updatePaymentCondition };

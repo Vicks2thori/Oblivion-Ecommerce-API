@@ -1,30 +1,30 @@
-//adminEntiy.js
+//stock_category.js
 const pool = require('../../../model/conection_db');
-const { getUser, createUser } = require('../user/userEntity');
 
 //Create
-async function createAdmin({name, email, password, status}) {
-  const type = "admin";
-  user_id = createUser(name, email, password, type)
+async function createStockCategory({name, status}) {
   const [result] = await pool.query(`
-    INSERT INTO admin (user_id, status)
-    VALUES (?, ?)`, [user_id, status]
+    INSERT INTO stock_category (name, status)
+    VALUES (?, ?)`, [name, status]
   );
   return result.insertId;
 }
 
 //Read
-async function getAdmin() {
-  getUser("admin");
+async function getStockCategory({name}) {
+  const [rows] = await pool.query(`
+    SELECT * FROM stock_category WHERE name = ?`, [name]
+  );
+  return rows[0];
 }
 
 //Update
-async function updateAdmin({id, user_id, name, email, password, status}) { //{flexibiliza as variaveis}
-// Filtra apenas campos que foram enviados (não undefined/null)
-  updateUser({user_id, name, email, password}); //alteração da tabela users
+async function updateStockCategory({id, name, status}) {
+  // Filtra apenas campos que foram enviados (não undefined/null)
   const fieldsToUpdate = {};
-
-  if (status !== undefined) fieldsToUpdate.status = status;
+  
+  if (name) fieldsToUpdate.name = name;
+  if (status !== undefined) fieldsToUpdate.status = status; // Boolean pode ser false
 
   if (Object.keys(fieldsToUpdate).length === 0) {
     return { success: false, message: 'Nenhum campo para atualizar' };
@@ -36,7 +36,7 @@ async function updateAdmin({id, user_id, name, email, password, status}) { //{fl
   const setClause = fields.map(field => `${field} = ?`).join(', ');
 
   const [result] = await pool.query(`
-    UPDATE admin
+    UPDATE stock_category
     SET ${setClause}
     WHERE id = ?
     LIMIT 1
@@ -49,6 +49,6 @@ async function updateAdmin({id, user_id, name, email, password, status}) { //{fl
 }
 
 module.exports = { 
-  createAdmin, 
-  getAdmin, 
-  updateAdmin };
+  createStockCategory, 
+  getStockCategory, 
+  updateStockCategory };
