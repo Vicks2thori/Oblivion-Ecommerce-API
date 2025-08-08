@@ -1,6 +1,7 @@
-//paymentController.js
-const { createPaymentSchema, updatePaymentSchema } = require('./paymentDto');
-const Payment = require('./paymentService');
+//orderController.js
+const { createOrderSchema, updateOrderSchema } = require('./orderDto');
+const Order = require('./orderService');
+//const { badRequest400, responseHelpersOk, responseHelpersError } = require("../../../routes/responseHelpers"); futuramente qando estiver funcionando
 
 //CRUD
 
@@ -8,7 +9,7 @@ const Payment = require('./paymentService');
 async function create(req, res) {
   try {
     //Validar DTO
-    const { error, value } = createPaymentSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
+    const { error, value } = createOrderSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
     if (error) {
       //400 - Dados inválidos
       return res.status(400).json({
@@ -19,13 +20,13 @@ async function create(req, res) {
     };
 
     //Criar através do Service
-    const payment = await Payment.createPayment(value);
+    const order = await Order.createOrder(value);
 
     //200 - Sucesso geral
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: payment
+      data: order
     });
 
 
@@ -41,17 +42,18 @@ async function create(req, res) {
 
 //Read
 
-//All
-async function getAll(req, res) {
+//Orders by status
+async function getOrdersByStatus(req, res) {
   try {
-    const payment = await Payment.getAllPayments();
+    const { status } = req.params;
+    const order = await Order.getOrdersByStatus(status);
 
     //OK
     //200 - Sucesso geral
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: payment
+      data: order
     });
 
   } catch (error) {
@@ -63,16 +65,17 @@ async function getAll(req, res) {
   }
 }
 
-//Active
-async function getActive(req, res) {
+//Orders by client
+async function getOrdersByClient(req, res) {
   try {
-    const activePayments = await Payment.getActivePayments();
+    const clientId = req.user.id; // Assumindo que o middleware de auth coloca o user na req
+    const order = await Order.getOrdersByClient(clientId);
 
     //200 - Sucesso geral
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: activePayments
+      data: order
     });
 
   }catch (error) {
@@ -84,35 +87,12 @@ async function getActive(req, res) {
   }
 };
 
-//By ID
-async function getById(req, res) {
-  try {
-    const { id } = req.params;
-    const payment = await Payment.getPaymentById(id);
-
-    //200 - Sucesso geral
-    res.status(200).json({
-      success: true,
-      message: '200 - Operação realizada com sucesso',
-      data: payment
-    });
-
-  }catch (error) {
-    //500 - Erro interno do servidor
-    return res.status(500).json({
-      success: false,
-      message: error.message 
-    });
-  };
-};
-
-
 //Update
 async function update(req, res) {
   try {
     const { id } = req.params;
 
-    const { error, value } = updatePaymentSchema.validate(req.body);
+    const { error, value } = updateOrderSchema.validate(req.body);
     if (error) {
       return res.status(400).json({
         success: false,
@@ -120,7 +100,7 @@ async function update(req, res) {
       });
     }
     
-    const result = await Payment.updatePayment(id, value);
+    const result = await Order.updateOrder(id, value.status);
     
     //200 - Sucesso geral
     return res.status(200).json({
@@ -137,33 +117,9 @@ async function update(req, res) {
   }
 }
 
-//Delete
-async function deletePayment(req, res) {
-  try {
-    const { id } = req.params;
-    const deleted = await Payment.deletePayment(id);
-
-    //200 - Sucesso geral
-    res.status(200).json({
-      success: true,
-      message: '200 - Operação realizada com sucesso',
-      data: deleted
-    });
-
-  } catch (error) {
-    //500 - Erro interno do servidor
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-}
-
 module.exports = {
   create,
-  getAll,
-  getActive,
-  getById,
-  update,
-  deletePayment
+  getOrdersByStatus,
+  getOrdersByClient,
+  update
 };
