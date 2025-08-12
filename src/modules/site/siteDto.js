@@ -2,17 +2,18 @@
 const Joi = require('joi');
 
 const createSiteSchema = Joi.object({
-  primary_color: Joi.string().length(6).required().default('000000'), //ainda vamos pensar no esquema de cores
-  second_color: Joi.string().length(6).required().default('123456'),
-  text_color: Joi.string().length(6).required().default('FFFFFF'),
-});
+  primaryColor: Joi.string().length(6).hex().required(),
+  secondColor: Joi.string().length(6).hex().required(),
+  textColor: Joi.string().length(6).hex().required()
+}).min(3).max(3);
 
 const updateSiteSchema = Joi.object({
-  primary_color: Joi.string().length(6).optional(),
-  second_color: Joi.string().length(6).optional(),
-  text_color: Joi.string().length(6).optional(),
-});
+  primaryColor: Joi.string().length(6).hex().optional(),
+  secondColor: Joi.string().length(6).hex().optional(),
+  textColor: Joi.string().length(6).hex().optional()
+}).min(1); // Pelo menos um campo deve ser fornecido
 
 module.exports = { 
   createSiteSchema, 
-  updateSiteSchema };
+  updateSiteSchema 
+};
