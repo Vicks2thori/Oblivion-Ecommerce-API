@@ -1,69 +1,74 @@
 //enterpriseEntity.js
-const pool = require('../../../model/conection_db');
+const mongoose = require('mongoose');
 
-//Definir uma logo padrão de ? para a emresa
-//Read
-async function getEnterprise() {
-  const [rows] = await pool.query(`SELECT * FROM enterprise LIMIT 1`);
-  return rows[0];
-}
-
-//CreateDefault (só existe uma empresa)
-async function defaultEnterprise({
-  name = "Oblivion",
-  phone = "10987654321",
-  instagram = null,
-  facebook = null,
-  email = null,
-  logo_image = null
-}) {
-  const existing = await getEnterprise();
-
-  if (existing) {
-    return existing.id;
+const EnterpriseSchema = new mongoose.Schema({
+  // Campo especial para garantir unicidade - apenas um registro pode existir
+  singleton: {
+    type: String,
+    default: 'singleton',
+    unique: true,
+    required: true,
+    immutable: true // Impede modificação após criação
+  },
+  name: { 
+    type: String, 
+    required: [true, 'Nome é obrigatório'], //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [2, 'Nome deve ter mais que 2 caracteres'],
+    maxlength: [50, 'Nome deve menos que 50 caracteres']
+  },
+  logoUrl: { 
+    type: String, 
+    required: [true, 'Logo é obrigatório'], //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [2, 'Logo deve ter mais que 2 caracteres'],
+    maxlength: [255, 'Logo deve menos que 255 caracteres']
+  },
+  phone: {
+    type: String, 
+    required: false, //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [11, 'Telefone deve ter exatamente 11 caracteres'],
+    maxlength: [11, 'Telefone deve ter exatamente 11 caracteres']
+  },
+  instagram: { //só o nome do instagram
+    type: String, 
+    required: false, //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [1, 'Instagram deve ter mais que 1 caracteres'],
+    maxlength: [30, 'Instagram deve ter menos que 30 caracteres']
+  },
+  facebook: {
+    type: String, 
+    required: false, //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [5, 'Facebook deve ter mais que 5 caracteres'],
+    maxlength: [50, 'Facebook deve menos que 50 caracteres']
+  },  
+  email: {
+    type: String, 
+    required: false, //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [6, 'Email deve ter mais que 6 caracteres'],
+    maxlength: [50, 'Email deve menos que 50 caracteres']
   }
+}, { 
+  timestamps: true, //controle automático de tempo
+  versionKey: false //remove campo inutil
+});
 
-  const [create] = await pool.query(`
-    INSERT INTO enterprise (name, phone, instagram, facebook, email, logo_image)
-    VALUES (?, ?, ?, ?, ?, ?)`,
-    [name, phone, instagram, facebook, email, logo_image]
-  );
+// Índice único para garantir apenas um registro
+EnterpriseSchema.index({ singleton: 1 }, { unique: true });
 
-  return create.insertId;
-}
-
-//Update
-async function updateEnterprise({ name, phone, instagram, facebook, email, logo_image }) {
-  // Filtra apenas campos que foram enviados (não são null/undefined)
-  const fieldsToUpdate = {};
-  
-  if (name) fieldsToUpdate.name = name;
-  if (phone) fieldsToUpdate.phone = phone;
-  if (instagram) fieldsToUpdate.instagram = instagram;
-  if (facebook) fieldsToUpdate.facebook = facebook;
-  if (email) fieldsToUpdate.email = email;
-  if (logo_image) fieldsToUpdate.logo_image = logo_image;
-
-  // Se não há campos para atualizar, retorna false
-  if (Object.keys(fieldsToUpdate).length === 0) {
-    return false;
+// Middleware para prevenir criação de múltiplos registros (vou criar um arquivo para isso?)
+EnterpriseSchema.pre('save', async function(next) {
+  if (this.isNew) {
+    const existingEnterprise = await this.constructor.findOne({});
+    if (existingEnterprise) {
+      throw new Error('Apenas um registro Enterprise pode existir');
+    }
   }
+  next();
+});
 
-  // Constrói a query dinamicamente
-  const fields = Object.keys(fieldsToUpdate);
-  const values = Object.values(fieldsToUpdate);
-  const setClause = fields.map(field => `${field} = ?`).join(', ');
-
-  const [result] = await pool.query(`
-    UPDATE enterprise
-    SET ${setClause}
-    LIMIT 1
-  `, values);
-
-  return result.affectedRows > 0;
-}
-
-module.exports = { 
-  getEnterprise, 
-  defaultEnterprise, 
-  updateEnterprise };
+module.exports = mongoose.model('Enterprise', EnterpriseSchema);
