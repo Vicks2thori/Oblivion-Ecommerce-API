@@ -1,5 +1,4 @@
 //payment_conditionDto.js
-//Opcional
 //Se for manipulada diretamente (upload de imagens fora do produto)
 const Joi = require('joi');
 
