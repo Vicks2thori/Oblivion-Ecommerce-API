@@ -1,6 +1,6 @@
 //categoryService.js
 const Category = require("./categoryEntity");
-const { filterActiveProducts, addProductToCategoryWithTransfer } = require("./categoryUtills");
+const { filterActiveProducts, addProductToCategoryWithTransfer } = require("./categoryUtils");
 
 //CRUD
 
