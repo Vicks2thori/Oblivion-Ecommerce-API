@@ -1,70 +1,70 @@
 //productEntity.js
-const pool = require('../../../model/conection_db');
+const mongoose = require('mongoose');
 
-//vai criar junto o estoque
-//Create
-async function createProduct({name, image_id, description, price, code, status, category_id, quantity}) {
-  const [result] = await pool.query(`
-    INSERT INTO product (name, image_id, description, price, code, status, category_id, quantity)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [name, image_id, description, price, code, status, category_id, quantity]
-  );
-  return result.insertId;
-}
-
-//Tem que ter um get por categoria ja que vou apresentar no ecommerce
-//Read
-async function getProduct({name}) {
-  const [rows] = await pool.query(`
-    SELECT * FROM product WHERE name = ?`, [name]
-  );
-  return rows[0];
-} // como que é melhor puxar?
-
-//Update
-async function updateProduct({id, name, image_id, description, price, code, status, category_id}) {
-// Filtra apenas campos que foram enviados (não undefined/null)
-  const fieldsToUpdate = {};
-
-  if (name) fieldsToUpdate.name = name;
-  if (image_id) fieldsToUpdate.image_id = image_id;
-  if (description) fieldsToUpdate.description = description;
-  if (price) fieldsToUpdate.price = price;
-  if (code) fieldsToUpdate.code = code;
-  if (category_id) fieldsToUpdate.category_id = category_id;
-  if (status !== undefined) fieldsToUpdate.status = status;
-
-  if (Object.keys(fieldsToUpdate).length === 0) {
-    return { success: false, message: 'Nenhum campo para atualizar' };
+const ProductSchema = new mongoose.Schema({
+  name: { 
+    type: String, 
+    required: [true, 'Nome é obrigatório'], //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [1, 'Nome deve ter um minímo de 1 caracteres'],
+    maxlength: [50, 'Nome deve ter um máximo de 50 caracteres']
+    //unique: true, //Quando o unique esta ativo ele retorna um erro, mesmo quando o item foi "deletado"
+  },
+  imageUrl: {
+    type: String,
+    required: [true, 'URL da imagem é obrigatória'],
+    trim: true,
+    minlength: [1, 'URL da imagem deve ter um minímo de 1 caracteres'], //Preciso analisar melhor o contexto para restringir
+    maxlength: [255, 'URL da imagem deve ter um máximo de 255 caracteres']
+  },
+  description: {
+    type: String,
+    required: false,
+    trim: true,
+    minlength: [1, 'Descrição deve ter um minímo de 1 caracteres'],
+    maxlength: [65535, 'Descrição deve ter um máximo de 65535 caracteres'] //Fiz com base no tipo do SQL Varchar
+  },
+  price: {
+    type: Number,
+    required: [true, 'Preço é obrigatório'],
+    min: [0.01, 'Preço deve ser maior que 0'],
+    max: [999999.99, 'Preço deve ser menor que 999999.99'] //Fiz com base no tipo do SQL Decimal(8,2)
+  },
+  code: { //código do produto vai ser obrigatório? vai ser inserido ou gerado automaticamente?
+    type: Number,
+    required: [true, 'Código é obrigatório'],
+    min: [1, 'Código deve ser maior que 0'],
+    max: [9223372036854775807, 'Código deve ser menor que 9223372036854775807'] //Fiz com base no tipo do SQL BigInt (Para alocar código de barras)
+  },
+  quantity: { //vou obrigar? pode ser negativo dependendo das vendas? ou ele vai ter que barrar?
+    type: Number,
+    required: [true, 'Quantidade é obrigatória'],
+    min: [1, 'Quantidade deve ser maior que 0'],
+    max: [65535, 'Quantidade deve ser menor que 65535'] //Fiz com base no tipo do SQL SmallInt
+  },
+  //REFERENCING - Bidirecional
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: [true, 'Categoria é obrigatória']
+  },
+  status: { 
+    type: Boolean,
+    required: true,
+    default: true 
+  },
+  deleted: {
+    type: Boolean,
+    required: true,
+    default: false
   }
+}, { 
+  timestamps: true, //controle automático de tempo
+  versionKey: false //remove campo inutil
+});
 
-  // Constrói query dinâmica
-  const fields = Object.keys(fieldsToUpdate);
-  const values = Object.values(fieldsToUpdate);
-  const setClause = fields.map(field => `${field} = ?`).join(', ');
+//indexação para performance
+ProductSchema.index({name: 1})
+ProductSchema.index({status: 1, deleted: 1}) //melhorar
 
-  const [result] = await pool.query(`
-    UPDATE product
-    SET ${setClause}
-    WHERE id = ?
-    LIMIT 1
-  `, [...values, id]); //... "espalha" os arrays
-
-  return {
-    success: result.affectedRows > 0,
-    affectedRows: result.affectedRows
-  };
-}
-
-//Delete
-async function deleteProduct({id}) {
-  const [result] = await pool.query(`
-    DELETE FROM product WHERE id = ?`, [id]
-  );
-  return result.affectedRows > 0;
-}
-
-module.exports = { 
-  createProduct, 
-  getProduct, 
-  updateProduct, 
-  deleteProduct};
+module.exports = mongoose.model('Product', ProductSchema);

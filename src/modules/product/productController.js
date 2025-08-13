@@ -64,6 +64,27 @@ async function getAll(req, res) {
   }
 }
 
+//Active
+async function getActive(req, res) {
+  try {
+    const activeProducts = await Product.getActiveProducts();
+
+    //200 - Sucesso geral
+    res.status(200).json({
+      success: true,
+      message: '200 - Operação realizada com sucesso',
+      data: activeProducts
+    });
+
+  }catch (error) {
+    //500 - Erro interno do servidor
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 //By ID
 async function getById(req, res) {
   try {
@@ -142,6 +163,7 @@ async function deleteProduct(req, res) {
 module.exports = {
   create,
   getAll,
+  getActive,
   getById,
   update,
   deleteProduct
