@@ -5,7 +5,7 @@ const paymentRoutes = require("../modules/payment/paymentRouter");
 const categoryRoutes = require('../modules/category/categoryRouter');
 const siteRoutes = require('../modules/site/siteRouter');
 const enterpriseRoutes = require('../modules/enterprise/enterpriseRouter');
-const orderRoutes = require('../modules/pedido/order/orderRouter');
+const orderRoutes = require('../modules/order/orderRouter');
 
 const publicRouter = express.Router();
 

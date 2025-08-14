@@ -2,8 +2,10 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
-const { connectDB } = require('./src/model/database'); // ✅ Importar função
-const { initializeSite } = require('./src/modules/empresa/site/siteService'); // ✅ Importar inicialização do Site
+// const swaggerUi = require('swagger-ui-express');
+// const specs = require('./config/swagger');
+const { connectDB } = require('./model/database'); // ✅ Importar função
+const { initializeSite } = require('./modules/site/siteService'); // ✅ Importar inicialização do Site
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -12,9 +14,12 @@ const app = express();
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
 // Rotas
-const publicRoutes = require('./src/routes/publicRoutes');
-const privateRoutes = require('./src/routes/privateRoutes');
+const publicRoutes = require('./routes/publicRoutes');
+const privateRoutes = require('./routes/privateRoutes');
 
 app.use('/api/public', publicRoutes);
 app.use('/api/private', privateRoutes);
