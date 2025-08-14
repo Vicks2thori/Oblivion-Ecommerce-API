@@ -1,90 +1,106 @@
 //userEntity.js
+//Caso de uso de Embedding
 const mongoose = require('mongoose');
 
-// Schema do usuário
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
+const UserSchema = new mongoose.Schema({
+  name: { 
+    type: String, 
+    required: [true, 'Nome é obrigatório'], //required + mensagem personalizada
+    trim: true,  //Remove espaços inicio/fim
+    minlength: [5, 'Nome deve ter um minímo de 5 caracteres'],
+    maxlength: [80, 'Nome deve ter um máximo de 80 caracteres']
   },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    required: [true, 'Email é obrigatório'],
     trim: true,
-    lowercase: true
+    minlength: [6, 'Email deve ter um minímo de 6 caracteres'],
+    maxlength: [50, 'Email deve ter um máximo de 50 caracteres'],
+    unique: true, //validar no service
   },
   password: {
     type: String,
-    required: true
+    required: [true, 'Senha é obrigatória'],
+    trim: true,
+    minlength: [8, 'Senha deve ter um minímo de 8 caracteres'],
+    maxlength: [255, 'Senha deve ter um máximo de 255 caracteres']
   },
   type: {
     type: String,
     required: true,
-    enum: ['admin', 'client', 'employee']
+    enum: ['admin', 'client']
+  },
+
+  // EMBEDDING - Subdocumentos
+  adminDetails: {
+    type: {
+      status: { 
+        type: Boolean,
+        default: true },
+    },
+    required: function() { return this.type === 'admin'; }
+  },
+  
+  clientDetails: {
+    type: {
+      cpf: { 
+        type: String,
+        required: [true, 'Cpf é obrigatório'],
+        trim: true,
+        minlength: [11, 'Cpf deve ter exatamente 11 digitos (min)'],
+        maxlength: [11, 'Cpf deve ter exatamente 11 digitos (max)'],
+        unique: true //Unique
+      },
+      cell: { 
+        type: String,
+        required: [true, 'Telefone é obrigatório'],
+        trim: true,
+        minlength: [11, 'Telefone deve ter exatamente 11 digitos (min)'],
+        maxlength: [11, 'Telefone deve ter exatamente 11 digitos (max)'],
+        unique: true //Unique
+      },
+    },
+    required: function() { return this.type === 'client'; }
+  },
+
+  deleted: {
+    type: Boolean,
+    required: true,
+    default: false
   }
-}, {
-  timestamps: true
+}, { 
+  timestamps: true, //controle automático de tempo
+  versionKey: false //remove campo inutil
 });
 
-// Modelo do usuário
-const User = mongoose.model('User', userSchema);
+//indexação para performance
+UserSchema.index({ email: 1 }); // Email único
+UserSchema.index({ type: 1 }); // Filtrar por tipo
+UserSchema.index({ deleted: 1, type: 1 }); // Composto principal
 
-//Create
-async function createUser({name, email, password, type}) {
-  try {
-    const user = new User({ name, email, password, type });
-    const result = await user.save();
-    return result._id;
-  } catch (error) {
-    throw error;
-  }
-}
-
-//Read
-async function getUserType({type}) {
-  try {
-    const user = await User.findOne({ type });
-    return user;
-  } catch (error) {
-    throw error;
-  }
-}
-
-//Update
-async function updateUser({id, name, email, password}) {
-  try {
-    // Filtra apenas campos que foram enviados (não undefined/null)
-    const fieldsToUpdate = {};
-
-    if (name) fieldsToUpdate.name = name;
-    if (email) fieldsToUpdate.email = email;
-    if (password) fieldsToUpdate.password = password;
-
-    if (Object.keys(fieldsToUpdate).length === 0) {
-      return { success: false, message: 'Nenhum campo para atualizar' };
+//Client
+UserSchema.index(
+  { 'clientDetails.cpf': 1 }, 
+  { 
+    unique: true, 
+    sparse: true,  // Só cria índice se campo existir
+    partialFilterExpression: { 
+      type: 'client',
+      deleted: false 
     }
-
-    const result = await User.findByIdAndUpdate(
-      id,
-      fieldsToUpdate,
-      { new: true, runValidators: true }
-    );
-
-    return {
-      success: !!result,
-      affectedRows: result ? 1 : 0,
-      user: result
-    };
-  } catch (error) {
-    throw error;
   }
-}
+);
 
-module.exports = { 
-  User,
-  createUser, 
-  getUserType, 
-  updateUser 
-};
+UserSchema.index(
+  { 'clientDetails.cell': 1 }, 
+  { 
+    unique: true, 
+    sparse: true,
+    partialFilterExpression: { 
+      type: 'client',
+      deleted: false 
+    }
+  }
+);
+
+module.exports = mongoose.model('User', UserSchema);
