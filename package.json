@@ -5,8 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "prod": "NODE_ENV=production node src/server.js"
+    "dev": "nodemon src/server.js"
   },
   "keywords": ["ecommerce", "backend", "nodejs", "express", "mongodb"],
   "author": "Victoria Riso",
