@@ -14,8 +14,8 @@ const app = express();
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
-// Swagger Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+// Swagger Documentation - Comentado temporariamente
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Rotas
 const publicRoutes = require('./routes/publicRoutes');
