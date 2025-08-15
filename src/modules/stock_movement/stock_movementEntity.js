@@ -2,6 +2,11 @@
 const mongoose = require('mongoose');
 
 const StockMovementSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: [true, 'Data é obrigatória'],
+    default: Date.now
+  },
   name: { 
     type: String, 
     required: [true, 'Nome é obrigatório'], //required + mensagem personalizada
@@ -16,11 +21,15 @@ const StockMovementSchema = new mongoose.Schema({
     trim: true,
     maxlength: [255, 'Descrição deve ter um máximo de 255 caracteres']
   },
-
   stockCategoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StockCategory',
     required: [true, 'stockCategoryId é obrigatório']
+  },
+  type: {
+    type: String,
+    required: [true, 'Tipo é obrigatório'],
+    enum: ['entry', 'exit', 'definition']
   },
   //REFERENCING - subdocumentos
   products: [
@@ -37,6 +46,11 @@ const StockMovementSchema = new mongoose.Schema({
     }
     },
   ],
+  adminId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'adminId é obrigatório']
+  }
 },{
   timestamps: true, //controle automático de tempo
   versionKey: false, //remove campo inutil
