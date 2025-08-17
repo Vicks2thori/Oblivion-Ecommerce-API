@@ -1,0 +1,171 @@
+/* Estilos personalizados para o Swagger UI */
+
+/* Cores da marca */
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #8b5cf6;
+  --accent-color: #06b6d4;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --text-color: #1f2937;
+  --bg-color: #ffffff;
+}
+
+/* Header personalizado */
+.swagger-ui .topbar {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 20px;
+  text-align: center;
+}
+
+.swagger-ui .topbar .download-url-wrapper {
+  display: none;
+}
+
+/* Título principal */
+.swagger-ui .info .title {
+  color: var(--primary-color);
+  font-size: 2.5em;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Descrição */
+.swagger-ui .info .description {
+  color: var(--text-color);
+  font-size: 1.1em;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Botões */
+.swagger-ui .btn.execute {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.swagger-ui .btn.execute:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+/* Tags */
+.swagger-ui .opblock-tag {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.swagger-ui .opblock-tag:hover {
+  background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+}
+
+/* Endpoints */
+.swagger-ui .opblock {
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.swagger-ui .opblock.opblock-get {
+  border-color: var(--success-color);
+}
+
+.swagger-ui .opblock.opblock-post {
+  border-color: var(--primary-color);
+}
+
+.swagger-ui .opblock.opblock-put {
+  border-color: var(--warning-color);
+}
+
+.swagger-ui .opblock.opblock-delete {
+  border-color: var(--error-color);
+}
+
+/* Métodos HTTP */
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+  background-color: var(--success-color);
+}
+
+.swagger-ui .opblock.opblock-post .opblock-summary-method {
+  background-color: var(--primary-color);
+}
+
+.swagger-ui .opblock.opblock-put .opblock-summary-method {
+  background-color: var(--warning-color);
+}
+
+.swagger-ui .opblock.opblock-delete .opblock-summary-method {
+  background-color: var(--error-color);
+}
+
+/* Respostas */
+.swagger-ui .responses-table .response-col_status {
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+.swagger-ui .responses-table .response-col_description {
+  color: var(--text-color);
+}
+
+/* Schemas */
+.swagger-ui .model-box {
+  background-color: #f8fafc;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 10px 0;
+}
+
+/* Footer personalizado */
+.swagger-ui .footer {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .swagger-ui .info .title {
+    font-size: 2em;
+  }
+  
+  .swagger-ui .opblock-summary-description {
+    font-size: 0.9em;
+  }
+}
+
+/* Animações */
+.swagger-ui .opblock {
+  transition: all 0.3s ease;
+}
+
+.swagger-ui .opblock:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Scrollbar personalizada */
+.swagger-ui ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.swagger-ui ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.swagger-ui ::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.swagger-ui ::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
