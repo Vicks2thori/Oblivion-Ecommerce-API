@@ -24,8 +24,8 @@ const CategorySchema = new mongoose.Schema({
       ref: 'Product',
       required: [true, 'productId é obrigatório']
       //para os atributos vou usar o populate no controller
-      },
     }
+    },
   ],
   deleted: {
     type: Boolean,

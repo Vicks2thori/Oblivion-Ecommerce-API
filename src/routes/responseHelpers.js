@@ -115,8 +115,19 @@ const responseHelpersError = (res, statusCode, data, message) => {
   }
 };
 
+// Funções auxiliares para respostas padronizadas
+const successResponse = (res, statusCode, message, data) => {
+  return responseHelpersOk(res, statusCode, data, message);
+};
+
+const errorResponse = (res, statusCode, message, errors) => {
+  return responseHelpersError(res, statusCode, errors, message);
+};
+
 module.exports = {
     badRequest400,
     responseHelpersOk,
-    responseHelpersError
+    responseHelpersError,
+    successResponse,
+    errorResponse
 };

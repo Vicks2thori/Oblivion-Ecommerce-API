@@ -1,106 +1,57 @@
-//userEntity.js
-//Caso de uso de Embedding
-const mongoose = require('mongoose');
+//userEntiy.js
+const pool = require('../../../model/conection_db');
 
-const UserSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: [true, 'Nome é obrigatório'], //required + mensagem personalizada
-    trim: true,  //Remove espaços inicio/fim
-    minlength: [5, 'Nome deve ter um minímo de 5 caracteres'],
-    maxlength: [80, 'Nome deve ter um máximo de 80 caracteres']
-  },
-  email: {
-    type: String,
-    required: [true, 'Email é obrigatório'],
-    trim: true,
-    minlength: [6, 'Email deve ter um minímo de 6 caracteres'],
-    maxlength: [50, 'Email deve ter um máximo de 50 caracteres'],
-    unique: true, //validar no service
-  },
-  password: {
-    type: String,
-    required: [true, 'Senha é obrigatória'],
-    trim: true,
-    minlength: [8, 'Senha deve ter um minímo de 8 caracteres'],
-    maxlength: [255, 'Senha deve ter um máximo de 255 caracteres']
-  },
-  type: {
-    type: String,
-    required: true,
-    enum: ['admin', 'client']
-  },
+//Create
+async function createUser({name, email, password, type}) {
+  const [result] = await pool.query(`
+    INSERT INTO user (name, email, password, type)
+    VALUES (?, ?, ?, ?)`, [name, email, password, type]
+  );
+  return result.insertId;
+};
 
-  // EMBEDDING - Subdocumentos
-  adminDetails: {
-    type: {
-      status: { 
-        type: Boolean,
-        default: true },
-    },
-    required: function() { return this.type === 'admin'; }
-  },
-  
-  clientDetails: {
-    type: {
-      cpf: { 
-        type: String,
-        required: [true, 'Cpf é obrigatório'],
-        trim: true,
-        minlength: [11, 'Cpf deve ter exatamente 11 digitos (min)'],
-        maxlength: [11, 'Cpf deve ter exatamente 11 digitos (max)'],
-        unique: true //Unique
-      },
-      cell: { 
-        type: String,
-        required: [true, 'Telefone é obrigatório'],
-        trim: true,
-        minlength: [11, 'Telefone deve ter exatamente 11 digitos (min)'],
-        maxlength: [11, 'Telefone deve ter exatamente 11 digitos (max)'],
-        unique: true //Unique
-      },
-    },
-    required: function() { return this.type === 'client'; }
-  },
+//tem que criar 2 gets, um que vai ser chamado na hora de exibir (geral)
+//outro que vai chamar na hora de fazer update (vai ser mandado pelo front espero eu)
+//Read
+async function getUserType({type}) {
+  const [rows] = await pool.query(`
+    SELECT * FROM user WHERE type = ?`, [type]
+  );
+  return rows[0];
+}
 
-  deleted: {
-    type: Boolean,
-    required: true,
-    default: false
+//Update
+async function updateUser({name, email, password}) {
+// Filtra apenas campos que foram enviados (não undefined/null)
+  const fieldsToUpdate = {};
+
+  if (name) fieldsToUpdate.name = name;
+  if (email) fieldsToUpdate.email = email;
+  if (password) fieldsToUpdate.password = password;
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return { success: false, message: 'Nenhum campo para atualizar' };
   }
-}, { 
-  timestamps: true, //controle automático de tempo
-  versionKey: false //remove campo inutil
-});
 
-//indexação para performance
-UserSchema.index({ email: 1 }); // Email único
-UserSchema.index({ type: 1 }); // Filtrar por tipo
-UserSchema.index({ deleted: 1, type: 1 }); // Composto principal
+  // Constrói query dinâmica
+  const fields = Object.keys(fieldsToUpdate);
+  const values = Object.values(fieldsToUpdate);
+  const setClause = fields.map(field => `${field} = ?`).join(', ');
 
-//Client
-UserSchema.index(
-  { 'clientDetails.cpf': 1 }, 
-  { 
-    unique: true, 
-    sparse: true,  // Só cria índice se campo existir
-    partialFilterExpression: { 
-      type: 'client',
-      deleted: false 
-    }
-  }
-);
+  const [result] = await pool.query(`
+    UPDATE user
+    SET ${setClause}
+    WHERE id = ?
+    LIMIT 1
+  `, [...values, id]); //... "espalha" os arrays
 
-UserSchema.index(
-  { 'clientDetails.cell': 1 }, 
-  { 
-    unique: true, 
-    sparse: true,
-    partialFilterExpression: { 
-      type: 'client',
-      deleted: false 
-    }
-  }
-);
+  return {
+    success: result.affectedRows > 0,
+    affectedRows: result.affectedRows
+  };
+}
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = { 
+  createUser, 
+  getUserType, 
+  updateUser };

@@ -7,6 +7,7 @@ const categoryRoutes = require('../modules/category/categoryRouter');
 const productRoutes = require('../modules/product/productRouter');
 const siteRoutes = require('../modules/site/siteRouter');
 const enterpriseRoutes = require('../modules/enterprise/enterpriseRouter');
+const orderRoutes = require('../modules/order/orderRouter');
 
 const privateRouter = express.Router();
 
@@ -19,5 +20,6 @@ privateRouter.use('/categories', categoryRoutes.private);
 privateRouter.use('/products', productRoutes.private);
 privateRouter.use('/site', siteRoutes.private);
 privateRouter.use('/enterprise', enterpriseRoutes.private);
+privateRouter.use('/orders', orderRoutes.private);
 
 module.exports = privateRouter;

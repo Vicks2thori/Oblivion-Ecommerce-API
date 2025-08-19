@@ -3,9 +3,9 @@ const Joi = require('joi');
 
 const createStockCategorySchema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
-  status: Joi.boolean().default(true).optional()
+  status: Joi.boolean().default(true).required(),
   //não se cria deleted isso é o backend que faz
-}).min(1).max(2); //mesmo esquema do categoryDto
+}).min(2).max(2);
 
 const updateStockCategorySchema = Joi.object({
   name: Joi.string().min(3).max(50).optional(),
