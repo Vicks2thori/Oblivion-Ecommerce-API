@@ -8,6 +8,7 @@ const productRoutes = require('../modules/product/productRouter');
 const siteRoutes = require('../modules/site/siteRouter');
 const enterpriseRoutes = require('../modules/enterprise/enterpriseRouter');
 const orderRoutes = require('../modules/order/orderRouter');
+const stockMovementRoutes = require('../modules/stock_movement/stock_movementRouter');
 
 const privateRouter = express.Router();
 
@@ -21,5 +22,6 @@ privateRouter.use('/products', productRoutes.private);
 privateRouter.use('/site', siteRoutes.private);
 privateRouter.use('/enterprise', enterpriseRoutes.private);
 privateRouter.use('/orders', orderRoutes.private);
+privateRouter.use('/stock-movements', stockMovementRoutes.private);
 
 module.exports = privateRouter;
