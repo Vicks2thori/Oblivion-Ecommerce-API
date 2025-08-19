@@ -1,0 +1,83 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Oblivion Ecommerce API",
+    "version": "1.0.0",
+    "description": "API para sistema de e-commerce com retaguarda administrativa",
+    "contact": {
+      "name": "Victoria Riso",
+      "email": "devvicrisosan@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Servidor de Desenvolvimento"
+    },
+    {
+      "url": "https://tcc-oblivion.onrender.com",
+      "description": "Servidor de Produção (Render)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Categoria",
+      "description": "Endpoints para gestão de Categorias de Produtos"
+    },
+    {
+      "name": "Produto",
+      "description": "Endpoints para gestão de Produtos"
+    },
+    {
+      "name": "Condição de Pagamento",
+      "description": "Endpoints para gestão de Condições de Pagamento"
+    },
+    {
+      "name": "Pagamento",
+      "description": "Endpoints para gestão de Pagamentos"
+    },
+    {
+      "name": "Categoria de Estoque",
+      "description": "Endpoints para gestão de Categorias de Estoque"
+    },
+    {
+      "name": "Site",
+      "description": "Endpoints para configuração do Site"
+    },
+    {
+      "name": "Empresa",
+      "description": "Endpoints para gestão de Empresas"
+    },
+    {
+      "name": "Pedido",
+      "description": "Endpoints para gestão de Pedidos"
+    },
+    {
+      "name": "Usuários",
+      "description": "Endpoints para gestão de Usuários"
+    },
+    {
+      "name": "Estoque",
+      "description": "Endpoints para gestão de Movimentações de Estoque"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "$ref": "./schemas.json"
+    }
+  },
+  "paths": {
+    "$ref": "./paths.json"
+  }
+}
