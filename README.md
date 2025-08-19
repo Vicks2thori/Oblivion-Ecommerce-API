@@ -1,331 +1,600 @@
-# 🛒 E-commerce Backend - Sistema de Gestão
+# 📂 API de Categorias - TCC Oblivion
 
-> **Projeto de TCC** - Backend para sistema de e-commerce com retaguarda para gerenciar pedidos.
+> **Branch:** `docs/Category-API` | **Status:** 🚧 Em Desenvolvimento
 
-[![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-5.7+-blue.svg)](https://www.mongodb.com/)
-[![Express](https://img.shields.io/badge/Express-4.18+-black.svg)](https://expressjs.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+Documentação completa da API de gestão de categorias do e-commerce.
 
-## 📋 Índice
+## 🔗 Outras Branchs
+- [🏠 **Voltar ao Main**](../../tree/main)
 
-- [🎯 Sobre o Projeto](#-sobre-o-projeto)
-- [🏗️ Arquitetura do Sistema](#️-arquitetura-do-sistema)
-- [🚀 Como Executar](#-como-executar)
-- [📚 Documentação da API](#-documentação-da-api)
-- [🗂️ Estrutura de Pastas](#️-estrutura-de-pastas)
-- [🔧 Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [📊 Engenharia de Requisitos Funcionais](#-engenharia-de-requisitos-funcionais)
-- [📈 Histórico de Commits](#-histórico-de-commits)
-- [📌 Boas Práticas](#-boas-práticas-do-projeto)
-- [🤝 Contribuição](#-contribuição)
-- [🎯 Diferencial do Projeto](#-diferencial-do-projeto)
-- [👨‍💻 Autor](#-autor)
+## 🧭 Navegação
+- [👫 **Relacionamento Categoria-Produto**](#-relacionamento-categoria-produto)
+- [📋 **Endpoints Disponíveis**](#-endpoints-disponíveis)
+- [🔓 **Endpoints Públicos**](#-endpoints-publicos)
+  - [_**GET** `/api/public/categories/active ✅`_](#get-apipubliccategoriesactive)
+- [🔒 **Endpoints Privados**](#-endpoints-privados-admin)
+  - [_**POST** `/api/private/categories ✅`_](#post-apiprivatecategories)
+  - [_**GET** `/api/private/categories ✅`_](#get-apiprivatecategories)
+  - [_**GET** `/api/private/categories/:id 🚧`_](#get-apiprivatecategoriesid-)
+  - [_**PUT** `/api/private/categories/:id ✅`_](#put-apiprivatecategoriesid-)
+  - [_**PUT** `/api/private/categories/:id/delete 🚧`_](#put-apiprivatecategoriesiddelete-)
 
-## 🎯 Sobre o Projeto
+## 👫 **Relacionamento Categoria-Produto**
 
-Este é um **sistema de vitrine digital** desenvolvido como projeto de TCC, focado em **pequenas lojas** que desejam ingressar no mercado digital. O sistema oferece uma **API robusta** para criar sites de demonstração de produtos onde clientes podem visualizar catálogos e solicitar pedidos. A retaguarda permite gestão simples de produtos, estoque e personalização básica do site, com um **gerenciador de pedidos estilo Kanban** para controle eficiente das vendas.
-
-### 🎯 **Público-Alvo**
-- **Pequenas lojas** que querem presença digital
-- **Empreendedores** iniciando no e-commerce
-- **Negócios locais** buscando expandir vendas
-- **Lojistas** que preferem gestão simples e direta
-
-### ✨ Características Principais
-
-- **🛍️ Vitrine Digital** - Site de demonstração de produtos para clientes
-- **📋 Gerenciador Kanban** - Sistema de pedidos estilo Kanban para controle de vendas
-- **⚙️ Retaguarda Simples** - Painel administrativo intuitivo para pequenas lojas
-- **💳 Configuração de Pagamentos** - Definição de métodos e condições (sem integração)
-- **📦 Gestão de Estoque** - Controle simples de produtos e movimentações
-- **🏢 Personalização Básica** - Configurações da empresa e customização do site
-
-## 🏗️ Arquitetura do Sistema
-
-### 🎨 Padrão Arquitetural
-
-O projeto segue uma **arquitetura modular** bem estruturada:
-
-```
-┌────────────────────────────────────────────────────────────┐
-│                     PRESENTATION LAYER                     │
-├────────────────────────────────────────────────────────────┤
-│   Routes (Public/Private) │  Controllers  │  Middlewares   │
-├────────────────────────────────────────────────────────────┤
-│                       BUSINESS LAYER                       │
-├────────────────────────────────────────────────────────────┤
-│      Services  │  DTOs  │  Utils  │  Validation (Joi)      │
-├────────────────────────────────────────────────────────────┤
-│                         DATA LAYER                         │
-├────────────────────────────────────────────────────────────┤
-│        Entities (Mongoose)  │  Database Connection         │
-└────────────────────────────────────────────────────────────┘
+### **📊 Estrutura do Banco de Dados:**
+```javascript
+// Category Schema:
+{
+  _id: ObjectId,
+  name: String,
+  status: Boolean,
+  products: [
+    {
+      _id: false,                    // ← Desabilitado para subdocument
+      productId: ObjectId           // ← Referência para Product
+    }
+  ],
+  deleted: Boolean,
+  createdAt: Date,
+  updatedAt: Date
+}
 ```
 
-### 🔄 Fluxo de Dados
+### **🔄 Como Funciona o Populate:**
+1. **Categoria tem array** `products: [{ productId: ObjectId }]`
+2. **Populate busca** dados completos em `Product` collection
+3. **Mongoose substitui** ObjectId pelos dados do produto
+4. **Match filtra** produtos conforme regras (ativo/inativo)
+5. **Select escolhe** quais campos retornar
 
-1. **Request** → Routes → Controllers
-2. **Controllers** → Services (lógica de negócio)
-3. **Services** → Dtos → Entities (persistência)
-4. **Response** ← Controllers ← Services
+### **💡 Vantagens desta Abordagem:**
+- ✅ **Performance:** Busca eficiente com índices
+- ✅ **Flexibilidade:** Diferentes views (público/admin)
+- ✅ **Consistência:** Relacionamento bidirecional
+- ✅ **Manutenibilidade:** Fácil adicionar/remover produtos
 
-## 🚀 Como Executar
+---
 
-### 📋 Pré-requisitos
+## 🌐 Base URLs
+- **Produção:** `https://tcc-oblivion.onrender.com`
+- **Desenvolvimento:** `http://localhost:3001`
+- **Docs Interativas:** `/docs`
 
-- **Node.js** 16.0.0 ou superior
-- **MongoDB** local ou MongoDB Atlas
-- **Git** para clonar o repositório
+---
 
-### 🛠️ Instalação
+## 📋 **Endpoints Disponíveis**
 
-```bash
-# 1. Clonar o repositório
-git clone https://github.com/Vicks2thori/Oblivion-Ecommerce-API
-cd Oblivion-Ecommerce-API
+### 🔓 **Público (E-commerce)**
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| `GET` | `/api/public/categories/active` | Listar categorias e seus produtos ativos | ✅ |
 
-# 2. Instalar dependências
-npm install
+### 🔒 **Privado (Admin)**
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| `POST` | `/api/private/categories` | Criar categoria | ✅ |
+| `GET` | `/api/private/categories` | Listar todas as categorias | ✅ |
+| `GET` | `/api/private/categories/:id` | Buscar categoria por ID | 🚧 |
+| `PUT` | `/api/private/categories/:id` | Atualizar categoria | ✅ |
+| `PUT` | `/api/private/categories/:id/archive` | Arquivar categoria (soft delete) | 🚧 |
 
-# 3. Configurar variáveis de ambiente
-cp .env.example .env
-# Editar .env com suas configurações
+---
+**Diferenças dos endpoint:**
+- 🔓 **Público:** Só categorias ativas + produtos ativos
+- 🔒 **Privado:** Todas categorias + todos produtos (para gestão)
+- 📊 **Admin vê:** Produtos inativos, categorias inativas, timestamps
+- 🎯 **Público vê:** Apenas itens disponíveis para compra
 
-# 4. Executar o projeto
-npm run dev    # Desenvolvimento
-npm start      # Produção
+
+
+## 🔓 **Endpoints Públicos**
+
+### **GET** `/api/public/categories/active`
+Lista todas as categorias ativas com seus produtos ativos para exibição no e-commerce.
+
+### **💭 Request:**
+```http
+GET /api/public/categories/active
 ```
 
-### ⚙️ Configuração do Ambiente
+**Headers:** Nenhum necessário
 
-Crie um arquivo `.env` na raiz do projeto:
+**Query Parameters:** Nenhum
 
-```env
-# Banco de Dados
-MONGODB_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/database
+**Body:** Não aplicável
 
-# Servidor
-PORT=3000
-NODE_ENV=development
-
-# Segurança
-JWT_SECRET=sua_chave_secreta_muito_segura
-JWT_EXPIRES_IN=7d
-
-# Email (opcional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=seu_email@gmail.com
-SMTP_PASS=sua_senha_app
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": [
+    {
+      "name": "Eletrônicos",
+      "products": [
+        {
+          "_id": "66b8f1234567890123456789",
+          "name": "Smartphone Galaxy",
+          "imageUrl": "https://exemplo.com/smartphone.jpg",
+          "description": "Smartphone com 128GB de armazenamento",
+          "price": 899.99,
+          "code": 123456,
+          "quantity": 15
+        },
+        {
+          "_id": "66b8f9876543210987654321",
+          "name": "Notebook Gamer",
+          "imageUrl": "https://exemplo.com/notebook.jpg",
+          "description": "Notebook para jogos",
+          "price": 2599.99,
+          "code": 789456,
+          "quantity": 8
+        }
+      ]
+    },
+    {
+      "name": "Roupas",
+      "products": [
+        {
+          "_id": "66b8f5555666677778888999",
+          "name": "Camiseta Básica",
+          "imageUrl": "https://exemplo.com/camiseta.jpg",
+          "description": "Camiseta 100% algodão",
+          "price": 29.99,
+          "code": 456789,
+          "quantity": 50
+        }
+      ]
+    }
+  ]
+}
 ```
 
-## 📚 Documentação da API
-
-### 🔗 Endpoints Disponíveis
-
-- **🌐 Público**: `http://localhost:3000/api/public`
-- **🔒 Privado**: `http://localhost:3000/api/private`
-- **📖 Swagger**: `http://localhost:3000/api-docs`
-
-### 📖 Swagger UI
-
-A documentação interativa da API está disponível através do Swagger, permitindo:
-- Visualizar todos os endpoints
-- Testar requisições diretamente
-- Ver schemas de dados
-- Entender parâmetros e respostas
-
-## 🗂️ Estrutura de Pastas
-
-```
-src/
-├── 📁 config/                
-│   └── swagger.js            # Configuração do Swagger
-│
-├── 📁 model/                 
-│   └── database.js           # Conexão com MongoDB
-│
-├── 📁 modules/               # Módulos da aplicação
-│   ├── 📁 order/             # Gestão de pedidos
-│   ├── 📁 category/          # Categorias de produtos
-│   ├── 📁 product/           # Produtos
-│   ├── 📁 payment/           # Métodos de pagamento
-│   ├── 📁 payment_condition/ # Condições de pagamento
-│   ├── 📁 stock_category/    # Categorias de estoque
-│   ├── 📁 stock_movement/    # Movimentações de estoque
-│   ├── 📁 enterprise/        # Gestão da empresa
-│   ├── 📁 site/              # Configurações de estilo do site
-│   └── 📁 user/              # Gestão de usuários (admins/clients)
-│
-├── 📁 routes/                 # Definição de rotas
-│   ├── publicRoutes.js        # Rotas públicas (clients)
-│   ├── privateRoutes.js       # Rotas privadas (admins)
-│   └── responseHelpers.js     # Helpers de resposta
-│
-└── server.js                  # Ponto de entrada da aplicação
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao buscar categorias ativas: [detalhes do erro]"
+}
 ```
 
-### 🎯 Padrão de Módulos
+#### **Observações:**
+- ✅ **Apenas categorias ativas não deletadas** (`status: true, deleted: false`)
+- ✅ **Apenas produtos ativos e não deletados** (`status: true, deleted: false`)
+- ✅ **Não requer autenticação**
+- ✅ **Ordenado por nome da categoria**
 
-```
-│   ├── 📁 entity/            # Nome da Entidade
-│   │   ├── entityController.js
-│   │   ├── entityDto.js
-│   │   ├── entityEntity.js
-│   │   ├── entityRouter.js
-│   │   ├── entityService.js
-│   │   └── entityUtils.js     # Arquivo esporádico
-```
+**Estrutura de dados interna:**
+```javascript
+// Como está no banco (Category):
+{
+  _id: "66b8f1111222233334444555",
+  name: "Eletrônicos",
+  status: true,
+  products: [
+    { _id: false, productId: "66b8f1234567890123456789" }, // ← ObjectId ref
+    { _id: false, productId: "66b8f9876543210987654321" }  // ← ObjectId ref
+  ]
+}
 
-*Para uma melhor análise das entidades recomenda-se seguir esta **ordem de inspeção de arquivos**:
-`Entity` → `DTO` → `Utils` → `Service` → `Controller` → `Router`.*
-
-Cada módulo segue uma estrutura consistente:
-- **Entity**: Modelo de dados (Mongoose)
-- **DTO**: Transferência de dados entre camadas (Joi)
-- **Utils**: Funções auxiliares normalmente ligadas a relacionamentos
-- **Service**: Contém a lógica de negócio
-- **Controller**: Recebe requisições e retorna respostas (Express)
-- **Router**: Definição das rotas clients e admins do módulo
-
-## 🔧 Tecnologias Utilizadas
-
-### 🚀 **Backend**
-- **Node.js** - Runtime JavaScript
-- **Express.js** - Framework web
-- **MongoDB** - Banco de dados NoSQL
-- **Mongoose** - ODM para MongoDB
-
-### 🛡️ **Segurança & Validação**
-- **Joi** - Validação de dados
-
-### 📊 **Monitoramento & Logs**
-- **Morgan** - Logs de requisições HTTP
-
-### 🔧 **Desenvolvimento**
-- **Nodemon** - Reinicialização automática em desenvolvimento
-- **Git** - Controle de versão
-- **npm** - Gerenciador de pacotes
-- **Swagger** - Documentação da API
-
-## 📊 Engenharia de Requisitos Funcionais
-
-### 🛍️ **Vitrine Digital**
-- [x] Catálogo de produtos
-- [x] Sistema de categorias
-- [x] Site de demonstração
-- [x] Aba de pedidos
-
-### ⚙️ **Retaguarda**
-- [x] Painel administrativo simples
-- [x] Gestão de produtos e categorias
-- [x] Controle de estoque básico
-- [x] Configurações da empresa
-- [x] Personalização do site
-
-### 💳 **Pagamentos**
-- [x] Configuração de métodos
-- [x] Definição de condições
-- [x] **Sem integração real** (apenas configuração)
-
-### 📦 **Estoque**
-- [x] Categorias de estoque
-- [x] Movimentações de entrada/saída/definição
-
-### 📋 **Pedidos**
-- [x] Gerenciador estilo Kanban
-- [x] Controle de status de vendas
-
-## 📈 Histórico de Commits
-
-### 🎯 **Estrutura de Commits**
-O projeto segue uma convenção de commits bem definida:
-
-```
-feat: ✨ Nova funcionalidade
-fix: 🐛 Correção de bug
-docs: 📚 Documentação
-style: 🎨 Formatação de código
-refactor: ♻️ Refatoração
-test: 🧪 Testes
-chore: 🔧 Configurações e dependências
+// Após populate:
+{
+  name: "Eletrônicos",
+  products: [
+    {
+      _id: "66b8f1234567890123456789",  // ← Dados completos do produto
+      name: "Smartphone Galaxy",
+      imageUrl: "https://...",
+      price: 899.99,
+      // ... outros campos selecionados
+    }
+  ]
+}
 ```
 
-### 🌿 **Branches Temáticas**
-Cada situação possui uma branch dedicada:
-- `feat/Entity(module)`: Definições gerais da estrutura
-- `feat/Referecing-Entity&Entity`: Relacionamento entre as entidades
-- `feat/Entity/Function`: Novas funcionalidades (Ex: `feat/Product/zero-stock-block`)
 
-> **💡 Dica**: Branches são mescladas em `main` após conclusão e mantidas como **histórico de evolução**.
 
-## 📌 **Boas Práticas do Projeto**
+## 🔒 **Endpoints Privados**
 
-### ✏️ **Padrão de Commits**
-- **Formato**: `tipo(escopo): descrição`
-- **Exemplos**:
-  - `feat(productDto): Adicionado min/max requisições no Schema`
-  - `fix(orderUtills): Corrige cálculo de total do pedido`
-  - `docs(main:README): Atualiza instruções de instalação`
-  - `style(Category): Implementação Clean Code`
+### **POST** `/api/private/categories`
+Cria uma nova categoria no sistema.
 
-### 🌿 **Estratégia de Branches**
-- **`main`**: Código estável e testado
-- **`feat/Entity`**: Novas entidades ou módulos
-- **`feat/Entity/Function`**: Funcionalidades específicas
-- **`fix/Entity`**: Correções de bugs
-- **`docs/Entity`**: Documentação específica
+### **💭 Request:**
+```http
+POST /api/private/categories
+Content-Type: application/json
+Authorization: Bearer {token}
+```
 
-### 🔄 **Fluxo de Desenvolvimento**
-1. **Criar branch** temática para a feature
-2. **Desenvolver** seguindo padrões estabelecidos
-3. **Testar** funcionalidade implementada
-4. **Commit** com mensagem clara
-5. **Pull Request** para `main`
-6. **Code Review** e aprovação
-7. **Merge** e manutenção da branch
+**Headers:**
+- `Content-Type: application/json` *(obrigatório)*
+- `Authorization: Bearer {token}` *(futuro - quando implementar auth)*
 
-## 🤝 Contribuição
+**Body Parameters:**
+```json
+{
+  "name": "string",     // Obrigatório: 3-50 caracteres
+  "status": "boolean"   // Opcional: default = true
+}
+```
 
-### 📝 **Como Contribuir**
+#### **Exemplos de Request:**
 
-1. **Fork** o projeto
-2. **Crie** uma branch para sua feature (`git checkout -b feat/Entity/Function`)
-3. **Commit** suas mudanças (`git commit -m 'feat(escopo): Descrição'`)
-4. **Push** para a branch (`git push origin feat/Entity/Function`)
-5. **Abra** um Pull Request
+**Exemplo 1 - Categoria ativa (status omitido):**
+```json
+{
+  "name": "Brincos Dourados"
+}
+```
 
-### 📋 **Padrões de Código**
+**Exemplo 2 - Categoria inativa:**
+```json
+{
+  "name": "Categoria Sazonal",
+  "status": false
+}
+```
 
-- Siga o padrão de **commits** estabelecido
-- Mantenha a **arquitetura modular**
-- Documente novas funcionalidades
+**Exemplo 3 - Categoria ativa (status explícito):**
+```json
+{
+  "name": "Novidades 2024",
+  "status": true
+}
+```
+---
+### **💬 Responses:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": {
+    "_id": "66b8f1111222233334444555",
+    "name": "Brincos Dourados",
+    "status": true,
+    "products": [],
+    "deleted": false,
+    "createdAt": "2024-08-15T10:30:00.000Z",
+    "updatedAt": "2024-08-15T10:30:00.000Z"
+  }
+}
+```
 
-## 🎯 **Diferencial do Projeto**
+#### **❓ Response 400 - Dados Inválidos:**
+```json
+{
+  "success": false,
+  "message": "Dados inválidos",
+  "errors": [
+    "Nome é obrigatório",
+    "Nome deve ter um mínimo de 3 caracteres"
+  ]
+}
+```
 
-### 🚀 **Por que uma Vitrine Digital?**
-- **Simplicidade**: Sem complexidade de integrações de pagamento
-- **Acessibilidade**: Ideal para pequenas lojas iniciantes no comércio digital
-- **Controle**: Gestão direta via WhatsApp (mais pessoal)
-- **Custo**: Solução econômica para presença digital
-- **Flexibilidade**: Personalização básica sem complicações
+#### **❌ Response 500 - Erro Interno:**
+```json
+{
+  "success": false,
+  "message": "Erro ao criar categoria: [detalhes do erro]"
+}
+```
 
-### 📱 **Fluxo de Venda**
-1. **Cliente** visualiza produtos na vitrine
-2. **Interesse** em produto específico
-3. **Solicita** via plataforma o pedido
-4. **Lojista** gerencia pedido no Kanban e acerta com o cliente (via numero disponivel no pedido)
-5. **Acompanhamento** do status da venda
+#### **Validações:**
+- ✅ **name:** Obrigatório, string, 3-50 caracteres
+- ✅ **status:** Opcional, boolean, default = `true`
+---
 
-## 👨‍💻 Autor
+### **GET** `/api/private/categories`
+Lista todas as categorias (ativas/inativas) com seus produtos (ativos/inativos) para administração.
 
-**Victoria Riso** - Desenvolvedora 
+### **💭 Request:**
+```http
+GET /api/private/categories
+Authorization: Bearer {token}
+```
 
-- 📧 Email: devvicrisosan@gmail.com
-- 🔗 LinkedIn: https://www.linkedin.com/in/victoria-riso-santana-441b0a337/
-- 🐙 GitHub: https://github.com/Vicks2thori
+**Headers:**
+- `Authorization: Bearer {token}` *(futuro)*
 
-### 📄 Licença
+**Query Parameters:** Nenhum
 
-Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+**Body:** Não aplicável
+
+---
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": [
+    {
+      "_id": "66b8f1111222233334444555",
+      "name": "Eletrônicos",
+      "status": true,
+      "products": [
+        {
+          "_id": "66b8f1234567890123456789",
+          "name": "Smartphone Galaxy",
+          "imageUrl": "https://exemplo.com/smartphone.jpg",
+          "description": "Smartphone com 128GB",
+          "price": 899.99,
+          "code": 123456,
+          "quantity": 15,
+          "status": true
+        },
+        {
+          "_id": "66b8f9999888877776666555",
+          "name": "Tablet Antigo",
+          "imageUrl": "https://exemplo.com/tablet.jpg", 
+          "description": "Tablet descontinuado",
+          "price": 299.99,
+          "code": 111222,
+          "quantity": 2,
+          "status": false
+        }
+      ],
+      "createdAt": "2024-08-10T08:00:00.000Z",
+      "updatedAt": "2024-08-15T14:30:00.000Z"
+    },
+    {
+      "_id": "66b8f2222333344445555666",
+      "name": "Categoria Desativada",
+      "status": false,
+      "products": [],
+      "createdAt": "2024-08-12T10:00:00.000Z",
+      "updatedAt": "2024-08-14T16:20:00.000Z"
+    }
+  ]
+}
+```
+
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao buscar todas as categorias: [detalhes do erro]"
+}
+```
+
+#### **Observações:**
+- ✅ **Todas as categorias** (ativas e inativas, não deletadas)
+- ✅ **Todos os produtos** (ativos e inativos, não deletados)
+- ✅ **Ordenado por nome** da categoria
+- ✅ **Inclui timestamps** de criação e atualização
+- ✅ **Dados completos** para administração
+---
+
+### **GET** `/api/private/categories/:id` 🚧
+Busca uma categoria específica por ID para edição/visualização.
+
+#### **💭 Request:**
+```http
+GET /api/private/categories/{categoryId}
+Authorization: Bearer {token}
+```
+
+**Headers:**
+- `Authorization: Bearer {token}` *(futuro)*
+
+**Path Parameters:**
+- `categoryId` *(obrigatório)*: ObjectId da categoria (24 caracteres hexadecimais)
+
+**Body:** Não aplicável
+
+#### **Exemplo:**
+```http
+GET /api/private/categories/66b8f1111222233334444555
+```
+---
+### **💬 Response:**
+
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "message": "Categoria encontrada",
+  "data": {
+    "_id": "66b8f1111222233334444555",
+    "name": "Eletrônicos",
+    "status": true,
+    "products": [
+      {
+        "_id": "66b8f1234567890123456789",
+        "name": "Smartphone Galaxy",
+        "price": 899.99,
+        "quantity": 15,
+        "status": true
+      }
+    ],
+    "deleted": false,
+    "createdAt": "2024-08-10T08:00:00.000Z",
+    "updatedAt": "2024-08-15T14:30:00.000Z"
+  }
+}
+```
+
+#### **❓ Response 400 - ID Inválido:**
+```json
+{
+  "success": false,
+  "message": "ID inválido"
+}
+```
+
+#### **⁉️ Response 404 - Não Encontrada:**
+```json
+{
+  "success": false,
+  "message": "Categoria não encontrada"
+}
+```
+
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao buscar categoria: [detalhes do erro]"
+}
+```
+
+---
+
+### **PUT** `/api/private/categories/:id`
+Atualiza uma categoria existente (nome, status, produtos vinculados).
+
+### **💭 Request:**
+```http
+PUT /api/private/categories/{categoryId}
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+**Headers:**
+- `Content-Type: application/json` *(obrigatório)*
+- `Authorization: Bearer {token}` *(futuro)*
+
+**Path Parameters:**
+- `categoryId` *(obrigatório)*: ObjectId da categoria
+
+**Body Parameters:**
+```json
+{
+  "name": "string",        // Opcional: 3-50 caracteres
+  "status": "boolean",     // Opcional: true/false
+  "products": [            // Opcional: array de produtos
+    {
+      "productId": "string"  // ObjectId do produto (24 chars hex)
+    }
+  ],
+  "deleted": "boolean"     // Opcional: soft delete (use archive endpoint)
+}
+```
+
+#### **Exemplos de Request:**
+
+**Exemplo 1 - Atualizar apenas nome:**
+```json
+{
+  "name": "Eletrônicos Premium"
+}
+```
+
+**Exemplo 2 - Desativar categoria:**
+```json
+{
+  "status": false
+}
+```
+
+**Exemplo 3 - Adicionar produtos à categoria:**
+```json
+{
+  "products": [
+    { "productId": "66b8f1234567890123456789" },
+    { "productId": "66b8f9876543210987654321" }
+  ]
+}
+```
+
+**Exemplo 4 - Atualização completa:**
+```json
+{
+  "name": "Tecnologia Avançada",
+  "status": true,
+  "products": [
+    { "productId": "66b8f1234567890123456789" }
+  ]
+}
+```
+---
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "66b8f1111222233334444555",
+    "name": "Eletrônicos Premium",
+    "status": true,
+    "products": [
+      {
+        "_id": "66b8f1234567890123456789",
+        "productId": "66b8f1234567890123456789"
+      }
+    ],
+    "deleted": false,
+    "createdAt": "2024-08-10T08:00:00.000Z",
+    "updatedAt": "2024-08-15T15:45:00.000Z"
+  }
+}
+```
+
+#### **❓ Response 400 - Dados Inválidos:**
+```json
+{
+  "success": false,
+  "errors": [
+    "Nome deve ter um mínimo de 3 caracteres",
+    "productId deve ser um ObjectId válido"
+  ]
+}
+```
+
+#### **⁉️ Response 404 - Não Encontrada:**
+```json
+{
+  "success": false,
+  "message": "Erro ao atualizar categoria: Categoria não encontrada"
+}
+```
+
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao atualizar categoria: [detalhes do erro]"
+}
+```
+
+#### **Validações:**
+- ✅ **name:** Opcional, 3-50 caracteres, único se fornecido
+- ✅ **status:** Opcional, boolean
+- ✅ **products:** Opcional, array de ObjectIds válidos
+- ✅ **Mínimo 1 campo** obrigatório para atualização
+- ✅ **Máximo 4 campos** por request
+---
+
+### **PUT** `/api/private/categories/:id/delete` 🚧
+Arquiva uma categoria (soft delete) removendo-a das consultas de endpoints.
+
+### **💭 Request:**
+```http
+PUT /api/private/categories/{categoryId}/delete
+Authorization: Bearer {token}
+```
+
+**Headers:**
+- `Authorization: Bearer {token}` *(futuro)*
+
+**Path Parameters:**
+- `categoryId` *(obrigatório)*:
+
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "66b8f1111222233334444555",
+    "name": "Eletrônicos Premium",
+    "status": true,
+    "deleted": true,
+    "createdAt": "2024-08-10T08:00:00.000Z",
+    "updatedAt": "2024-08-15T15:45:00.000Z"
+  }
+}
+```
