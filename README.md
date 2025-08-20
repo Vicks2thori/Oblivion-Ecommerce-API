@@ -22,6 +22,11 @@
 - [🎯 Diferencial do Projeto](#-diferencial-do-projeto)
 - [👨‍💻 Autor](#-autor)
 
+## 📋 Documentação APIs
+
+- [📩 **Category API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Category-API)
+- [🗳️ **Product API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Product-API)
+
 ## 🎯 Sobre o Projeto
 
 Este é um **sistema de vitrine digital** desenvolvido como projeto de TCC, focado em **pequenas lojas** que desejam ingressar no mercado digital. O sistema oferece uma **API robusta** para criar sites de demonstração de produtos onde clientes podem visualizar catálogos e solicitar pedidos. A retaguarda permite gestão simples de produtos, estoque e personalização básica do site, com um **gerenciador de pedidos estilo Kanban** para controle eficiente das vendas.
