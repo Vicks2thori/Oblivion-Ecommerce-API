@@ -86,7 +86,7 @@ Authorization: Bearer {token}
   "categoryId": "string",  // Obrigatório: Chave estrangeira, 24 caracteres, hexadecimal
   "price": "number",       // Obrigatório: 0.01-9999999.99 numeros
   "quantity": "number",    // Opcional: default = 0
-  "status": "boolean"     // Opcional: default = true
+  "status": "boolean"      // Opcional: default = true
 }
 ```
 
@@ -127,9 +127,9 @@ Authorization: Bearer {token}
     "name": "Smartphone Galaxy",
     "code": "98765", // Gerado pelo sistema
     "categoryId": "66b8f1111222233334444555",
-    "price": 899.99,
-    "quantity": 0,
-    "status": true,
+    "price": 899.99, 
+    "quantity": 0,   // Default = 0
+    "status": true,  // Default = true
     "deleted": false,
     "createdAt": "2024-08-15T10:30:00.000Z",
     "updatedAt": "2024-08-15T10:30:00.000Z"
@@ -284,7 +284,7 @@ Authorization: Bearer {token}
   "categoryId": "string",  // Obrigatório: Chave estrangeira, 24 caracteres, hexadecimal
   "price": "number",       // Obrigatório: 0.01-9999999.99 numeros
   "quantity": "number",    // Opcional: default = 0
-  "status": "boolean"     // Opcional: default = true
+  "status": "boolean"      // Opcional: default = true
 }
 ```
 
