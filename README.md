@@ -1,336 +1,295 @@
-# 🛒 E-commerce Backend - Sistema de Gestão
+# 📂 API de Empresa - TCC Oblivion
 
-> **Projeto de TCC** - Backend para sistema de e-commerce com retaguarda para gerenciar pedidos.
+> **Branch:** `docs/Enterprise-API` | **Status:** 📑 Em Revisão
 
-[![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-5.7+-blue.svg)](https://www.mongodb.com/)
-[![Express](https://img.shields.io/badge/Express-4.18+-black.svg)](https://expressjs.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+Documentação completa da API de gestão de configurações das informações da empresa do e-commerce.
 
-## 📋 Índice
-
-- [🎯 Sobre o Projeto](#-sobre-o-projeto)
-- [🏗️ Arquitetura do Sistema](#️-arquitetura-do-sistema)
-- [🚀 Como Executar](#-como-executar)
-- [📚 Documentação da API](#-documentação-da-api)
-- [🗂️ Estrutura de Pastas](#️-estrutura-de-pastas)
-- [🔧 Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [📊 Engenharia de Requisitos Funcionais](#-engenharia-de-requisitos-funcionais)
-- [📈 Histórico de Commits](#-histórico-de-commits)
-- [📌 Boas Práticas](#-boas-práticas-do-projeto)
-- [🤝 Contribuição](#-contribuição)
-- [🎯 Diferencial do Projeto](#-diferencial-do-projeto)
-- [👨‍💻 Autor](#-autor)
-
-## 📋 Documentação APIs
-
+## 🔗 Outras Branchs
+- [🏠 **Voltar ao Main**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/main)
 - [📩 **Category API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Category-API)
-- [🗳️ **Product API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Product-API)
+- [🛍️ **Product API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Product-API)
 
-## 🎯 Sobre o Projeto
+## 🧭 Navegação
+- [📊 **Estrutura do Banco de Dados**](#-estrutura-do-banco-de-dados)
+- [📋 **Endpoints Disponíveis**](#-endpoints-disponíveis)
+- [🔓 **Endpoints Públicos**](#-endpoints-publicos)
+  - [_**GET** `/api/public/enterprise ✅`_](#get-apipubliccategoriesactive)
+- [🔒 **Endpoints Privados**](#-endpoints-privados-admin)
+  - [_**GET** `/api/private/enterprise ✅`_](#get-apiprivatecategories)
+  - [_**PUT** `/api/private/enterprise ✅`_](#put-apiprivatecategoriesiddelete-)
+- [🔧 **Unicidade da empresa**](#-unicidade-da-empresa)
 
-Este é um **sistema de vitrine digital** desenvolvido como projeto de TCC, focado em **pequenas lojas** que desejam ingressar no mercado digital. O sistema oferece uma **API robusta** para criar sites de demonstração de produtos onde clientes podem visualizar catálogos e solicitar pedidos. A retaguarda permite gestão simples de produtos, estoque e personalização básica do site, com um **gerenciador de pedidos estilo Kanban** para controle eficiente das vendas.
-
-### 🎯 **Público-Alvo**
-- **Pequenas lojas** que querem presença digital
-- **Empreendedores** iniciando no e-commerce
-- **Negócios locais** buscando expandir vendas
-- **Lojistas** que preferem gestão simples e direta
-
-### ✨ Características Principais
-
-- **🛍️ Vitrine Digital** - Site de demonstração de produtos para clientes
-- **📋 Gerenciador Kanban** - Sistema de pedidos estilo Kanban para controle de vendas
-- **⚙️ Retaguarda Simples** - Painel administrativo intuitivo para pequenas lojas
-- **💳 Configuração de Pagamentos** - Definição de métodos e condições (sem integração)
-- **📦 Gestão de Estoque** - Controle simples de produtos e movimentações
-- **🏢 Personalização Básica** - Configurações da empresa e customização do site
-
-## 🏗️ Arquitetura do Sistema
-
-### 🎨 Padrão Arquitetural
-
-O projeto segue uma **arquitetura modular** bem estruturada:
-
-```
-┌────────────────────────────────────────────────────────────┐
-│                     PRESENTATION LAYER                     │
-├────────────────────────────────────────────────────────────┤
-│   Routes (Public/Private) │  Controllers  │  Middlewares   │
-├────────────────────────────────────────────────────────────┤
-│                       BUSINESS LAYER                       │
-├────────────────────────────────────────────────────────────┤
-│      Services  │  DTOs  │  Utils  │  Validation (Joi)      │
-├────────────────────────────────────────────────────────────┤
-│                         DATA LAYER                         │
-├────────────────────────────────────────────────────────────┤
-│        Entities (Mongoose)  │  Database Connection         │
-└────────────────────────────────────────────────────────────┘
+## **📊 Estrutura do Banco de Dados:**
+```json
+// Category Schema:
+{
+  _id: ObjectId,
+  singleton: String, // Obrigatório
+  name: String,      // Obrigatório
+  logoUrl: Boolean,  // Obrigatório
+  phone: String,     // Obrigatório
+  instagram: String, // Opcional
+  facebook: String,  // Opcional
+  email: String,     // Opcional
+  createdAt: Date,   
+  updatedAt: Date    
+}
 ```
 
-### 🔄 Fluxo de Dados
+## 📋 **Endpoints Disponíveis**
 
-1. **Request** → Routes → Controllers
-2. **Controllers** → Services (lógica de negócio)
-3. **Services** → Dtos → Entities (persistência)
-4. **Response** ← Controllers ← Services
+### 🔓 **Público (E-commerce)**
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| `GET` | `/api/public/enterprise` | Lista informações da empresa | 📑 |
 
-## 🚀 Como Executar
+### 🔒 **Privado (Admin)**
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| `GET` | `/api/private/enterprise` | Lista todas as informações da empresa | 📑 |
+| `PUT` | `/api/private/enterprise` | Atualizar informações da empresa | 📑 |
 
-### 📋 Pré-requisitos
+---
+**Diferenças dos endpoint:**
+- 🔓 **Público:** Apenas lista informações da empresa
+- 🔒 **Privado:** Lista e edita informações da empresa
+- 📊 **Admin vê:** Informações da empresa, timestamps
+- 🎯 **Público vê:** Apenas informações da empresa
 
-- **Node.js** 16.0.0 ou superior
-- **MongoDB** local ou MongoDB Atlas
-- **Git** para clonar o repositório
+## 🌐 Base URLs
+- **Produção:** `https://tcc-oblivion.onrender.com`
+- **Desenvolvimento:** `http://localhost:3001`
 
-### 🛠️ Instalação
 
-```bash
-# 1. Clonar o repositório
-git clone https://github.com/Vicks2thori/Oblivion-Ecommerce-API
-cd Oblivion-Ecommerce-API
+## 🔓 **Endpoints Públicos**
 
-# 2. Instalar dependências
-npm install
+### **GET** `/api/public/enterprise` ✅
+Lista todas as informações da empresa.
 
-# 3. Configurar variáveis de ambiente
-cp .env.example .env
-# Editar .env com suas configurações
-
-# 4. Executar o projeto
-npm run dev    # Desenvolvimento
-npm start      # Produção
+### **💭 Request:**
+```http
+GET /api/public/enterprise
 ```
 
-### ⚙️ Configuração do Ambiente
+**Headers:** Nenhum necessário
 
-Crie um arquivo `.env` na raiz do projeto:
+**Query Parameters:** Nenhum
 
-```env
-# Banco de Dados
-MONGODB_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/database
+**Body:** Não aplicável
 
-# Servidor
-PORT=3000
-NODE_ENV=development
-
-# Segurança
-JWT_SECRET=sua_chave_secreta_muito_segura
-JWT_EXPIRES_IN=7d
-
-# Email (opcional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=seu_email@gmail.com
-SMTP_PASS=sua_senha_app
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": [
+    {
+      "name": "Oblivion",
+      "logoUrl": "https://www.oblivion.com.br/logo.png",
+      "phone": "10987654321",
+      "instagram": "https://www.instagram.com/oblivion",
+      "facebook": "https://www.facebook.com/oblivion",
+      "email": "obvlivion@gmail.com"
+    }
+  ]
+}
 ```
 
-## 📚 Documentação da API
-
-### 🔗 Endpoints Disponíveis
-
-- **🌐 Público**: `http://localhost:3000/api/public`
-- **🔒 Privado**: `http://localhost:3000/api/private`
-- **📖 Swagger**: `http://localhost:3000/api-docs`
-
-### 📖 Swagger UI
-
-A documentação interativa da API está disponível através do Swagger, permitindo:
-- Visualizar todos os endpoints
-- Testar requisições diretamente
-- Ver schemas de dados
-- Entender parâmetros e respostas
-
-## 🗂️ Estrutura de Pastas
-
-```
-src/
-├── 📁 config/                
-│   └── swagger.js            # Configuração do Swagger
-│
-├── 📁 model/                 
-│   └── database.js           # Conexão com MongoDB
-│
-├── 📁 modules/               # Módulos da aplicação
-│   ├── 📁 order/             # Gestão de pedidos
-│   ├── 📁 category/          # Categorias de produtos
-│   ├── 📁 product/           # Produtos
-│   ├── 📁 payment/           # Métodos de pagamento
-│   ├── 📁 payment_condition/ # Condições de pagamento
-│   ├── 📁 stock_category/    # Categorias de estoque
-│   ├── 📁 stock_movement/    # Movimentações de estoque
-│   ├── 📁 enterprise/        # Gestão da empresa
-│   ├── 📁 site/              # Configurações de estilo do site
-│   └── 📁 user/              # Gestão de usuários (admins/clients)
-│
-├── 📁 routes/                 # Definição de rotas
-│   ├── publicRoutes.js        # Rotas públicas (clients)
-│   ├── privateRoutes.js       # Rotas privadas (admins)
-│   └── responseHelpers.js     # Helpers de resposta
-│
-└── server.js                  # Ponto de entrada da aplicação
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao buscar empresa: [detalhes do erro]"
+}
 ```
 
-### 🎯 Padrão de Módulos
+#### **Observações:**
+- 📝 **Não requer autenticação**
 
-```
-│   ├── 📁 entity/            # Nome da Entidade
-│   │   ├── entityController.js
-│   │   ├── entityDto.js
-│   │   ├── entityEntity.js
-│   │   ├── entityRouter.js
-│   │   ├── entityService.js
-│   │   └── entityUtils.js     # Arquivo esporádico
-```
+## 🔒 **Endpoints Privados**
 
-*Para uma melhor análise das entidades recomenda-se seguir esta **ordem de inspeção de arquivos**:
-`Entity` → `DTO` → `Utils` → `Service` → `Controller` → `Router`.*
+### **GET** `/api/private/enterprise` ✅
+Lista a informação da empresa.
 
-Cada módulo segue uma estrutura consistente:
-- **Entity**: Modelo de dados (Mongoose)
-- **DTO**: Transferência de dados entre camadas (Joi)
-- **Utils**: Funções auxiliares normalmente ligadas a relacionamentos
-- **Service**: Contém a lógica de negócio
-- **Controller**: Recebe requisições e retorna respostas (Express)
-- **Router**: Definição das rotas clients e admins do módulo
-
-## 🔧 Tecnologias Utilizadas
-
-### 🚀 **Backend**
-- **Node.js** - Runtime JavaScript
-- **Express.js** - Framework web
-- **MongoDB** - Banco de dados NoSQL
-- **Mongoose** - ODM para MongoDB
-
-### 🛡️ **Segurança & Validação**
-- **Joi** - Validação de dados
-
-### 📊 **Monitoramento & Logs**
-- **Morgan** - Logs de requisições HTTP
-
-### 🔧 **Desenvolvimento**
-- **Nodemon** - Reinicialização automática em desenvolvimento
-- **Git** - Controle de versão
-- **npm** - Gerenciador de pacotes
-- **Swagger** - Documentação da API
-
-## 📊 Engenharia de Requisitos Funcionais
-
-### 🛍️ **Vitrine Digital**
-- [x] Catálogo de produtos
-- [x] Sistema de categorias
-- [x] Site de demonstração
-- [x] Aba de pedidos
-
-### ⚙️ **Retaguarda**
-- [x] Painel administrativo simples
-- [x] Gestão de produtos e categorias
-- [x] Controle de estoque básico
-- [x] Configurações da empresa
-- [x] Personalização do site
-
-### 💳 **Pagamentos**
-- [x] Configuração de métodos
-- [x] Definição de condições
-- [x] **Sem integração real** (apenas configuração)
-
-### 📦 **Estoque**
-- [x] Categorias de estoque
-- [x] Movimentações de entrada/saída/definição
-
-### 📋 **Pedidos**
-- [x] Gerenciador estilo Kanban
-- [x] Controle de status de vendas
-
-## 📈 Histórico de Commits
-
-### 🎯 **Estrutura de Commits**
-O projeto segue uma convenção de commits bem definida:
-
-```
-feat: ✨ Nova funcionalidade
-fix: 🐛 Correção de bug
-docs: 📚 Documentação
-style: 🎨 Formatação de código
-refactor: ♻️ Refatoração
-test: 🧪 Testes
-chore: 🔧 Configurações e dependências
+### **💭 Request:**
+```http
+GET /api/private/enterprise
+Authorization: Bearer {token}
 ```
 
-### 🌿 **Branches Temáticas**
-Cada situação possui uma branch dedicada:
-- `feat/Entity(module)`: Definições gerais da estrutura
-- `feat/Referecing-Entity&Entity`: Relacionamento entre as entidades
-- `feat/Entity/Function`: Novas funcionalidades (Ex: `feat/Product/zero-stock-block`)
+**Headers:**
+- `Authorization: Bearer {token}` *(futuro)*
 
-> **💡 Dica**: Branches são mescladas em `main` após conclusão e mantidas como **histórico de evolução**.
+**Query Parameters:** Nenhum
 
-## 📌 **Boas Práticas do Projeto**
+**Body:** Não aplicável
 
-### ✏️ **Padrão de Commits**
-- **Formato**: `tipo(escopo): descrição`
-- **Exemplos**:
-  - `feat(productDto): Adicionado min/max requisições no Schema`
-  - `fix(orderUtills): Corrige cálculo de total do pedido`
-  - `docs(main:README): Atualiza instruções de instalação`
-  - `style(Category): Implementação Clean Code`
+---
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": [
+      {
+      "name": "Oblivion",
+      "logoUrl": "https://www.oblivion.com.br/logo.png",
+      "phone": "10987654321",
+      "instagram": "https://www.instagram.com/oblivion",
+      "facebook": "https://www.facebook.com/oblivion",
+      "email": "obvlivion@gmail.com"
+    }
+  ]
+}
+```
 
-### 🌿 **Estratégia de Branches**
-- **`main`**: Código estável e testado
-- **`feat/Entity`**: Novas entidades ou módulos
-- **`feat/Entity/Function`**: Funcionalidades específicas
-- **`fix/Entity`**: Correções de bugs
-- **`docs/Entity`**: Documentação específica
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao buscar empresa: [detalhes do erro]"
+}
+```
 
-### 🔄 **Fluxo de Desenvolvimento**
-1. **Criar branch** temática para a feature
-2. **Desenvolver** seguindo padrões estabelecidos
-3. **Testar** funcionalidade implementada
-4. **Commit** com mensagem clara
-5. **Pull Request** para `main`
-6. **Code Review** e aprovação
-7. **Merge** e manutenção da branch
+#### **Observações:**
+- 📝 **Inclui timestamps** de criação e atualização
 
-## 🤝 Contribuição
+### **PUT** `/api/private/enterprise` ✅
+Atualiza as informações da empresa.
 
-### 📝 **Como Contribuir**
+### **💭 Request:**
+```http
+PUT /api/private/enterprise
+Content-Type: application/json
+Authorization: Bearer {token}
+```
 
-1. **Fork** o projeto
-2. **Crie** uma branch para sua feature (`git checkout -b feat/Entity/Function`)
-3. **Commit** suas mudanças (`git commit -m 'feat(escopo): Descrição'`)
-4. **Push** para a branch (`git push origin feat/Entity/Function`)
-5. **Abra** um Pull Request
+**Headers:**
+- `Content-Type: application/json` *(obrigatório)*
+- `Authorization: Bearer {token}` *(futuro)*
 
-### 📋 **Padrões de Código**
+**Body Parameters:**
+```json
+{
+  "name": "string",        // Opcional: 3-50 caracteres
+  "logoUrl": "string",     // Opcional: 5-255 caracteres
+  "phone": "sring",        // Opcional: 11 caracteres numéricos
+  "instagram": "string",   // Opcional: 1-30 caracteres (será adcionado o link)
+  "facebook": "string",    // Opcional: 5-50 caracteres (será adicionado o link)
+  "email": "string"        // Opcional: 6-50 caracteres
+}
+```
 
-- Siga o padrão de **commits** estabelecido
-- Mantenha a **arquitetura modular**
-- Documente novas funcionalidades
+#### **Exemplos de Request:**
 
-## 🎯 **Diferencial do Projeto**
+**Exemplo 1 - Atualizar apenas nome e logo:**
+```json
+{
+  "name": "Atelie da Josi",
+  "logoUrl": "https://www.oblivion.com.br/logoatelie.png"
+}
+```
 
-### 🚀 **Por que uma Vitrine Digital?**
-- **Simplicidade**: Sem complexidade de integrações de pagamento
-- **Acessibilidade**: Ideal para pequenas lojas iniciantes no comércio digital
-- **Controle**: Gestão direta via WhatsApp (mais pessoal)
-- **Custo**: Solução econômica para presença digital
-- **Flexibilidade**: Personalização básica sem complicações
+**Exemplo 2 - Atualizar apenas informações de contato:**
+```json
+{
+  "phone": "11999999999",
+  "email": "ateliedajosi@hotmail.com"
+}
+```
 
-### 📱 **Fluxo de Venda**
-1. **Cliente** visualiza produtos na vitrine
-2. **Interesse** em produto específico
-3. **Solicita** via plataforma o pedido
-4. **Lojista** gerencia pedido no Kanban e acerta com o cliente (via numero disponivel no pedido)
-5. **Acompanhamento** do status da venda
+**Exemplo 3 - Atualizar apenas redes sociais:**
+```json
+{
+  "instagram": "ateliedadonajosi",
+  "facebook": "ateliedadonajosi"
+}
+```
 
-## 👨‍💻 Autor
+**Exemplo 4 - Atualização completa:**
+```json
+{
+  "name": "Atelie da Josi",
+  "logoUrl": "https://www.oblivion.com.br/logoatelie.png",
+  "phone": "11999999999",
+  "instagram": "ateliedadonajosi",
+  "facebook": "ateliedadonajosi",
+  "email": "ateliedajosi@hotmail.com"
+}
+```
+---
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "data": {
+    "singleton": "8c2b018b50142069da87094e",
+    "name": "Atelie da Josi",
+    "logoUrl": "https://www.oblivion.com.br/logoatelie.png",
+    "phone": "11999999999",
+    "instagram": "https://www.instagram.com/ateliedadonajosi",
+    "facebook": "https://www.facebook.com/ateliedadonajosi",
+    "email": "ateliedajosi@hotmail.com",
+    "createdAt": "2024-08-10T08:00:00.000Z",
+    "updatedAt": "2024-08-15T15:45:00.000Z"
+  }
+}
+```
 
-**Victoria Riso** - Desenvolvedora 
+#### **❓ Response 400 - Dados Inválidos:**
+```json
+{
+  "success": false,
+  "errors": [
+    "name: obrigatório, minimo 2 caracteres, maximo 50 caracteres", "logoUrl: obrigatório, minimo 2 caracteres, maximo 255 caracteres", "phone: obrigatório, tamanho de 11 caracteres", "instagram: minimo 1 caracter, maximo 30 caracteres", "facebook: minimo de 5 caracteres, maximo 50 caracteres", "email: minimo 6 caracteres, maximo 50 caracteres"
+  ]
+}
+```
 
-- 📧 Email: devvicrisosan@gmail.com
-- 🔗 LinkedIn: https://www.linkedin.com/in/victoria-riso-santana-441b0a337/
-- 🐙 GitHub: https://github.com/Vicks2thori
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao atualizar empresa: [detalhes do erro]"
+}
+```
 
-### 📄 Licença
+#### **Validações:**
+- 📝 **singleton:** Obrigatório, unico, imutavel, string
+- 📝 **name:** Obrigatório, 3-50 caracteres, único se fornecido
+- 📝 **logoUrl:** Obrigatório, 2-255 caracteres
+- 📝 **phone:** Obrigatório, 11 caracteres numéricos
+- 📝 **instagram:** Opcional, 1-30 caracteres
+- 📝 **facebook:** Opcional, 5-50 caracteres
+- 📝 **email:** Opcional, 6-50 caracteres
+- 📝 **Mínimo 1 campo** obrigatório para atualização
+- 📝 **Máximo 6 campos** por request
+---
 
-Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+### **💡 Vantagens desta Abordagem:**
+- 📝 **Performance:** Busca eficiente com índices
+- 📝 **Flexibilidade:** Diferentes views (público/admin)
+- 📝 **Consistência:** Relacionamento bidirecional
+- 📝 **Manutenibilidade:** Fácil adicionar/remover produtos
+
+## **🔧 Unicidade da empresa:**
+
+### **🗳️ Criação Automática:**
+- **Sistema cria automaticamente** uma única instância da empresa na primeira inicialização
+- **Campo `singleton`** garante que existe apenas um registro de empresa
+- **Não é possível criar** múltiplas empresas no sistema
+
+### **🎯 Uso do Singleton:**
+- **Identificador único** para a empresa (ex: `8c2b018b50142069da87094e`)
+- **Imutável** - não pode ser alterado após criação
+- **Referência estável** para todas as operações de empresa
+
+### **💡 Vantagens do Singleton:**
+- **📊 Consistência:** Sempre uma única fonte de verdade para dados da empresa
+- **🔒 Segurança:** Evita duplicação e inconsistências de dados
+- **⚡ Performance:** Busca direta sem necessidade de filtros complexos
+- **🛠️ Simplicidade:** Lógica simples para gerenciar configurações da empresa
