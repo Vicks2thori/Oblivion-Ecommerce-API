@@ -1,128 +1,74 @@
-# 📂 API de Categorias - TCC Oblivion
+# 📂 API de Produtos - TCC Oblivion
 
-> **Branch:** `docs/Category-API` | **Status:** 🚧 Em Desenvolvimento
+> **Branch:** `docs/Product-API` | **Status:** 🚧 Em Desenvolvimento
 
-Documentação completa da API de gestão de categorias do e-commerce.
+Documentação completa da API de gestão de produtos do e-commerce.
 
 ## 🔗 Outras Branchs
 - [🏠 **Voltar ao Main**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/main)
-- [👥 **Users API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/users-api)
-- [🛍️ **Products API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/products-api)
-- [💳 **Payments API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/payments-api)
-- [📦 **Orders API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/orders-api)
-- [🏢 **Enterprise API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/enterprise-api)
+- [📩 **Category API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Category-API)
 
 ## 🧭 Navegação
-- [📋 **Endpoints Disponíveis**](#-endpoints-disponíveis)
-- [🔓 **Endpoints Públicos**](#-endpoints-publicos)
-  - [_**GET** `/api/public/categories/active ✅`_](#get-apipubliccategoriesactive)
+- [📊 **Estrutura do Banco de Dados**](#-estrutura-do-banco-de-dados)
+- [📋 **Endpoints Disponíveis**](#get-apipubliccategoriesactive)
 - [🔒 **Endpoints Privados**](#-endpoints-privados-admin)
   - [_**POST** `/api/private/categories ✅`_](#post-apiprivatecategories)
   - [_**GET** `/api/private/categories ✅`_](#get-apiprivatecategories)
   - [_**GET** `/api/private/categories/:id 🚧`_](#get-apiprivatecategoriesid-)
   - [_**PUT** `/api/private/categories/:id ✅`_](#put-apiprivatecategoriesid-)
   - [_**PUT** `/api/private/categories/:id/delete 🚧`_](#put-apiprivatecategoriesiddelete-)
-- [📊 **Estrutura do Banco de Dados**](#-estrutura-do-banco-de-dados)
+- [🔄 **Como Funciona o Relacionamento:**](#-como-funciona-o-relacionamento)
+
+## **📊 Estrutura do Banco de Dados:**
+```json
+// Product Schema:
+{
+  _id: ObjectId,
+  name: String,
+  imageUrl: String,
+  code: String,
+  description: String,
+  categoryId: ObjectId,
+  price: Number,
+  quantity: Number,
+  status: Boolean,
+  deleted: Boolean,
+  createdAt: Date,
+  updatedAt: Date
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
 
 ## 📋 **Endpoints Disponíveis**
-
-### 🔓 **Público (E-commerce)**
-| Método | Endpoint | Descrição | Status |
-|--------|----------|-----------|--------|
-| `GET` | `/api/public/categories/active` | Listar categorias e seus produtos ativos | ✅ |
 
 ### 🔒 **Privado (Admin)**
 | Método | Endpoint | Descrição | Status |
 |--------|----------|-----------|--------|
-| `POST` | `/api/private/categories` | Criar categoria | ✅ |
-| `GET` | `/api/private/categories` | Listar todas as categorias | ✅ |
-| `GET` | `/api/private/categories/:id` | Buscar categoria por ID | 🚧 |
-| `PUT` | `/api/private/categories/:id` | Atualizar categoria | ✅ |
-| `PUT` | `/api/private/categories/:id/delete` | Arquivar categoria (soft delete) | 🚧 |
+| `POST` | `/api/private/products` | Criar produtos | ✅ |
+| `GET` | `/api/private/products/:id` | Buscar produto por ID | 🚧 |
+| `PUT` | `/api/private/products/:id` | Atualizar produto | ✅ |
+| `PUT` | `/api/private/products/:id/delete` | Arquivar produto (soft delete) | 🚧 |
 
 ---
-**Diferenças dos endpoint:**
-- 🔓 **Público:** Só categorias ativas + produtos ativos
-- 🔒 **Privado:** Todas categorias + todos produtos (para gestão)
-- 📊 **Admin vê:** Categorias ativas/inativas e produtos vinculados ativos/inativos, timestamps
-- 🎯 **Público vê:** Apenas itens disponíveis para compra
+**📱 Diferenças dos endpoint:**
+- **🔓 Público:** Produtos são mostrados através dos endpoints de categoria (ex: `/api/public/categories/active`)
+- **🔒 Privado:** Produtos são organizados por categoria para facilitar gestão e ordenação (ex: `/api/private/categories`)
+- **🎯 Vantagem:** Usuário sempre vê produtos organizados por categoria, não produtos soltos
 
 ## 🌐 Base URLs
 - **Produção:** `https://tcc-oblivion.onrender.com`
 - **Desenvolvimento:** `http://localhost:3001`
 
-
-## 🔓 **Endpoints Públicos**
-
-### **GET** `/api/public/categories/ active` ✅
-Lista todas as categorias ativas com seus produtos ativos para exibição no e-commerce.
-
-### **💭 Request:**
-```http
-GET /api/public/categories/active
-```
-
-**Headers:** Nenhum necessário
-
-**Query Parameters:** Nenhum
-
-**Body:** Não aplicável
-
-### **💬 Response:**
-#### **✔️ Response 200 - Sucesso:**
-```json
-{
-  "success": true,
-  "message": "Operação realizada com sucesso",
-  "data": [
-    {
-      "name": "Eletrônicos",
-      "products": [
-        {
-          "_id": "66b8f1234567890123456789",
-          "name": "Smartphone Galaxy",
-          "imageUrl": "https://exemplo.com/smartphone.jpg",
-          "description": "Smartphone com 128GB de armazenamento",
-          "price": 899.99,
-          "code": 123456,
-          "quantity": 15
-        },
-        {
-          "_id": "66b8f9876543210987654321",
-          "name": "Notebook Gamer",
-          "imageUrl": "https://exemplo.com/notebook.jpg",
-          "description": "Notebook para jogos",
-          "price": 2599.99,
-          "code": 789456,
-          "quantity": 8
-        }
-      ]
-    },
-  ]
-}
-```
-
-#### **❌ Response 500 - Erro:**
-```json
-{
-  "success": false,
-  "message": "Erro ao buscar categorias ativas: [detalhes do erro]"
-}
-```
-
-#### **Observações:**
-- 📝 **Apenas categorias ativas não deletadas** (`status: true, deleted: false`)
-- 📝 **Apenas produtos ativos e não deletados** (`status: true, deleted: false`)
-- 📝 **Não requer autenticação**
-
 ## 🔒 **Endpoints Privados**
 
-### **POST** `/api/private/categories`
-Cria uma nova categoria no sistema.
+### **POST** `/api/private/products`
+Cria um novo produto no sistema.
 
 ### **💭 Request:**
 ```http
-POST /api/private/categories
+POST /api/private/products
 Content-Type: application/json
 Authorization: Bearer {token}
 ```
@@ -134,32 +80,38 @@ Authorization: Bearer {token}
 **Body Parameters:**
 ```json
 {
-  "name": "string",     // Obrigatório: 3-50 caracteres
-  "status": "boolean"   // Opcional: default = true
+  "name": "string",        // Obrigatório: 3-50 caracteres
+  "imageUrl": "string",    // Opcional: 1-255 caracteres (implementação futura)
+  "code": "string",        // Opcional: 0-9999999999999999999 (implementação futura), default = gerado pelo sistema
+  "description": "string", // Opcional: 1-255 caracteres
+  "categoryId": "string",  // Obrigatório: Chave estrangeira, 24 caracteres, hexadecimal
+  "price": "number",       // Obrigatório: 0.01-9999999.99 numeros
+  "quantity": "number",    // Opcional: default = 0
+  "status": "boolean"     // Opcional: default = true
 }
 ```
 
 #### **Exemplos de Request:**
 
-**Exemplo 1 - Categoria ativa (status omitido):**
+**Exemplo 1 - Produto simples (sem campos opcionais):**
 ```json
 {
-  "name": "Brincos Dourados"
+  "name": "Smartphone Galaxy",
+  "categoryId": "66b8f2222333344445555666",
+  "price": 899.99
 }
 ```
 
-**Exemplo 2 - Categoria inativa:**
+**Exemplo 2 - Produto completo (com dados opcionais):**
 ```json
 {
-  "name": "Categoria Sazonal",
-  "status": false
-}
-```
-
-**Exemplo 3 - Categoria ativa (status explícito):**
-```json
-{
-  "name": "Novidades 2024",
+  "name": "Smartphone Galaxy",
+  "imageUrl": "https://exemplo.com/smartphone.jpg",
+  "code": "123456",
+  "description": "Smartphone com 128GB",
+  "categoryId": "66b8f1111222233334444555",
+  "price": 899.99,
+  "quantity": 15,
   "status": true
 }
 ```
@@ -167,14 +119,37 @@ Authorization: Bearer {token}
 ### **💬 Responses:**
 #### **✔️ Response 200 - Sucesso:**
 ```json
+//Produto simples
 {
   "success": true,
   "message": "Operação realizada com sucesso",
   "data": {
-    "_id": "66b8f1111222233334444555",
-    "name": "Brincos Dourados",
+    "_id": "66b8f1234567890123456789",
+    "name": "Smartphone Galaxy",
+    "code": "98765", // Gerado pelo sistema
+    "categoryId": "66b8f1111222233334444555",
+    "price": 899.99,
+    "quantity": 0,
     "status": true,
-    "products": [],
+    "deleted": false,
+    "createdAt": "2024-08-15T10:30:00.000Z",
+    "updatedAt": "2024-08-15T10:30:00.000Z"
+  }
+}
+
+//Produto completo
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": {
+    "name": "Smartphone Galaxy",
+    "imageUrl": "https://exemplo.com/smartphone.jpg",
+    "code": "123456",
+    "description": "Smartphone com 128GB",
+    "categoryId": "66b8f1111222233334444555",
+    "price": 899.99,
+    "quantity": 15,
+    "status": true,
     "deleted": false,
     "createdAt": "2024-08-15T10:30:00.000Z",
     "updatedAt": "2024-08-15T10:30:00.000Z"
@@ -188,8 +163,7 @@ Authorization: Bearer {token}
   "success": false,
   "message": "Dados inválidos",
   "errors": [
-    "Nome é obrigatório",
-    "Nome deve ter um mínimo de 3 caracteres"
+    "name: é obrigatório, minimo 3 caracteres, maximo 5o caracteres", "imageUrl: minimo 1 caracter, maximo 255", "code: maior que 0, menor que 9999999999999999999", "description: minimo 1 caracter, maximo 255", "categoryId: é obrigatório, tamanho 24 caracteres, hexadecimal", "price: é obrigatório, minimo 0.01, maximo 999999.99", "quantity: menor que 99999"
   ]
 }
 ```
@@ -198,102 +172,27 @@ Authorization: Bearer {token}
 ```json
 {
   "success": false,
-  "message": "Erro ao criar categoria: [detalhes do erro]"
+  "message": "Erro ao criar produto: [detalhes do erro]"
 }
 ```
 
 #### **Validações:**
 - 📝 **name:** Obrigatório, string, 3-50 caracteres
+- 📝 **imageUrl:** Opcional, string, 1-255 caracteres
+- 📝 **code:** Opcional, string, 1-99999 intervalo de valores, default = `generatorCodeProduct`
+- 📝 **description:** Opcional, string, 1-255 caracteres
+- 📝 **categoryId:** Obrigatório, string, 24 caracteres, hexadecimal
+- 📝 **price:** Obrigatório, number, 0.01-999999.99 intervalo de valores
+- 📝 **quantity:** Opcional, number, 0-99999 intervalo de valores, default = `0`
 - 📝 **status:** Opcional, boolean, default = `true`
 ---
 
-### **GET** `/api/private/categories` ✅
-Lista todas as categorias (ativas/inativas) com seus produtos (ativos/inativos) para administração.
-
-### **💭 Request:**
-```http
-GET /api/private/categories
-Authorization: Bearer {token}
-```
-
-**Headers:**
-- `Authorization: Bearer {token}` *(futuro)*
-
-**Query Parameters:** Nenhum
-
-**Body:** Não aplicável
-
----
-### **💬 Response:**
-#### **✔️ Response 200 - Sucesso:**
-```json
-{
-  "success": true,
-  "message": "Operação realizada com sucesso",
-  "data": [
-    {
-      "_id": "66b8f1111222233334444555",
-      "name": "Eletrônicos",
-      "status": true,
-      "products": [
-        {
-          "_id": "66b8f1234567890123456789",
-          "name": "Smartphone Galaxy",
-          "imageUrl": "https://exemplo.com/smartphone.jpg",
-          "description": "Smartphone com 128GB",
-          "price": 899.99,
-          "code": 123456,
-          "quantity": 15,
-          "status": true
-        },
-        {
-          "_id": "66b8f9999888877776666555",
-          "name": "Tablet Antigo",
-          "imageUrl": "https://exemplo.com/tablet.jpg", 
-          "description": "Tablet descontinuado",
-          "price": 299.99,
-          "code": 111222,
-          "quantity": 2,
-          "status": false
-        }
-      ],
-      "createdAt": "2024-08-10T08:00:00.000Z",
-      "updatedAt": "2024-08-15T14:30:00.000Z"
-    },
-    {
-      "_id": "66b8f2222333344445555666",
-      "name": "Categoria Desativada",
-      "status": false,
-      "products": [],
-      "createdAt": "2024-08-12T10:00:00.000Z",
-      "updatedAt": "2024-08-14T16:20:00.000Z"
-    }
-  ]
-}
-```
-
-#### **❌ Response 500 - Erro:**
-```json
-{
-  "success": false,
-  "message": "Erro ao buscar todas as categorias: [detalhes do erro]"
-}
-```
-
-#### **Observações:**
-- 📝 **Todas as categorias** (ativas e inativas, não deletadas)
-- 📝 **Todos os produtos** (ativos e inativos, não deletados)
-- 📝 **Ordenado por nome** da categoria
-- 📝 **Inclui timestamps** de criação e atualização
-- 📝 **Dados completos** para administração
----
-
-### **GET** `/api/private/categories/:id` 🚧
-Busca uma categoria específica por ID para edição/visualização.
+### **GET** `/api/private/product/:id` 🚧
+Busca um produto específico por ID para edição/visualização.
 
 #### **💭 Request:**
 ```http
-GET /api/private/categories/{categoryId}
+GET /api/private/product/{productId}
 Authorization: Bearer {token}
 ```
 
@@ -301,13 +200,13 @@ Authorization: Bearer {token}
 - `Authorization: Bearer {token}` *(futuro)*
 
 **Path Parameters:**
-- `categoryId` *(obrigatório)*: ObjectId da categoria (24 caracteres hexadecimais)
+- `productId` *(obrigatório)*: ObjectId do produto (24 caracteres hexadecimais)
 
 **Body:** Não aplicável
 
 #### **Exemplo:**
 ```http
-GET /api/private/categories/66b8f1111222233334444555
+GET /api/private/product/66b8f1234567890123456789
 ```
 ---
 ### **💬 Response:**
@@ -316,23 +215,19 @@ GET /api/private/categories/66b8f1111222233334444555
 ```json
 {
   "success": true,
-  "message": "Categoria encontrada",
+  "message": "Operação realizada com sucesso",
   "data": {
-    "_id": "66b8f1111222233334444555",
-    "name": "Eletrônicos",
+    "name": "Smartphone Galaxy",
+    "imageUrl": "https://exemplo.com/smartphone.jpg",
+    "code": "123456",
+    "description": "Smartphone com 128GB",
+    "categoryId": "66b8f1111222233334444555",
+    "price": 899.99,
+    "quantity": 15,
     "status": true,
-    "products": [
-      {
-        "_id": "66b8f1234567890123456789",
-        "name": "Smartphone Galaxy",
-        "price": 899.99,
-        "quantity": 15,
-        "status": true
-      }
-    ],
     "deleted": false,
-    "createdAt": "2024-08-10T08:00:00.000Z",
-    "updatedAt": "2024-08-15T14:30:00.000Z"
+    "createdAt": "2024-08-15T10:30:00.000Z",
+    "updatedAt": "2024-08-15T10:30:00.000Z"
   }
 }
 ```
@@ -349,7 +244,7 @@ GET /api/private/categories/66b8f1111222233334444555
 ```json
 {
   "success": false,
-  "message": "Categoria não encontrada"
+  "message": "Produto não encontrada"
 }
 ```
 
@@ -357,18 +252,18 @@ GET /api/private/categories/66b8f1111222233334444555
 ```json
 {
   "success": false,
-  "message": "Erro ao buscar categoria: [detalhes do erro]"
+  "message": "Erro ao buscar produto: [detalhes do erro]"
 }
 ```
 
 ---
 
-### **PUT** `/api/private/categories/:id` ✅
-Atualiza uma categoria existente (nome, status, produtos vinculados).
+### **PUT** `/api/private/product/:id` ✅
+Atualiza um produto existente (nome, imagem, código, descrição, categoria, preço, quantidade, status).
 
 ### **💭 Request:**
 ```http
-PUT /api/private/categories/{categoryId}
+PUT /api/private/products/{productId}
 Content-Type: application/json
 Authorization: Bearer {token}
 ```
@@ -378,56 +273,56 @@ Authorization: Bearer {token}
 - `Authorization: Bearer {token}` *(futuro)*
 
 **Path Parameters:**
-- `categoryId` *(obrigatório)*: ObjectId da categoria
+- `productId` *(obrigatório)*: ObjectId do produto
 
 **Body Parameters:**
 ```json
 {
-  "name": "string",        // Opcional: 3-50 caracteres
-  "status": "boolean",     // Opcional: true/false
-  "products": [            // Opcional: array de produtos
-    {
-      "productId": "string"  // ObjectId do produto (24 chars hex)
-    }
-  ],
-  "deleted": "boolean"     // Opcional: soft delete (use archive endpoint)
+  "name": "string",        // Obrigatório: 3-50 caracteres
+  "imageUrl": "string",    // Opcional: 1-255 caracteres (implementação futura)
+  "code": "string",        // Opcional: 0-9999999999999999999 (implementação futura), default = gerado pelo sistema
+  "description": "string", // Opcional: 1-255 caracteres
+  "categoryId": "string",  // Obrigatório: Chave estrangeira, 24 caracteres, hexadecimal
+  "price": "number",       // Obrigatório: 0.01-9999999.99 numeros
+  "quantity": "number",    // Opcional: default = 0
+  "status": "boolean"     // Opcional: default = true
 }
 ```
 
 #### **Exemplos de Request:**
 
-**Exemplo 1 - Atualizar apenas nome:**
+**Exemplo 1 - Atualizar nome:**
 ```json
 {
-  "name": "Eletrônicos Premium"
+  "name": "Notebook Dell"
 }
 ```
 
-**Exemplo 2 - Desativar categoria:**
+**Exemplo 2 - Desativar produto:**
 ```json
 {
   "status": false
 }
 ```
 
-**Exemplo 3 - Adicionar produtos à categoria:**
+**Exemplo 3 - Adicionar produtos a uma nova categoria:**
 ```json
 {
-  "products": [
-    { "productId": "66b8f1234567890123456789" },
-    { "productId": "66b8f9876543210987654321" }
-  ]
+  "categoryId": "66b8f2222333344445555666"
 }
 ```
 
 **Exemplo 4 - Atualização completa:**
 ```json
 {
-  "name": "Tecnologia Avançada",
-  "status": true,
-  "products": [
-    { "productId": "66b8f1234567890123456789" }
-  ]
+  "name": "Notebook Dell",
+  "imageUrl": "https://exemplo.com/notebook.jpg",
+  "code": "98765",
+  "description": "Processardor i7 3 geração",
+  "categoryId": "66b8f2222333344445555666",
+  "price": 1500.99,
+  "quantity": 2,
+  "status": false
 }
 ```
 ---
@@ -437,15 +332,15 @@ Authorization: Bearer {token}
 {
   "success": true,
   "data": {
-    "_id": "66b8f1111222233334444555",
-    "name": "Eletrônicos Premium",
+    "id": "66b8f1234567890123456789",
+    "name": "Smartphone Galaxy",
+    "imageUrl": "https://exemplo.com/smartphone.jpg",
+    "code": "123456",
+    "description": "Smartphone com 128GB",
+    "categoryId": "66b8f1111222233334444555",
+    "price": 899.99,
+    "quantity": 15,
     "status": true,
-    "products": [
-      {
-        "_id": "66b8f1234567890123456789",
-        "productId": "66b8f1234567890123456789"
-      }
-    ],
     "deleted": false,
     "createdAt": "2024-08-10T08:00:00.000Z",
     "updatedAt": "2024-08-15T15:45:00.000Z"
@@ -458,8 +353,7 @@ Authorization: Bearer {token}
 {
   "success": false,
   "errors": [
-    "Nome deve ter um mínimo de 3 caracteres",
-    "productId deve ser um ObjectId válido"
+    "name: é obrigatório, minimo 3 caracteres, maximo 5o caracteres", "imageUrl: minimo 1 caracter, maximo 255", "code: maior que 0, menor que 9999999999999999999", "description: minimo 1 caracter, maximo 255", "categoryId: é obrigatório, tamanho 24 caracteres, hexadecimal", "price: é obrigatório, minimo 0.01, maximo 999999.99", "quantity: menor que 99999"
   ]
 }
 ```
@@ -468,7 +362,7 @@ Authorization: Bearer {token}
 ```json
 {
   "success": false,
-  "message": "Erro ao atualizar categoria: Categoria não encontrada"
+  "message": "Erro ao atualizar produto: Produto não encontrada"
 }
 ```
 
@@ -476,24 +370,29 @@ Authorization: Bearer {token}
 ```json
 {
   "success": false,
-  "message": "Erro ao atualizar categoria: [detalhes do erro]"
+  "message": "Erro ao atualizar produto: [detalhes do erro]"
 }
 ```
 
 #### **Validações:**
-- 📝 **name:** Opcional, 3-50 caracteres, único se fornecido
-- 📝 **status:** Opcional, boolean
-- 📝 **products:** Opcional, array de ObjectIds válidos
+- 📝 **name:** Obrigatório, string, 3-50 caracteres
+- 📝 **imageUrl:** Opcional, string, 1-255 caracteres
+- 📝 **code:** Opcional, string, 1-99999 intervalo de valores, default = `generatorCodeProduct`
+- 📝 **description:** Opcional, string, 1-255 caracteres
+- 📝 **categoryId:** Obrigatório, string, 24 caracteres, hexadecimal
+- 📝 **price:** Obrigatório, number, 0.01-999999.99 intervalo de valores
+- 📝 **quantity:** Opcional, number, 0-99999 intervalo de valores, default = `0`
+- 📝 **status:** Opcional, boolean, default = `true`
 - 📝 **Mínimo 1 campo** obrigatório para atualização
-- 📝 **Máximo 4 campos** por request
+- 📝 **Máximo 8 campos** por request
 ---
 
-### **PUT** `/api/private/categories/:id/delete` 🚧
-Arquiva uma categoria (soft delete) removendo-a das consultas de endpoints.
+### **PUT** `/api/private/products/:id/delete` 🚧
+Arquiva um produto (soft delete) removendo-a das consultas de endpoints.
 
 ### **💭 Request:**
 ```http
-PUT /api/private/categories/{categoryId}/delete
+PUT /api/private/products/{productId}/delete
 Authorization: Bearer {token}
 ```
 
@@ -501,7 +400,7 @@ Authorization: Bearer {token}
 - `Authorization: Bearer {token}` *(futuro)*
 
 **Path Parameters:**
-- `categoryId` *(obrigatório)*:
+- `productId` *(obrigatório)*:
 
 ### **💬 Response:**
 #### **✔️ Response 200 - Sucesso:**
@@ -509,8 +408,14 @@ Authorization: Bearer {token}
 {
   "success": true,
   "data": {
-    "_id": "66b8f1111222233334444555",
-    "name": "Eletrônicos Premium",
+    "id": "66b8f1234567890123456789",
+    "name": "Smartphone Galaxy",
+    "imageUrl": "https://exemplo.com/smartphone.jpg",
+    "code": "123456",
+    "description": "Smartphone com 128GB",
+    "categoryId": "66b8f1111222233334444555",
+    "price": 899.99,
+    "quantity": 15,
     "status": true,
     "deleted": true,
     "createdAt": "2024-08-10T08:00:00.000Z",
@@ -519,37 +424,16 @@ Authorization: Bearer {token}
 }
 ```
 
-## **📊 Estrutura do Banco de Dados:**
-```json
-// Category Schema:
-{
-  _id: ObjectId,
-  name: String,
-  status: Boolean,
-  products: [
-    {
-      _id: false,                    // ← Desabilitado para subdocument
-      productId: ObjectId           // ← Referência para Product
-    }
-  ],
-  deleted: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
+## **🔄 Como Funciona o Relacionamento:**
+1. **Categoria tem array** `products: [{ productId: ObjectId }]` - Referência para produtos
+2. **Produto é inserido no array** quando criado/atualizado via `CategoryService`
 
-### **🔄 Como Funciona o Populate:**
-1. **Categoria tem array** `products: [{ productId: ObjectId }]`
-2. **Populate busca** dados completos em `Product` collection
-3. **Mongoose substitui** ObjectId pelos dados do produto
-4. **Match filtra** produtos conforme regras (ativo/inativo)
-5. **Select escolhe** quais campos retornar
 
 ### **💡 Vantagens desta Abordagem:**
-- 📝 **Performance:** Busca eficiente com índices
-- 📝 **Flexibilidade:** Diferentes views (público/admin)
-- 📝 **Consistência:** Relacionamento bidirecional
-- 📝 **Manutenibilidade:** Fácil adicionar/remover produtos
+- 📝 **Performance:** Busca eficiente com índices MongoDB e relacionamentos otimizados
+- 📝 **Manutenibilidade:** Separação clara entre produtos e categorias, facilitando atualizações
+- 📝 **Integração:** Relacionamento bidirecional com categorias para consultas eficientes
+- 📝 **UX:** Usuário sempre vê produtos organizados logicamente por categoria
 
 ---
 **Estrutura de dados interna:**
@@ -565,15 +449,15 @@ Authorization: Bearer {token}
   ]
 }
 
-// Após populate:
+// Após populate (dados completos):
 {
   name: "Eletrônicos",
   products: [
     {
       _id: "66b8f1234567890123456789",  // ← Dados completos do produto
-      name: "Smartphone Galaxy",
+      name: "Notebook Dell",
       imageUrl: "https://...",
-      price: 899.99,
+      price: 1500.99,
       // ... outros campos selecionados
     }
   ]
