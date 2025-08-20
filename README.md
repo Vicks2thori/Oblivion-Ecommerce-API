@@ -10,14 +10,13 @@ Documentação completa da API de gestão de produtos do e-commerce.
 
 ## 🧭 Navegação
 - [📊 **Estrutura do Banco de Dados**](#-estrutura-do-banco-de-dados)
-- [📋 **Endpoints Disponíveis**](#get-apipubliccategoriesactive)
+- [📋 **Endpoints Disponíveis**](#-endpoints-disponíveis)
 - [🔒 **Endpoints Privados**](#-endpoints-privados-admin)
-  - [_**POST** `/api/private/categories ✅`_](#post-apiprivatecategories)
-  - [_**GET** `/api/private/categories ✅`_](#get-apiprivatecategories)
-  - [_**GET** `/api/private/categories/:id 🚧`_](#get-apiprivatecategoriesid-)
-  - [_**PUT** `/api/private/categories/:id ✅`_](#put-apiprivatecategoriesid-)
-  - [_**PUT** `/api/private/categories/:id/delete 🚧`_](#put-apiprivatecategoriesiddelete-)
-- [🔄 **Como Funciona o Relacionamento:**](#-como-funciona-o-relacionamento)
+  - [_**POST** `/api/private/products ✅`_](#post-apiprivateproducts)
+  - [_**GET** `/api/private/products/:id 🚧`_](#get-apiprivateproductid-)
+  - [_**PUT** `/api/private/products/:id ✅`_](#put-apiprivateproductid-)
+  - [_**PUT** `/api/private/products/:id/delete 🚧`_](#put-apiprivateproductsiddelete-)
+- [🔄 **Como Funciona o Relacionamento**](#-como-funciona-o-relacionamento)
 
 ## **📊 Estrutura do Banco de Dados:**
 ```json
