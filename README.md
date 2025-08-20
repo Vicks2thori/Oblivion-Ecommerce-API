@@ -5,7 +5,12 @@
 Documentação completa da API de gestão de categorias do e-commerce.
 
 ## 🔗 Outras Branchs
-- [🏠 **Voltar ao Main**](../../tree/main)
+- [🏠 **Voltar ao Main**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/main)
+- [👥 **Users API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/users-api)
+- [🛍️ **Products API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/products-api)
+- [💳 **Payments API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/payments-api)
+- [📦 **Orders API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/orders-api)
+- [🏢 **Enterprise API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/enterprise-api)
 
 ## 🧭 Navegação
 - [📋 **Endpoints Disponíveis**](#-endpoints-disponíveis)
@@ -49,7 +54,7 @@ Documentação completa da API de gestão de categorias do e-commerce.
 
 ## 🔓 **Endpoints Públicos**
 
-### **GET** `/api/public/categories/active`
+### **GET** `/api/public/categories/ active` ✅
 Lista todas as categorias ativas com seus produtos ativos para exibição no e-commerce.
 
 ### **💭 Request:**
@@ -202,7 +207,7 @@ Authorization: Bearer {token}
 - 📝 **status:** Opcional, boolean, default = `true`
 ---
 
-### **GET** `/api/private/categories`
+### **GET** `/api/private/categories` ✅
 Lista todas as categorias (ativas/inativas) com seus produtos (ativos/inativos) para administração.
 
 ### **💭 Request:**
@@ -358,7 +363,7 @@ GET /api/private/categories/66b8f1111222233334444555
 
 ---
 
-### **PUT** `/api/private/categories/:id`
+### **PUT** `/api/private/categories/:id` ✅
 Atualiza uma categoria existente (nome, status, produtos vinculados).
 
 ### **💭 Request:**
