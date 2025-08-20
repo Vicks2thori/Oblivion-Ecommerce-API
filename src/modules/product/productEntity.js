@@ -63,6 +63,17 @@ const ProductSchema = new mongoose.Schema({
   versionKey: false //remove campo inutil
 });
 
+//MIDDLEWARES
+// Validação customizada para garantir pelo menos uma categoria
+ProductSchema.pre('save', function(next) {
+  if (this.categoryId === null) {
+    return next(new Error('Produto deve ter uma categoria'));
+  }
+  next();
+});
+
+
+
 //indexação para performance
 ProductSchema.index({name: 1})
 ProductSchema.index({status: 1, deleted: 1}) //melhorar
