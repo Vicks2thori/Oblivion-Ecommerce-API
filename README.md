@@ -8,7 +8,6 @@ Documentação completa da API de gestão de categorias do e-commerce.
 - [🏠 **Voltar ao Main**](../../tree/main)
 
 ## 🧭 Navegação
-- [👫 **Relacionamento Categoria-Produto**](#-relacionamento-categoria-produto)
 - [📋 **Endpoints Disponíveis**](#-endpoints-disponíveis)
 - [🔓 **Endpoints Públicos**](#-endpoints-publicos)
   - [_**GET** `/api/public/categories/active ✅`_](#get-apipubliccategoriesactive)
@@ -18,49 +17,7 @@ Documentação completa da API de gestão de categorias do e-commerce.
   - [_**GET** `/api/private/categories/:id 🚧`_](#get-apiprivatecategoriesid-)
   - [_**PUT** `/api/private/categories/:id ✅`_](#put-apiprivatecategoriesid-)
   - [_**PUT** `/api/private/categories/:id/delete 🚧`_](#put-apiprivatecategoriesiddelete-)
-
-## 👫 **Relacionamento Categoria-Produto**
-
-### **📊 Estrutura do Banco de Dados:**
-```javascript
-// Category Schema:
-{
-  _id: ObjectId,
-  name: String,
-  status: Boolean,
-  products: [
-    {
-      _id: false,                    // ← Desabilitado para subdocument
-      productId: ObjectId           // ← Referência para Product
-    }
-  ],
-  deleted: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-### **🔄 Como Funciona o Populate:**
-1. **Categoria tem array** `products: [{ productId: ObjectId }]`
-2. **Populate busca** dados completos em `Product` collection
-3. **Mongoose substitui** ObjectId pelos dados do produto
-4. **Match filtra** produtos conforme regras (ativo/inativo)
-5. **Select escolhe** quais campos retornar
-
-### **💡 Vantagens desta Abordagem:**
-- ✅ **Performance:** Busca eficiente com índices
-- ✅ **Flexibilidade:** Diferentes views (público/admin)
-- ✅ **Consistência:** Relacionamento bidirecional
-- ✅ **Manutenibilidade:** Fácil adicionar/remover produtos
-
----
-
-## 🌐 Base URLs
-- **Produção:** `https://tcc-oblivion.onrender.com`
-- **Desenvolvimento:** `http://localhost:3001`
-- **Docs Interativas:** `/docs`
-
----
+- [📊 **Estrutura do Banco de Dados**](#-estrutura-do-banco-de-dados)
 
 ## 📋 **Endpoints Disponíveis**
 
@@ -76,15 +33,18 @@ Documentação completa da API de gestão de categorias do e-commerce.
 | `GET` | `/api/private/categories` | Listar todas as categorias | ✅ |
 | `GET` | `/api/private/categories/:id` | Buscar categoria por ID | 🚧 |
 | `PUT` | `/api/private/categories/:id` | Atualizar categoria | ✅ |
-| `PUT` | `/api/private/categories/:id/archive` | Arquivar categoria (soft delete) | 🚧 |
+| `PUT` | `/api/private/categories/:id/delete` | Arquivar categoria (soft delete) | 🚧 |
 
 ---
 **Diferenças dos endpoint:**
 - 🔓 **Público:** Só categorias ativas + produtos ativos
 - 🔒 **Privado:** Todas categorias + todos produtos (para gestão)
-- 📊 **Admin vê:** Produtos inativos, categorias inativas, timestamps
+- 📊 **Admin vê:** Categorias ativas/inativas e produtos vinculados ativos/inativos, timestamps
 - 🎯 **Público vê:** Apenas itens disponíveis para compra
 
+## 🌐 Base URLs
+- **Produção:** `https://tcc-oblivion.onrender.com`
+- **Desenvolvimento:** `http://localhost:3001`
 
 
 ## 🔓 **Endpoints Públicos**
@@ -133,20 +93,6 @@ GET /api/public/categories/active
         }
       ]
     },
-    {
-      "name": "Roupas",
-      "products": [
-        {
-          "_id": "66b8f5555666677778888999",
-          "name": "Camiseta Básica",
-          "imageUrl": "https://exemplo.com/camiseta.jpg",
-          "description": "Camiseta 100% algodão",
-          "price": 29.99,
-          "code": 456789,
-          "quantity": 50
-        }
-      ]
-    }
   ]
 }
 ```
@@ -160,40 +106,9 @@ GET /api/public/categories/active
 ```
 
 #### **Observações:**
-- ✅ **Apenas categorias ativas não deletadas** (`status: true, deleted: false`)
-- ✅ **Apenas produtos ativos e não deletados** (`status: true, deleted: false`)
-- ✅ **Não requer autenticação**
-- ✅ **Ordenado por nome da categoria**
-
-**Estrutura de dados interna:**
-```javascript
-// Como está no banco (Category):
-{
-  _id: "66b8f1111222233334444555",
-  name: "Eletrônicos",
-  status: true,
-  products: [
-    { _id: false, productId: "66b8f1234567890123456789" }, // ← ObjectId ref
-    { _id: false, productId: "66b8f9876543210987654321" }  // ← ObjectId ref
-  ]
-}
-
-// Após populate:
-{
-  name: "Eletrônicos",
-  products: [
-    {
-      _id: "66b8f1234567890123456789",  // ← Dados completos do produto
-      name: "Smartphone Galaxy",
-      imageUrl: "https://...",
-      price: 899.99,
-      // ... outros campos selecionados
-    }
-  ]
-}
-```
-
-
+- 📝 **Apenas categorias ativas não deletadas** (`status: true, deleted: false`)
+- 📝 **Apenas produtos ativos e não deletados** (`status: true, deleted: false`)
+- 📝 **Não requer autenticação**
 
 ## 🔒 **Endpoints Privados**
 
@@ -283,8 +198,8 @@ Authorization: Bearer {token}
 ```
 
 #### **Validações:**
-- ✅ **name:** Obrigatório, string, 3-50 caracteres
-- ✅ **status:** Opcional, boolean, default = `true`
+- 📝 **name:** Obrigatório, string, 3-50 caracteres
+- 📝 **status:** Opcional, boolean, default = `true`
 ---
 
 ### **GET** `/api/private/categories`
@@ -361,11 +276,11 @@ Authorization: Bearer {token}
 ```
 
 #### **Observações:**
-- ✅ **Todas as categorias** (ativas e inativas, não deletadas)
-- ✅ **Todos os produtos** (ativos e inativos, não deletados)
-- ✅ **Ordenado por nome** da categoria
-- ✅ **Inclui timestamps** de criação e atualização
-- ✅ **Dados completos** para administração
+- 📝 **Todas as categorias** (ativas e inativas, não deletadas)
+- 📝 **Todos os produtos** (ativos e inativos, não deletados)
+- 📝 **Ordenado por nome** da categoria
+- 📝 **Inclui timestamps** de criação e atualização
+- 📝 **Dados completos** para administração
 ---
 
 ### **GET** `/api/private/categories/:id` 🚧
@@ -561,11 +476,11 @@ Authorization: Bearer {token}
 ```
 
 #### **Validações:**
-- ✅ **name:** Opcional, 3-50 caracteres, único se fornecido
-- ✅ **status:** Opcional, boolean
-- ✅ **products:** Opcional, array de ObjectIds válidos
-- ✅ **Mínimo 1 campo** obrigatório para atualização
-- ✅ **Máximo 4 campos** por request
+- 📝 **name:** Opcional, 3-50 caracteres, único se fornecido
+- 📝 **status:** Opcional, boolean
+- 📝 **products:** Opcional, array de ObjectIds válidos
+- 📝 **Mínimo 1 campo** obrigatório para atualização
+- 📝 **Máximo 4 campos** por request
 ---
 
 ### **PUT** `/api/private/categories/:id/delete` 🚧
@@ -596,5 +511,66 @@ Authorization: Bearer {token}
     "createdAt": "2024-08-10T08:00:00.000Z",
     "updatedAt": "2024-08-15T15:45:00.000Z"
   }
+}
+```
+
+## **📊 Estrutura do Banco de Dados:**
+```json
+// Category Schema:
+{
+  _id: ObjectId,
+  name: String,
+  status: Boolean,
+  products: [
+    {
+      _id: false,                    // ← Desabilitado para subdocument
+      productId: ObjectId           // ← Referência para Product
+    }
+  ],
+  deleted: Boolean,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### **🔄 Como Funciona o Populate:**
+1. **Categoria tem array** `products: [{ productId: ObjectId }]`
+2. **Populate busca** dados completos em `Product` collection
+3. **Mongoose substitui** ObjectId pelos dados do produto
+4. **Match filtra** produtos conforme regras (ativo/inativo)
+5. **Select escolhe** quais campos retornar
+
+### **💡 Vantagens desta Abordagem:**
+- 📝 **Performance:** Busca eficiente com índices
+- 📝 **Flexibilidade:** Diferentes views (público/admin)
+- 📝 **Consistência:** Relacionamento bidirecional
+- 📝 **Manutenibilidade:** Fácil adicionar/remover produtos
+
+---
+**Estrutura de dados interna:**
+```json
+// Como está no banco (Category):
+{
+  _id: "66b8f1111222233334444555",
+  name: "Eletrônicos",
+  status: true,
+  products: [
+    { _id: false, productId: "66b8f1234567890123456789" }, // ← ObjectId ref
+    { _id: false, productId: "66b8f9876543210987654321" }  // ← ObjectId ref
+  ]
+}
+
+// Após populate:
+{
+  name: "Eletrônicos",
+  products: [
+    {
+      _id: "66b8f1234567890123456789",  // ← Dados completos do produto
+      name: "Smartphone Galaxy",
+      imageUrl: "https://...",
+      price: 899.99,
+      // ... outros campos selecionados
+    }
+  ]
 }
 ```
