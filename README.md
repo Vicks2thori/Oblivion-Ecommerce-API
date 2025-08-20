@@ -25,7 +25,8 @@
 ## 📋 Documentação APIs
 
 - [📩 **Category API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Category-API)
-- [🗳️ **Product API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Product-API)
+- [🛍️ **Product API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Product-API)
+- [🏦 **Enterprise API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Enterprise-API)
 
 ## 🎯 Sobre o Projeto
 
