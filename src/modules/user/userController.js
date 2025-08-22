@@ -1,15 +1,15 @@
 //userController.js
-const { createUserSchema, updateUserSchema } = require('./userDto');
+const { createAdminSchema, createClientSchema, updateAdminSchema, updateClientSchema } = require('./userDto');
 const User = require('./userService');
 //const { badRequest400, responseHelpersOk, responseHelpersError } = require("../../../routes/responseHelpers"); futuramente qando estiver funcionando
 
 //CRUD
 
 //Create
-async function create(req, res) {
+async function createClient(req, res) {
   try {
     //Validar DTO
-    const { error, value } = createUserSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
+    const { error, value } = createClientSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
     if (error) {
       //400 - Dados inválidos
       return res.status(400).json({
@@ -20,7 +20,41 @@ async function create(req, res) {
     };
 
     //Criar através do Service
-    const user = await User.createUser(value);
+    const user = await User.createClient(value);
+
+    //200 - Sucesso geral
+    res.status(200).json({
+      success: true,
+      message: '200 - Operação realizada com sucesso',
+      data: user
+    });
+
+
+  }catch (error) {
+    //500 - Erro interno do servidor
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  };
+};
+
+//Create
+async function createAdmin(req, res) {
+  try {
+    //Validar DTO
+    const { error, value } = createAdminSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
+    if (error) {
+      //400 - Dados inválidos
+      return res.status(400).json({
+        success: false,
+        message: '400 - Dados inválidos',
+        errors: error.details.map(d => d.message) //extrai só as mensagens
+      });
+    };
+
+    //Criar através do Service
+    const user = await User.createAdmin(value);
 
     //200 - Sucesso geral
     res.status(200).json({
@@ -110,11 +144,11 @@ async function getClientById(req, res) {
 
 
 //Update
-async function update(req, res) {
+async function updateAdmin(req, res) {
   try {
-    const { id } = req.params;
+    const { id } = req.params;  
 
-    const { error, value } = updateUserSchema.validate(req.body);
+    const { error, value } = updateAdminSchema.validate(req.body);
     if (error) {
       return res.status(400).json({
         success: false,
@@ -122,7 +156,37 @@ async function update(req, res) {
       });
     }
     
-    const result = await User.updateAdmin(id, value);
+    const result = await User.update(id, value);
+    
+    //200 - Sucesso geral
+    return res.status(200).json({
+      success: true,
+      data: result
+    });
+    
+  } catch (error) {
+    //500 - Erro interno do servidor
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
+
+//Update
+async function updateClient(req, res) {
+  try {
+    const { id } = req.params;  
+
+    const { error, value } = updateClientSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        errors: error.details.map(d => d.message) // ✅ Só aqui usar .details
+      });
+    }
+    
+    const result = await User.updateClient(id, value);
     
     //200 - Sucesso geral
     return res.status(200).json({
@@ -162,10 +226,12 @@ async function deleteUser(req, res) {
 }
 
 module.exports = {
-  create,
+  createClient,
+  createAdmin,
   getAllAdmins,
   getAdminById,
   getClientById,
-  update,
+  updateAdmin,
+  updateClient,
   deleteUser
 };
