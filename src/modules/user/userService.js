@@ -3,9 +3,19 @@ const User = require("./userEntity");
 
 //CRUD
 
-//Create
-const createUser = async function(data) {
+//Create client
+const createClient = async function(data) {
   try { 
+    const user = new User(data); //cria um novo
+    return await user.save(); //salva no banco
+  }catch (error) {
+    throw new Error(`Erro ao criar usuário: ${error.message}`);
+  }
+};
+
+//Create admin
+const createAdmin = async function(data) {
+  try {
     const user = new User(data); //cria um novo
     return await user.save(); //salva no banco
   }catch (error) {
@@ -27,7 +37,7 @@ const getAllAdmins = async function() {
 //By ID - admin
 const getAdminById = async function(id) {
   try {
-    const getById = await User.findById(id, {type: 'admin'});
+    const getById = await User.findById({_id: id, type: 'admin'}, {type: 0, password: 0});
     
     if (!getById || getById.deleted) { //se não encontrou ou encontrou e esta deletada
       throw new Error('Admin não encontrado'); //cria um novo erro
@@ -42,7 +52,7 @@ const getAdminById = async function(id) {
 //By ID - client
 const getClientById = async function(id) {
     try {
-      const getById = await User.findById(id, {type: 'client'});
+      const getById = await User.findById({_id: id, type: 'client'}, {type: 0, password: 0});
       
       if (!getById || getById.deleted) { //se não encontrou ou encontrou e esta deletada
         throw new Error('Cliente não encontrado'); //cria um novo erro
@@ -57,6 +67,7 @@ const getClientById = async function(id) {
 //Update - admin
 const updateAdmin = async function(id, updateData) {
     try {
+      updateData.type = 'admin';
       const updated = await User.findOneAndUpdate(
         {_id: id, deleted: false, type: 'admin' }, //só atualiza se não foi deletado
         updateData, 
@@ -75,6 +86,7 @@ const updateAdmin = async function(id, updateData) {
 //Update - client
 const updateClient = async function(id, updateData) {
     try {
+      updateData.type = 'client';
       const updated = await User.findOneAndUpdate(
         {_id: id, deleted: false, type: 'client' }, //só atualiza se não foi deletado
         updateData, 
@@ -110,10 +122,12 @@ const deleteUser = async function(id) {
 };
 
 module.exports = {
-    createUser,
+    createClient,
+    createAdmin,
     getAllAdmins,
     getAdminById,
     getClientById,
     updateAdmin,
+    updateClient,
     deleteUser
 };

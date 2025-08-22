@@ -33,6 +33,7 @@ const UserSchema = new mongoose.Schema({
 
   // EMBEDDING - Subdocumentos
   adminDetails: {
+    _id: false,
     type: {
       status: { 
         type: Boolean,
@@ -42,6 +43,7 @@ const UserSchema = new mongoose.Schema({
   },
   
   clientDetails: {
+    _id: false,
     type: {
       cpf: { 
         type: String,

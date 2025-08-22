@@ -9,6 +9,7 @@ const User = require('./userService');
 async function createClient(req, res) {
   try {
     //Validar DTO
+    req.body.type = 'client';
     const { error, value } = createClientSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
     if (error) {
       //400 - Dados inválidos
@@ -43,6 +44,7 @@ async function createClient(req, res) {
 async function createAdmin(req, res) {
   try {
     //Validar DTO
+    req.body.type = 'client';
     const { error, value } = createAdminSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
     if (error) {
       //400 - Dados inválidos
@@ -146,7 +148,8 @@ async function getClientById(req, res) {
 //Update
 async function updateAdmin(req, res) {
   try {
-    const { id } = req.params;  
+    const { id } = req.params; 
+    req.body.type = 'admin';
 
     const { error, value } = updateAdminSchema.validate(req.body);
     if (error) {
@@ -176,7 +179,8 @@ async function updateAdmin(req, res) {
 //Update
 async function updateClient(req, res) {
   try {
-    const { id } = req.params;  
+    const { id } = req.params;
+    req.body.type = 'client';
 
     const { error, value } = updateClientSchema.validate(req.body);
     if (error) {

@@ -1,5 +1,6 @@
 //userUtills.js
 const User = require("./userEntity");
+const bcrypt = require("bcrypt");
 
 // Função para converter senha em Hash
 const convertPasswordToHash = async function(password) {
