@@ -19,6 +19,9 @@ const corsOptions = {
   
   // Permitir todos os headers
   allowedHeaders: [
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Methods',
+    'Access-Control-Request-Method',
     'Origin',
     'X-Requested-With',
     'Content-Type',
