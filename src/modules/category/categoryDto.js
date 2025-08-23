@@ -1,24 +1,26 @@
-//categoryDto.js
 const Joi = require('joi');
 
 const createCategorySchema = Joi.object({
-  name: Joi.string().min(3).max(50).required(),
-  status: Joi.boolean().default(true).optional()
-  //na hora de criar a categoria não se vincula produto, só na hora de criar produto (atualizar)
-  //não se cria deleted isso é o backend que faz
-}).min(1).max(2); //Minimo do nome (se quiser enviar status indifere pois o Entity aplica o default)
+  name: Joi.string().trim().min(3).max(50).required(),
+
+  status: Joi.boolean().default(true).optional(),
+}).min(1).max(2);
 
 const updateCategorySchema = Joi.object({
-  name: Joi.string().min(3).max(50).optional(),
-  status: Joi.boolean().optional(),
-  products: Joi.array().items( //para a validação de muitos produtos
+  name: Joi.string().trim().min(3).max(50).optional(),
+
+  productsList: Joi.array().items(
     Joi.object({
       productId: Joi.string().length(24).hex().required()
     })
   ).optional(),
-  deleted: Joi.boolean().optional()
-}).min(1).max(4); //mesma duvida a cerca da quantidade de requisições (no caso de deleted como que o front manda? vai mandar SÓ ele ou o resto?)
+
+  status: Joi.boolean().optional(),
+
+  categoryDeleted: Joi.boolean().optional()
+}).min(1);
 
 module.exports = { 
   createCategorySchema, 
-  updateCategorySchema };
+  updateCategorySchema 
+};
