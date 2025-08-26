@@ -34,35 +34,26 @@ const UserSchema = new mongoose.Schema({
   // EMBEDDING - Subdocumentos
   adminDetails: {
     _id: false,
-    type: {
-      status: { 
-        type: Boolean,
-        default: true },
-    },
-    required: function() { return this.type === 'admin'; }
+    status: { 
+      type: Boolean,
+      default: true 
+    }
   },
   
   clientDetails: {
     _id: false,
-    type: {
-      cpf: { 
-        type: String,
-        required: [true, 'Cpf é obrigatório'],
-        trim: true,
-        minlength: [11, 'Cpf deve ter exatamente 11 digitos (min)'],
-        maxlength: [11, 'Cpf deve ter exatamente 11 digitos (max)'],
-        unique: true //Unique
-      },
-      cell: { 
-        type: String,
-        required: [true, 'Telefone é obrigatório'],
-        trim: true,
-        minlength: [11, 'Telefone deve ter exatamente 11 digitos (min)'],
-        maxlength: [11, 'Telefone deve ter exatamente 11 digitos (max)'],
-        unique: true //Unique
-      },
+    cpf: { 
+      type: String,
+      trim: true,
+      minlength: [11, 'Cpf deve ter exatamente 11 digitos (min)'],
+      maxlength: [11, 'Cpf deve ter exatamente 11 digitos (max)']
     },
-    required: function() { return this.type === 'client'; }
+    cell: { 
+      type: String,
+      trim: true,
+      minlength: [11, 'Telefone deve ter exatamente 11 digitos (min)'],
+      maxlength: [11, 'Telefone deve ter exatamente 11 digitos (max)']
+    }
   },
 
   deleted: {
@@ -75,24 +66,47 @@ const UserSchema = new mongoose.Schema({
   versionKey: false //remove campo inutil
 });
 
+// Validação condicional - campos obrigatórios por tipo
+UserSchema.pre('validate', function(next) {
+  if (this.type === 'admin') {
+    // Para admin: clientDetails deve ser completamente removido
+    this.clientDetails = undefined;
+    // Para admin: adminDetails é opcional mas pode ter valor padrão
+    if (!this.adminDetails) {
+      this.adminDetails = { status: true };
+    }
+  } else if (this.type === 'client') {
+    // Para client: adminDetails deve ser completamente removido
+    this.adminDetails = undefined;
+    
+    // Para client: cpf e cell são obrigatórios
+    if (!this.clientDetails || !this.clientDetails.cpf || !this.clientDetails.cell) {
+      return next(new Error('Para clientes, CPF e telefone são obrigatórios'));
+    }
+  }
+  next();
+});
+
 //indexação para performance
 UserSchema.index({ email: 1 }); // Email único
 UserSchema.index({ type: 1 }); // Filtrar por tipo
 UserSchema.index({ deleted: 1, type: 1 }); // Composto principal
 
-//Client
+//Client - CPF (só para clientes)
 UserSchema.index(
   { 'clientDetails.cpf': 1 }, 
   { 
     unique: true, 
-    sparse: true,  // Só cria índice se campo existir
+    sparse: true,
     partialFilterExpression: { 
       type: 'client',
-      deleted: false 
+      deleted: false,
+      'clientDetails.cpf': { $exists: true, $ne: null }
     }
   }
 );
 
+//Client - Telefone (só para clientes)
 UserSchema.index(
   { 'clientDetails.cell': 1 }, 
   { 
@@ -100,7 +114,8 @@ UserSchema.index(
     sparse: true,
     partialFilterExpression: { 
       type: 'client',
-      deleted: false 
+      deleted: false,
+      'clientDetails.cell': { $exists: true, $ne: null, $ne: '' }
     }
   }
 );

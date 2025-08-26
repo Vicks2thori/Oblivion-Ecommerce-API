@@ -15,7 +15,7 @@ const createClient = async function(data) {
 
 //Create admin
 const createAdmin = async function(data) {
-  try {
+  try { 
     const user = new User(data); //cria um novo
     return await user.save(); //salva no banco
   }catch (error) {

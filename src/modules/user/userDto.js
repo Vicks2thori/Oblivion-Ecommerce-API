@@ -8,8 +8,9 @@ const createAdminSchema = Joi.object({ //criei um para cada ja que se cria e se 
   type: Joi.string().valid('admin').required(),
   adminDetails: Joi.object({
     status: Joi.boolean().default(true)
-  }).required()
-}).min(6).max(6);
+  }).optional(),
+  clientDetails: Joi.forbidden() // Garante que clientDetails não seja enviado para admin
+}).min(4).max(5);
 
 const createClientSchema = Joi.object({
   name: Joi.string().min(5).max(80).required(),
@@ -19,7 +20,8 @@ const createClientSchema = Joi.object({
   clientDetails: Joi.object({
     cpf: Joi.string().length(11).required(),
     cell: Joi.string().length(11).required()
-  }).required()
+  }).required(),
+  adminDetails: Joi.forbidden() // Garante que adminDetails não seja enviado para client
 }).min(5).max(5); //clientDetails conta como 1 objeto
 
 const updateAdminSchema = Joi.object({
@@ -29,7 +31,8 @@ const updateAdminSchema = Joi.object({
   type: Joi.string().valid('admin').required(), //para validar se pode alterar
   adminDetails: Joi.object({
     status: Joi.boolean().default(true)
-  }).optional()
+  }).optional(),
+  clientDetails: Joi.forbidden() // Garante que clientDetails não seja enviado para admin
 }).min(2).max(5); //minimo 2 pois precisa do tipo + 1 alteração
 
 const updateClientSchema = Joi.object({
@@ -40,7 +43,8 @@ const updateClientSchema = Joi.object({
   clientDetails: Joi.object({
     cpf: Joi.string().length(11).optional(),
     cell: Joi.string().length(11).optional()
-  }).optional()
+  }).optional(),
+  adminDetails: Joi.forbidden() // Garante que adminDetails não seja enviado para client
 }).min(2).max(5);
 
 module.exports = { 

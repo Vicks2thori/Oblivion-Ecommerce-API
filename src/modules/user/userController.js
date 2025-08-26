@@ -10,7 +10,13 @@ async function createClient(req, res) {
   try {
     //Validar DTO
     req.body.type = 'client';
-    const { error, value } = createClientSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
+    
+    // Garante que adminDetails não seja enviado para client
+    if (req.body.adminDetails) {
+      delete req.body.adminDetails;
+    }
+    
+    const { error, value } = createClientSchema.validate(req.body); //validate do Joi retorna um erro(null se estender ok) e os valores
     if (error) {
       //400 - Dados inválidos
       return res.status(400).json({
@@ -44,7 +50,8 @@ async function createClient(req, res) {
 async function createAdmin(req, res) {
   try {
     //Validar DTO
-    req.body.type = 'client';
+    req.body.type = 'admin';
+    
     const { error, value } = createAdminSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
     if (error) {
       //400 - Dados inválidos
@@ -159,7 +166,7 @@ async function updateAdmin(req, res) {
       });
     }
     
-    const result = await User.update(id, value);
+    const result = await User.updateAdmin(id, value);
     
     //200 - Sucesso geral
     return res.status(200).json({

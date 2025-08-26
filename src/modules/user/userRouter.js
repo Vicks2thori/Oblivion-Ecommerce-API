@@ -19,7 +19,7 @@ privateRouter.post('/', userController.createAdmin);           // Criar
 privateRouter.get('/', userController.getAllAdmins);            // Listar todas
 privateRouter.get('/:id', userController.getAdminById);        // Buscar por ID
 privateRouter.put('/:id', userController.updateAdmin);         // Atualizar
-privateRouter.delete('/:id/delete', userController.deleteUser); // Deletar
+privateRouter.put('/:id/delete', userController.deleteUser); // Deletar
 
 module.exports = {
   public: publicRouter,
