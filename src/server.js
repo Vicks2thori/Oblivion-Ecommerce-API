@@ -25,6 +25,17 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
   }
 }));
 
+import express from "express";
+import cors from "cors";
+
+
+// Permitir apenas seu frontend
+app.use(cors({
+  origin: "https://tcc-oblivion.onrender.com",
+  methods: ["GET", "POST", "PUT"],
+  credentials: true
+}));
+
 // Rotas
 const publicRoutes = require('./routes/publicRoutes');
 const privateRoutes = require('./routes/privateRoutes');
