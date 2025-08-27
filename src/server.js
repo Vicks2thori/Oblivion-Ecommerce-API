@@ -4,6 +4,7 @@ const express = require("express");
 const morgan = require("morgan");
 const swaggerUi = require('swagger-ui-express');
 const specs = require('./config/swagger');
+const cors = require('cors');
 const { connectDB } = require('./model/database'); // ✅ Importar função
 const { initializeSite } = require('./modules/site/siteService'); // ✅ Importar inicialização do Site
 
@@ -24,9 +25,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
     tryItOutEnabled: true
   }
 }));
-
-import express from "express";
-import cors from "cors";
 
 
 // Permitir apenas seu frontend
