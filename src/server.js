@@ -27,12 +27,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
 }));
 
 
-// Permitir apenas seu frontend
-app.use(cors({
-  origin: "https://tcc-oblivion.onrender.com",
-  methods: ["GET", "POST", "PUT"],
-  credentials: true
-}));
+// Configuração de CORS flexível para desenvolvimento e produção
+const corsOptions = require('./config/cors');
+app.use(cors(corsOptions));
 
 // Rotas
 const publicRoutes = require('./routes/publicRoutes');

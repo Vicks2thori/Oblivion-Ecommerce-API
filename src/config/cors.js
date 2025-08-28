@@ -15,7 +15,7 @@ const corsOptions = {
   credentials: true,
   
   // Permitir todos os métodos HTTP
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
   
   // Permitir todos os headers
   allowedHeaders: [
