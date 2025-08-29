@@ -15,8 +15,9 @@ const privateRouter = express.Router();
 // CRUD completo para admin
 privateRouter.post('/', categoryController.create);           // Criar
 privateRouter.get('/', categoryController.getAll);            // Listar todas
+privateRouter.get('/:id', categoryController.getById);        // Buscar por ID
 privateRouter.put('/:id', categoryController.update);         // Atualizar
-privateRouter.delete('/:id', categoryController.deleteCategory); // Deletar
+privateRouter.put('/:id/delete', categoryController.deleteCategory); // Deletar
 
 module.exports = {
   public: publicRouter,

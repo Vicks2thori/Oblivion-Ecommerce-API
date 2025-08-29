@@ -46,6 +46,18 @@ const getAllCategories = async function() {
   }
 };
 
+//Get by Id
+const getCategoryById = async function(id) {
+  try {
+    const category = await Category.findById(id);
+    if (!category) {
+      throw new Error('Categoria não encontrada');
+    }
+    return category;
+  }catch (error) {
+    throw new Error(`Erro ao buscar categoria por ID: ${error.message}`);
+  }
+};
 
 //Active - Categorias ativas com produtos ativos (E-commerce)
 // Função para buscar categorias ativas com produtos ativos (E-commerce)
@@ -144,6 +156,7 @@ const deleteCategory = async function(id) {
 
 module.exports = {
     createCategory,
+    getCategoryById,
     getAllCategories,
     getActiveCategories,
     updateCategory,
