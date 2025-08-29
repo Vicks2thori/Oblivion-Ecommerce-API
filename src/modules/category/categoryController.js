@@ -63,6 +63,26 @@ async function getAll(req, res) {
   }
 }
 
+async function getById(req, res) {
+  try {
+    const activeCategories = await Category.getCategoryById();
+
+    //200 - Sucesso geral
+    res.status(200).json({
+      success: true,
+      message: '200 - Operação realizada com sucesso',
+      data: activeCategories
+    });
+
+  }catch (error) {
+    //500 - Erro interno do servidor
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 //Active
 async function getActive(req, res) {
   try {
@@ -93,7 +113,7 @@ async function update(req, res) {
     if (error) {
       return res.status(400).json({
         success: false,
-        errors: error.details.map(d => d.message) // ✅ Só aqui usar .details
+        message: `400 - Dados inválidos: ${error.details.map(d => d.message).join(', ')}`,
       });
     }
     
@@ -139,6 +159,7 @@ async function deleteCategory(req, res) {
 module.exports = {
   create,
   getAll,
+  getById,
   getActive,
   update,
   deleteCategory
