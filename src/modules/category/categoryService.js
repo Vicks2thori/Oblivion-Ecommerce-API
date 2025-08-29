@@ -32,8 +32,8 @@ const getAllCategories = async function() {
           return {
             _id: category._id,
             name: category.name,
-            status: category.status,
             products: products,
+            status: category.status,
             createdAt: category.createdAt,
             updatedAt: category.updatedAt
           };
@@ -121,7 +121,7 @@ const deleteCategory = async function(id) {
       throw new Error('Categoria não encontrada');
     };
 
-    const produtosVinculados = (category.productsList || []).filter(
+    const produtosVinculados = (category.productsList).filter(
       p => p.productId && !p.productId.deleted
     );
 

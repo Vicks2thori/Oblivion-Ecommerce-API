@@ -56,7 +56,8 @@ async function getAll(req, res) {
 
 async function getById(req, res) {
   try {
-    const category = await Category.getCategoryById();
+    const { id } = req.params;
+    const category = await Category.getCategoryById(id);
 
     //Sucesso
     res.status(200).json({
