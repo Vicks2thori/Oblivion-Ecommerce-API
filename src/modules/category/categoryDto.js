@@ -1,3 +1,4 @@
+//categoryDto.js
 const Joi = require('joi');
 
 const createCategorySchema = Joi.object({
@@ -14,7 +15,7 @@ const createCategorySchema = Joi.object({
 
   status: Joi.boolean()
   .default(true)
-  .optional(),
+  .optional()
 }).min(1).max(2);
 
 const updateCategorySchema = Joi.object({
@@ -45,6 +46,7 @@ const updateCategorySchema = Joi.object({
 
   categoryDeleted: Joi.boolean().optional()
 }).min(1);
+
 
 module.exports = { 
   createCategorySchema, 
