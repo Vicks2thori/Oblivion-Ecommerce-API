@@ -16,9 +16,9 @@ Documentação completa da API de gestão de categorias do e-commerce.
 - [🔒 **Endpoints Privados**](#-endpoints-privados-admin)
   - [_**POST** `/api/private/categories ✅`_](#post-apiprivatecategories)
   - [_**GET** `/api/private/categories ✅`_](#get-apiprivatecategories)
-  - [_**GET** `/api/private/categories/:id 🚧`_](#get-apiprivatecategoriesid-)
+  - [_**GET** `/api/private/categories/:id ✅`_](#get-apiprivatecategoriesid-)
   - [_**PUT** `/api/private/categories/:id ✅`_](#put-apiprivatecategoriesid-)
-  - [_**PUT** `/api/private/categories/:id/delete 🚧`_](#put-apiprivatecategoriesiddelete-)
+  - [_**PUT** `/api/private/categories/:id/delete ✅`_](#put-apiprivatecategoriesiddelete-)
 - [📊 **Estrutura do Banco de Dados**](#-estrutura-do-banco-de-dados)
 
 ## 📋 **Endpoints Disponíveis**
@@ -33,9 +33,9 @@ Documentação completa da API de gestão de categorias do e-commerce.
 |--------|----------|-----------|--------|
 | `POST` | `/api/private/categories` | Criar categoria | ✅ |
 | `GET` | `/api/private/categories` | Listar todas as categorias | ✅ |
-| `GET` | `/api/private/categories/:id` | Buscar categoria por ID | 🚧 |
+| `GET` | `/api/private/categories/:id` | Buscar categoria por ID | ✅ |
 | `PUT` | `/api/private/categories/:id` | Atualizar categoria | ✅ |
-| `PUT` | `/api/private/categories/:id/delete` | Arquivar categoria (soft delete) | 🚧 |
+| `PUT` | `/api/private/categories/:id/delete` | Arquivar categoria (soft delete) | ✅ |
 
 ---
 **Diferenças dos endpoint:**
@@ -285,7 +285,7 @@ Authorization: Bearer {token}
 - 📝 **Dados completos** para administração
 ---
 
-### **GET** `/api/private/categories/:id` 🚧
+### **GET** `/api/private/categories/:id` ✅
 Busca uma categoria específica por ID para edição/visualização.
 
 #### **💭 Request:**
@@ -485,7 +485,7 @@ Authorization: Bearer {token}
 - 📝 **Máximo 4 campos** por request
 ---
 
-### **PUT** `/api/private/categories/:id/delete` 🚧
+### **PUT** `/api/private/categories/:id/delete` ✅
 Arquiva uma categoria (soft delete) removendo-a das consultas de endpoints.
 
 ### **💭 Request:**
