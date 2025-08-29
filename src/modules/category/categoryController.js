@@ -14,8 +14,7 @@ async function create(req, res) {
       //400 - Dados inválidos
       return res.status(400).json({
         success: false,
-        message: '400 - Dados inválidos',
-        errors: error.details.map(d => d.message) //extrai só as mensagens
+        message: `400 - Dados inválidos: ${error.details.map(d => d.message).join(', ')}`,
       });
     };
 
@@ -94,7 +93,7 @@ async function update(req, res) {
     if (error) {
       return res.status(400).json({
         success: false,
-        errors: error.details.map(d => d.message) // ✅ Só aqui usar .details
+        message: `400 - Dados inválidos: ${error.details.map(d => d.message).join(', ')}`,
       });
     }
     
