@@ -37,13 +37,13 @@ async function create(req, res) {
 //READ
 async function getAll(req, res) {
   try {
-    const category = await Category.getAllCategories();
+    const categories = await Category.getAllCategories();
 
     //Sucesso geral
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: category
+      data: categories
     });
   } catch (error) {
     //Erro interno do servidor
@@ -56,13 +56,13 @@ async function getAll(req, res) {
 
 async function getById(req, res) {
   try {
-    const activeCategories = await Category.getCategoryById();
+    const category = await Category.getCategoryById();
 
     //Sucesso
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: activeCategories
+      data: category
     });
   } catch (error) {
     //Erro interno do servidor
@@ -106,12 +106,12 @@ async function update(req, res) {
       });
     };
     
-    const result = await Category.updateCategory(id, value);
+    const updatedCategory = await Category.updateCategory(id, value);
     
     //Sucesso
     return res.status(200).json({
       success: true,
-      data: result
+      data: updatedCategory
     });
   } catch (error) {
     //Erro interno do servidor
@@ -127,13 +127,13 @@ async function update(req, res) {
 async function deleteCategory(req, res) {
   try {
     const { id } = req.params;
-    const deleted = await Category.deleteCategory(id);
+    const deletedCategory = await Category.deleteCategory(id);
 
     //Sucesso
     res.status(200).json({
       success: true,
       message: '200 - Operação realizada com sucesso',
-      data: deleted
+      data: deletedCategory
     });
   } catch (error) {
     //Erro interno do servidor

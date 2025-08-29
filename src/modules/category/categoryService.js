@@ -1,6 +1,6 @@
 //categoryService.js
 const Category = require("./categoryEntity");
-const { filterActiveProducts, addProductToCategoryWithTransfer } = require("./categoryUtils");
+const { filterProducts, addProductToCategoryWithTransfer } = require("./categoryUtils");
 
 
 //CREATE
@@ -27,7 +27,7 @@ const getAllCategories = async function() {
       .sort({name: 1})
       .then(categories => {
         return categories.map(category => {
-          const products = filterActiveProducts(category.productsList, true);
+          const products = filterProducts(category.productsList);
           
           return {
             _id: category._id,
@@ -66,20 +66,17 @@ const getActiveCategories = async function() {
     })
     .populate({
       path: 'productsList.productId',
-      select: 'name imageUrl description price code quantity status deleted'
+      select: 'name imageUrl description price code quantity'
     })
     .sort({ name: 1 })
     .then(categories => {
       return categories.map(category => {
-        const activeProducts = filterActiveProducts(category.productsList, false);
+        const activeProducts = filterProducts(category.productsList, 'active');
         
         return {
           _id: category._id,
           name: category.name,
-          status: category.status,
-          products: activeProducts,
-          createdAt: category.createdAt,
-          updatedAt: category.updatedAt
+          products: activeProducts
         };
       });
     });
