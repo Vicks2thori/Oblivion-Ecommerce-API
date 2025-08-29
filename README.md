@@ -1,336 +1,470 @@
-# 🛒 E-commerce Backend - Sistema de Gestão
+# 📂 API de Usuários - TCC Oblivion
 
-> **Projeto de TCC** - Backend para sistema de e-commerce com retaguarda para gerenciar pedidos.
+> **Branch:** `docs/Users-API` | **Status:** 🚧 Em Desenvolvimento
 
-[![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-5.7+-blue.svg)](https://www.mongodb.com/)
-[![Express](https://img.shields.io/badge/Express-4.18+-black.svg)](https://expressjs.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+Documentação completa da API de gestão de produtos do e-commerce.
 
-## 📋 Índice
-
-- [🎯 Sobre o Projeto](#-sobre-o-projeto)
-- [🏗️ Arquitetura do Sistema](#️-arquitetura-do-sistema)
-- [🚀 Como Executar](#-como-executar)
-- [📚 Documentação da API](#-documentação-da-api)
-- [🗂️ Estrutura de Pastas](#️-estrutura-de-pastas)
-- [🔧 Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [📊 Engenharia de Requisitos Funcionais](#-engenharia-de-requisitos-funcionais)
-- [📈 Histórico de Commits](#-histórico-de-commits)
-- [📌 Boas Práticas](#-boas-práticas-do-projeto)
-- [🤝 Contribuição](#-contribuição)
-- [🎯 Diferencial do Projeto](#-diferencial-do-projeto)
-- [👨‍💻 Autor](#-autor)
-
-## 📋 Documentação APIs
-
+## 🔗 Outras Branchs
+- [🏠 **Voltar ao Main**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/main)
 - [📩 **Category API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Category-API)
-- [🗳️ **Product API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Product-API)
+- [📩 **Product API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Product-API)
 
-## 🎯 Sobre o Projeto
+## 🧭 Navegação
+- [📊 **Estrutura do Banco de Dados**](#-estrutura-do-banco-de-dados)
+- [📋 **Endpoints Disponíveis**](#-endpoints-disponíveis)
+- [🔒 **Endpoints Publicos**](#-endpoints-publicos)
+  - [_**POST** `/api/private/products 🚧`_](#post-apiprivateproducts)
+  - [_**GET** `/api/private/products/:id 🚧`_](#get-apiprivateproductid-)
+  - [_**PUT** `/api/private/products/:id 🚧`_](#put-apiprivateproductid-)
+  - [_**PUT** `/api/private/products/:id/delete 🚧`_](#put-apiprivateproductsiddelete-)
+- [🔒 **Endpoints Privados**](#-endpoints-privados-admin)
+  - [_**POST** `/api/private/products 🚧`_](#post-apiprivateproducts)
+  - [_**GET** `/api/private/products/:id 🚧`_](#get-apiprivateproductid-)
+  - [_**PUT** `/api/private/products/:id 🚧`_](#put-apiprivateproductid-)
+  - [_**PUT** `/api/private/products/:id/delete 🚧`_](#put-apiprivateproductsiddelete-)
+- [🔄 **Como Funciona o Relacionamento**](#-como-funciona-o-relacionamento)
 
-Este é um **sistema de vitrine digital** desenvolvido como projeto de TCC, focado em **pequenas lojas** que desejam ingressar no mercado digital. O sistema oferece uma **API robusta** para criar sites de demonstração de produtos onde clientes podem visualizar catálogos e solicitar pedidos. A retaguarda permite gestão simples de produtos, estoque e personalização básica do site, com um **gerenciador de pedidos estilo Kanban** para controle eficiente das vendas.
-
-### 🎯 **Público-Alvo**
-- **Pequenas lojas** que querem presença digital
-- **Empreendedores** iniciando no e-commerce
-- **Negócios locais** buscando expandir vendas
-- **Lojistas** que preferem gestão simples e direta
-
-### ✨ Características Principais
-
-- **🛍️ Vitrine Digital** - Site de demonstração de produtos para clientes
-- **📋 Gerenciador Kanban** - Sistema de pedidos estilo Kanban para controle de vendas
-- **⚙️ Retaguarda Simples** - Painel administrativo intuitivo para pequenas lojas
-- **💳 Configuração de Pagamentos** - Definição de métodos e condições (sem integração)
-- **📦 Gestão de Estoque** - Controle simples de produtos e movimentações
-- **🏢 Personalização Básica** - Configurações da empresa e customização do site
-
-## 🏗️ Arquitetura do Sistema
-
-### 🎨 Padrão Arquitetural
-
-O projeto segue uma **arquitetura modular** bem estruturada:
-
-```
-┌────────────────────────────────────────────────────────────┐
-│                     PRESENTATION LAYER                     │
-├────────────────────────────────────────────────────────────┤
-│   Routes (Public/Private) │  Controllers  │  Middlewares   │
-├────────────────────────────────────────────────────────────┤
-│                       BUSINESS LAYER                       │
-├────────────────────────────────────────────────────────────┤
-│      Services  │  DTOs  │  Utils  │  Validation (Joi)      │
-├────────────────────────────────────────────────────────────┤
-│                         DATA LAYER                         │
-├────────────────────────────────────────────────────────────┤
-│        Entities (Mongoose)  │  Database Connection         │
-└────────────────────────────────────────────────────────────┘
+## **📊 Estrutura do Banco de Dados:**
+```json
+// Product Schema:
+{
+  _id: ObjectId,
+  name: String,
+  email: String,
+  password: String,
+  //Embending (admin/client)
+  adminDetails: {
+    status: Boolean
+  }
+  clientDetails: {
+    cpf: String
+    cell: String
+  }
+}
 ```
 
-### 🔄 Fluxo de Dados
 
-1. **Request** → Routes → Controllers
-2. **Controllers** → Services (lógica de negócio)
-3. **Services** → Dtos → Entities (persistência)
-4. **Response** ← Controllers ← Services
+## 📋 **Endpoints Disponíveis**
 
-## 🚀 Como Executar
+### 🔓 **Publico (Client)**
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| `POST` | `/api/public/clients` | Criar clientes | 🚧 |
+| `GET` | `/api/private/clients/:id` | Buscar cliente por ID | 🚧 |
+| `PUT` | `/api/private/clients/:id` | Atualizar cliente | 🚧 |
+| `PUT` | `/api/private/clients/:id/delete` | Arquivar cliente (soft delete) | 🚧 |
 
-### 📋 Pré-requisitos
+### 🔒 **Privado (Admin)**
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| `POST` | `/api/private/admins` | Criar administradores | ✅ |
+| `GET` | `/api/private/admins/` | Buscar todos os admins | ✅ |
+| `GET` | `/api/private/admins/:id` | Buscar admin por ID | ✅ |
+| `PUT` | `/api/private/admins/:id` | Atualizar admin | ✅ |
+| `PUT` | `/api/private/admins/:id/delete` | Arquivar admin (soft delete) | ✅ |
 
-- **Node.js** 16.0.0 ou superior
-- **MongoDB** local ou MongoDB Atlas
-- **Git** para clonar o repositório
+---
+**📱 Diferenças dos endpoint:**
+- **🔓 Público:** Só é possivel CRUD de client (cada cliente é responsavel por seu gerenciamento) (ex: `/api/public/client/:id`)
+- **🔒 Privado:** Só é possivel CRUD de admins (modifica e visualiza todos) (ex: `/api/private/admins`)
+- **🎯 Vantagem:** Usuários são separados por role em uma mesma entidade, mas compartilham rotas completamente diferentes (publicas e privadas)
 
-### 🛠️ Instalação
+## 🌐 Base URLs
+- **Produção:** `https://tcc-oblivion.onrender.com`
+- **Desenvolvimento:** `http://localhost:3001`
 
-```bash
-# 1. Clonar o repositório
-git clone https://github.com/Vicks2thori/Oblivion-Ecommerce-API
-cd Oblivion-Ecommerce-API
+## 🔒 **Endpoints Publicos**
 
-# 2. Instalar dependências
-npm install
+### **POST** `/api/public/client` 🚧
+Cria um novo cliente no sistema.
 
-# 3. Configurar variáveis de ambiente
-cp .env.example .env
-# Editar .env com suas configurações
-
-# 4. Executar o projeto
-npm run dev    # Desenvolvimento
-npm start      # Produção
+### **💭 Request:**
+```http
+POST /api/private/client
+Content-Type: application/json
+Authorization: Bearer {token}
 ```
 
-### ⚙️ Configuração do Ambiente
+**Headers:**
+- `Content-Type: application/json` *(obrigatório)*
+- `Authorization: Bearer {token}` *(futuro - quando implementar auth)*
 
-Crie um arquivo `.env` na raiz do projeto:
-
-```env
-# Banco de Dados
-MONGODB_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/database
-
-# Servidor
-PORT=3000
-NODE_ENV=development
-
-# Segurança
-JWT_SECRET=sua_chave_secreta_muito_segura
-JWT_EXPIRES_IN=7d
-
-# Email (opcional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=seu_email@gmail.com
-SMTP_PASS=sua_senha_app
+**Body Parameters:**
+```json
+{
+  "name": "string",       // Obrigatório: 5-80 caracteres
+  "email": "string",      // Obrigatório: 6-50 caracteres, unico
+  "password": "string",   // Obrigatório: 8-255 caracteres, o sistema irá gerar um hash (implementação futura)
+  "clientDetails": {
+    "cpf": "string",      // Obrigatório: 11 caracteres, unico
+    "cell": "string"      // Obrigatório: 11 caracteres, unico
+  },
+}
 ```
 
-## 📚 Documentação da API
+#### **Exemplos de Request:**
 
-### 🔗 Endpoints Disponíveis
-
-- **🌐 Público**: `http://localhost:3000/api/public`
-- **🔒 Privado**: `http://localhost:3000/api/private`
-- **📖 Swagger**: `http://localhost:3000/api-docs`
-
-### 📖 Swagger UI
-
-A documentação interativa da API está disponível através do Swagger, permitindo:
-- Visualizar todos os endpoints
-- Testar requisições diretamente
-- Ver schemas de dados
-- Entender parâmetros e respostas
-
-## 🗂️ Estrutura de Pastas
-
-```
-src/
-├── 📁 config/                
-│   └── swagger.js            # Configuração do Swagger
-│
-├── 📁 model/                 
-│   └── database.js           # Conexão com MongoDB
-│
-├── 📁 modules/               # Módulos da aplicação
-│   ├── 📁 order/             # Gestão de pedidos
-│   ├── 📁 category/          # Categorias de produtos
-│   ├── 📁 product/           # Produtos
-│   ├── 📁 payment/           # Métodos de pagamento
-│   ├── 📁 payment_condition/ # Condições de pagamento
-│   ├── 📁 stock_category/    # Categorias de estoque
-│   ├── 📁 stock_movement/    # Movimentações de estoque
-│   ├── 📁 enterprise/        # Gestão da empresa
-│   ├── 📁 site/              # Configurações de estilo do site
-│   └── 📁 user/              # Gestão de usuários (admins/clients)
-│
-├── 📁 routes/                 # Definição de rotas
-│   ├── publicRoutes.js        # Rotas públicas (clients)
-│   ├── privateRoutes.js       # Rotas privadas (admins)
-│   └── responseHelpers.js     # Helpers de resposta
-│
-└── server.js                  # Ponto de entrada da aplicação
+**Exemplo 1 - Cliente:**
+```json
+{
+  "name": "João Silva",       
+  "email": "joao.silva@gmail.com",      
+  "password": "12345678",   
+  "clientDetails": {
+    "cpf": "12345678900",     
+    "cell": "10987654321"     
+  }
+}
 ```
 
-### 🎯 Padrão de Módulos
-
+**Exemplo 2 - Cliente com dados duplicados**
+```json
+{
+  "name": "João Silva da Rosa",       
+  "email": "joao.silva@gmail.com",  //Igual o exemplo 1      
+  "password": "12345678",   
+  "clientDetails": {
+    "cpf": "12345678900",           //Igual o exemplo 1  
+    "cell": "10987654321"           //Igual o exemplo 1  
+  }
+}
 ```
-│   ├── 📁 entity/            # Nome da Entidade
-│   │   ├── entityController.js
-│   │   ├── entityDto.js
-│   │   ├── entityEntity.js
-│   │   ├── entityRouter.js
-│   │   ├── entityService.js
-│   │   └── entityUtils.js     # Arquivo esporádico
-```
-
-*Para uma melhor análise das entidades recomenda-se seguir esta **ordem de inspeção de arquivos**:
-`Entity` → `DTO` → `Utils` → `Service` → `Controller` → `Router`.*
-
-Cada módulo segue uma estrutura consistente:
-- **Entity**: Modelo de dados (Mongoose)
-- **DTO**: Transferência de dados entre camadas (Joi)
-- **Utils**: Funções auxiliares normalmente ligadas a relacionamentos
-- **Service**: Contém a lógica de negócio
-- **Controller**: Recebe requisições e retorna respostas (Express)
-- **Router**: Definição das rotas clients e admins do módulo
-
-## 🔧 Tecnologias Utilizadas
-
-### 🚀 **Backend**
-- **Node.js** - Runtime JavaScript
-- **Express.js** - Framework web
-- **MongoDB** - Banco de dados NoSQL
-- **Mongoose** - ODM para MongoDB
-
-### 🛡️ **Segurança & Validação**
-- **Joi** - Validação de dados
-
-### 📊 **Monitoramento & Logs**
-- **Morgan** - Logs de requisições HTTP
-
-### 🔧 **Desenvolvimento**
-- **Nodemon** - Reinicialização automática em desenvolvimento
-- **Git** - Controle de versão
-- **npm** - Gerenciador de pacotes
-- **Swagger** - Documentação da API
-
-## 📊 Engenharia de Requisitos Funcionais
-
-### 🛍️ **Vitrine Digital**
-- [x] Catálogo de produtos
-- [x] Sistema de categorias
-- [x] Site de demonstração
-- [x] Aba de pedidos
-
-### ⚙️ **Retaguarda**
-- [x] Painel administrativo simples
-- [x] Gestão de produtos e categorias
-- [x] Controle de estoque básico
-- [x] Configurações da empresa
-- [x] Personalização do site
-
-### 💳 **Pagamentos**
-- [x] Configuração de métodos
-- [x] Definição de condições
-- [x] **Sem integração real** (apenas configuração)
-
-### 📦 **Estoque**
-- [x] Categorias de estoque
-- [x] Movimentações de entrada/saída/definição
-
-### 📋 **Pedidos**
-- [x] Gerenciador estilo Kanban
-- [x] Controle de status de vendas
-
-## 📈 Histórico de Commits
-
-### 🎯 **Estrutura de Commits**
-O projeto segue uma convenção de commits bem definida:
-
-```
-feat: ✨ Nova funcionalidade
-fix: 🐛 Correção de bug
-docs: 📚 Documentação
-style: 🎨 Formatação de código
-refactor: ♻️ Refatoração
-test: 🧪 Testes
-chore: 🔧 Configurações e dependências
+---
+### **💬 Responses:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+//Cliente
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": {
+    "_id": "66b8f1234567890123456789",
+    "name": "João Silva",       
+    "email": "joao.silva@gmail.com",      
+    "password": "12345678",   
+    "clientDetails": {
+      "cpf": "12345678900",     
+      "cell": "10987654321"     
+  },
+    "deleted": false,
+    "createdAt": "2024-08-15T10:30:00.000Z",
+    "updatedAt": "2024-08-15T10:30:00.000Z"
+  }
+}
 ```
 
-### 🌿 **Branches Temáticas**
-Cada situação possui uma branch dedicada:
-- `feat/Entity(module)`: Definições gerais da estrutura
-- `feat/Referecing-Entity&Entity`: Relacionamento entre as entidades
-- `feat/Entity/Function`: Novas funcionalidades (Ex: `feat/Product/zero-stock-block`)
 
-> **💡 Dica**: Branches são mescladas em `main` após conclusão e mantidas como **histórico de evolução**.
+#### **❓ Response 400 - Dados Inválidos:**
+```json
+//Cliente
+{
+  "success": false,
+  "message": "Dados inválidos",
+  "errors": [
+    "name: é obrigatório, minimo 5 caracteres, maximo 80 caracteres", "email: minimo 6 caracteres, maximo 50", "password: minimo de 8 caracteres, maximo 255", "clientDetails: é obrigatório", "clientDetails.cpf: é obrigatório, tamanho de 11 caracteres", "clientDetails.cell: é obrigatório, tamanho de 11 caracteres"
+  ]
+}
 
-## 📌 **Boas Práticas do Projeto**
+//Cliente com dados duplicados
+{
+  "success": false,
+  "message": "Dados inválidos",
+  "errors": [
+    "email: dados duplicados tente login", "clientDetails.cpf: dados duplicados tente login", "clientDetails.cell: dados duplicados tente login"
+  ]
+}
+```
 
-### ✏️ **Padrão de Commits**
-- **Formato**: `tipo(escopo): descrição`
-- **Exemplos**:
-  - `feat(productDto): Adicionado min/max requisições no Schema`
-  - `fix(orderUtills): Corrige cálculo de total do pedido`
-  - `docs(main:README): Atualiza instruções de instalação`
-  - `style(Category): Implementação Clean Code`
+#### **❌ Response 500 - Erro Interno:**
+```json
+{
+  "success": false,
+  "message": "Erro ao criar cliente: [detalhes do erro]"
+}
+```
 
-### 🌿 **Estratégia de Branches**
-- **`main`**: Código estável e testado
-- **`feat/Entity`**: Novas entidades ou módulos
-- **`feat/Entity/Function`**: Funcionalidades específicas
-- **`fix/Entity`**: Correções de bugs
-- **`docs/Entity`**: Documentação específica
+#### **Validações:**
+- 📝 **name:** Obrigatório, string, 3-50 caracteres
+- 📝 **email:** obrigatório, string, 6-50 caracteres, unico
+- 📝 **password:** obrigatório, string, 8-255 caracteres, default = `generatorHashPassword`
+- 📝 **clientDetails:** obrigatório
+- 📝 **clientDetails.cpf:** Obrigatório, string, 11 caracteres, unico
+- 📝 **clientDetails.cell:** Obrigatório, string, 11 caracteres, unico
+---
 
-### 🔄 **Fluxo de Desenvolvimento**
-1. **Criar branch** temática para a feature
-2. **Desenvolver** seguindo padrões estabelecidos
-3. **Testar** funcionalidade implementada
-4. **Commit** com mensagem clara
-5. **Pull Request** para `main`
-6. **Code Review** e aprovação
-7. **Merge** e manutenção da branch
+### **GET** `/api/public/client/:id` 🚧
+Busca um cliente específico por ID para edição/visualização.
 
-## 🤝 Contribuição
+#### **💭 Request:**
+```http
+GET /api/public/client/{userId}
+Authorization: Bearer {token}
+```
 
-### 📝 **Como Contribuir**
+**Headers:**
+- `Authorization: Bearer {token}` *(futuro)*
 
-1. **Fork** o projeto
-2. **Crie** uma branch para sua feature (`git checkout -b feat/Entity/Function`)
-3. **Commit** suas mudanças (`git commit -m 'feat(escopo): Descrição'`)
-4. **Push** para a branch (`git push origin feat/Entity/Function`)
-5. **Abra** um Pull Request
+**Path Parameters:**
+- `userId` *(obrigatório)*: ObjectId do usuário (24 caracteres hexadecimais)
 
-### 📋 **Padrões de Código**
+**Body:** Não aplicável
 
-- Siga o padrão de **commits** estabelecido
-- Mantenha a **arquitetura modular**
-- Documente novas funcionalidades
+#### **Exemplo:**
+```http
+GET /api/private/product/66b8f1234567890123456789
+```
+---
+### **💬 Response:**
 
-## 🎯 **Diferencial do Projeto**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": {
+    "name": "Smartphone Galaxy",
+    "imageUrl": "https://exemplo.com/smartphone.jpg",
+    "code": "123456",
+    "description": "Smartphone com 128GB",
+    "categoryId": "66b8f1111222233334444555",
+    "price": 899.99,
+    "quantity": 15,
+    "status": true,
+    "deleted": false,
+    "createdAt": "2024-08-15T10:30:00.000Z",
+    "updatedAt": "2024-08-15T10:30:00.000Z"
+  }
+}
+```
 
-### 🚀 **Por que uma Vitrine Digital?**
-- **Simplicidade**: Sem complexidade de integrações de pagamento
-- **Acessibilidade**: Ideal para pequenas lojas iniciantes no comércio digital
-- **Controle**: Gestão direta via WhatsApp (mais pessoal)
-- **Custo**: Solução econômica para presença digital
-- **Flexibilidade**: Personalização básica sem complicações
+#### **❓ Response 400 - ID Inválido:**
+```json
+{
+  "success": false,
+  "message": "ID inválido"
+}
+```
 
-### 📱 **Fluxo de Venda**
-1. **Cliente** visualiza produtos na vitrine
-2. **Interesse** em produto específico
-3. **Solicita** via plataforma o pedido
-4. **Lojista** gerencia pedido no Kanban e acerta com o cliente (via numero disponivel no pedido)
-5. **Acompanhamento** do status da venda
+#### **⁉️ Response 404 - Não Encontrada:**
+```json
+{
+  "success": false,
+  "message": "Produto não encontrada"
+}
+```
 
-## 👨‍💻 Autor
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao buscar produto: [detalhes do erro]"
+}
+```
 
-**Victoria Riso** - Desenvolvedora 
+---
 
-- 📧 Email: devvicrisosan@gmail.com
-- 🔗 LinkedIn: https://www.linkedin.com/in/victoria-riso-santana-441b0a337/
-- 🐙 GitHub: https://github.com/Vicks2thori
+### **PUT** `/api/private/product/:id` ✅
+Atualiza um produto existente (nome, imagem, código, descrição, categoria, preço, quantidade, status).
 
-### 📄 Licença
+### **💭 Request:**
+```http
+PUT /api/private/products/{productId}
+Content-Type: application/json
+Authorization: Bearer {token}
+```
 
-Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+**Headers:**
+- `Content-Type: application/json` *(obrigatório)*
+- `Authorization: Bearer {token}` *(futuro)*
+
+**Path Parameters:**
+- `productId` *(obrigatório)*: ObjectId do produto
+
+**Body Parameters:**
+```json
+{
+  "name": "string",        // Obrigatório: 3-50 caracteres
+  "imageUrl": "string",    // Opcional: 1-255 caracteres (implementação futura)
+  "code": "string",        // Opcional: 0-9999999999999999999 (implementação futura), default = gerado pelo sistema
+  "description": "string", // Opcional: 1-255 caracteres
+  "categoryId": "string",  // Obrigatório: Chave estrangeira, 24 caracteres, hexadecimal
+  "price": "number",       // Obrigatório: 0.01-9999999.99 numeros
+  "quantity": "number",    // Opcional: default = 0
+  "status": "boolean"      // Opcional: default = true
+}
+```
+
+#### **Exemplos de Request:**
+
+**Exemplo 1 - Atualizar nome:**
+```json
+{
+  "name": "Notebook Dell"
+}
+```
+
+**Exemplo 2 - Desativar produto:**
+```json
+{
+  "status": false
+}
+```
+
+**Exemplo 3 - Adicionar produtos a uma nova categoria:**
+```json
+{
+  "categoryId": "66b8f2222333344445555666"
+}
+```
+
+**Exemplo 4 - Atualização completa:**
+```json
+{
+  "name": "Notebook Dell",
+  "imageUrl": "https://exemplo.com/notebook.jpg",
+  "code": "98765",
+  "description": "Processardor i7 3 geração",
+  "categoryId": "66b8f2222333344445555666",
+  "price": 1500.99,
+  "quantity": 2,
+  "status": false
+}
+```
+---
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "66b8f1234567890123456789",
+    "name": "Smartphone Galaxy",
+    "imageUrl": "https://exemplo.com/smartphone.jpg",
+    "code": "123456",
+    "description": "Smartphone com 128GB",
+    "categoryId": "66b8f1111222233334444555",
+    "price": 899.99,
+    "quantity": 15,
+    "status": true,
+    "deleted": false,
+    "createdAt": "2024-08-10T08:00:00.000Z",
+    "updatedAt": "2024-08-15T15:45:00.000Z"
+  }
+}
+```
+
+#### **❓ Response 400 - Dados Inválidos:**
+```json
+{
+  "success": false,
+  "errors": [
+    "name: é obrigatório, minimo 3 caracteres, maximo 5o caracteres", "imageUrl: minimo 1 caracter, maximo 255", "code: maior que 0, menor que 9999999999999999999", "description: minimo 1 caracter, maximo 255", "categoryId: é obrigatório, tamanho 24 caracteres, hexadecimal", "price: é obrigatório, minimo 0.01, maximo 999999.99", "quantity: menor que 99999"
+  ]
+}
+```
+
+#### **⁉️ Response 404 - Não Encontrada:**
+```json
+{
+  "success": false,
+  "message": "Erro ao atualizar produto: Produto não encontrada"
+}
+```
+
+#### **❌ Response 500 - Erro:**
+```json
+{
+  "success": false,
+  "message": "Erro ao atualizar produto: [detalhes do erro]"
+}
+```
+
+#### **Validações:**
+- 📝 **name:** Obrigatório, string, 3-50 caracteres
+- 📝 **imageUrl:** Opcional, string, 1-255 caracteres
+- 📝 **code:** Opcional, string, 1-99999 intervalo de valores, default = `generatorCodeProduct`
+- 📝 **description:** Opcional, string, 1-255 caracteres
+- 📝 **categoryId:** Obrigatório, string, 24 caracteres, hexadecimal
+- 📝 **price:** Obrigatório, number, 0.01-999999.99 intervalo de valores
+- 📝 **quantity:** Opcional, number, 0-99999 intervalo de valores, default = `0`
+- 📝 **status:** Opcional, boolean, default = `true`
+- 📝 **Mínimo 1 campo** obrigatório para atualização
+- 📝 **Máximo 8 campos** por request
+---
+
+### **PUT** `/api/private/products/:id/delete` 🚧
+Arquiva um produto (soft delete) removendo-a das consultas de endpoints.
+
+### **💭 Request:**
+```http
+PUT /api/private/products/{productId}/delete
+Authorization: Bearer {token}
+```
+
+**Headers:**
+- `Authorization: Bearer {token}` *(futuro)*
+
+**Path Parameters:**
+- `productId` *(obrigatório)*:
+
+### **💬 Response:**
+#### **✔️ Response 200 - Sucesso:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "66b8f1234567890123456789",
+    "name": "Smartphone Galaxy",
+    "imageUrl": "https://exemplo.com/smartphone.jpg",
+    "code": "123456",
+    "description": "Smartphone com 128GB",
+    "categoryId": "66b8f1111222233334444555",
+    "price": 899.99,
+    "quantity": 15,
+    "status": true,
+    "deleted": true,
+    "createdAt": "2024-08-10T08:00:00.000Z",
+    "updatedAt": "2024-08-15T15:45:00.000Z"
+  }
+}
+```
+
+## **🔄 Como Funciona o Relacionamento:**
+1. **Categoria tem array** `products: [{ productId: ObjectId }]` - Referência para produtos
+2. **Produto é inserido no array** quando criado/atualizado via `CategoryService`
+
+
+### **💡 Vantagens desta Abordagem:**
+- 📝 **Performance:** Busca eficiente com índices MongoDB e relacionamentos otimizados
+- 📝 **Manutenibilidade:** Separação clara entre produtos e categorias, facilitando atualizações
+- 📝 **Integração:** Relacionamento bidirecional com categorias para consultas eficientes
+- 📝 **UX:** Usuário sempre vê produtos organizados logicamente por categoria
+
+---
+**Estrutura de dados interna:**
+```json
+// Como está no banco (Category):
+{
+  _id: "66b8f1111222233334444555",
+  name: "Eletrônicos",
+  status: true,
+  products: [
+    { _id: false, productId: "66b8f1234567890123456789" }, // ← ObjectId ref
+    { _id: false, productId: "66b8f9876543210987654321" }  // ← ObjectId ref
+  ]
+}
+
+// Após populate (dados completos):
+{
+  name: "Eletrônicos",
+  products: [
+    {
+      _id: "66b8f1234567890123456789",  // ← Dados completos do produto
+      name: "Notebook Dell",
+      imageUrl: "https://...",
+      price: 1500.99,
+      // ... outros campos selecionados
+    }
+  ]
+}
+```
