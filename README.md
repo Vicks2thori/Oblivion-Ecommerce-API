@@ -6,11 +6,8 @@ Documentação completa da API de gestão de categorias do e-commerce.
 
 ## 🔗 Outras Branchs
 - [🏠 **Voltar ao Main**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/main)
-- [👥 **Users API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/users-api)
-- [🛍️ **Products API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/products-api)
-- [💳 **Payments API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/payments-api)
-- [📦 **Orders API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/orders-api)
-- [🏢 **Enterprise API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/feature/enterprise-api)
+- [🛍️ **Products API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Product-API)
+- [🏢 **Enterprise API**](https://github.com/Vicks2thori/Oblivion-Ecommerce-API/tree/docs/Enterprise-API)
 
 ## 🧭 Navegação
 - [📋 **Endpoints Disponíveis**](#-endpoints-disponíveis)
