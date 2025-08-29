@@ -19,9 +19,9 @@ const createCategory = async function(data) {
 //All
 const getAllCategories = async function() {
   try {
-    return await Category.find({deleted: false})
+    return await Category.find({categoryDeleted: false})
       .populate({
-        path: 'products.productId',
+        path: 'productsList.productId',
         match: { deleted: false },
         select: 'name imageUrl description price code quantity status'
       })
@@ -29,7 +29,7 @@ const getAllCategories = async function() {
       .then(categories => {
         // Incluir TODOS os produtos (ativos e inativos)
         return categories.map(category => {
-          const products = filterActiveProducts(category.products, true);
+          const products = filterActiveProducts(category.productsList, true);
           
           return {
             _id: category._id,
@@ -64,23 +64,26 @@ const getCategoryById = async function(id) {
 const getActiveCategories = async function() {
   try {
     return await Category.find({
-      deleted: false,
+      categoryDeleted: false,
       status: true 
     })
     .populate({
-      path: 'products.productId',
-      match: { status: true, deleted: false },
-      select: 'name imageUrl description price code quantity'
+      path: 'productsList.productId',
+      select: 'name imageUrl description price code quantity status deleted'
     })
     .sort({ name: 1 })
     .then(categories => {
       // Filtrar apenas produtos ativos e não deletados
       return categories.map(category => {
-        const activeProducts = filterActiveProducts(category.products, false);
+        const activeProducts = filterActiveProducts(category.productsList, false);
         
         return {
+          _id: category._id,
           name: category.name,
-          products: activeProducts
+          status: category.status,
+          products: activeProducts,
+          createdAt: category.createdAt,
+          updatedAt: category.updatedAt
         };
       });
     });
@@ -94,7 +97,7 @@ const updateCategory = async function(id, updateData) {
   try {
     const category = await Category.findById(id);
     
-    if (!category || category.deleted) {
+    if (!category || category.categoryDeleted) {
       throw new Error('Categoria não encontrada');
     }
 
@@ -123,14 +126,14 @@ const updateCategory = async function(id, updateData) {
 //Delete (soft delete)
 const deleteCategory = async function(id) {
  try {
-    // Popula o campo products.productId para garantir que está vendo os produtos vinculados
-    const category = await Category.findById(id).populate('products.productId');
+    // Popula o campo productsList.productId para garantir que está vendo os produtos vinculados
+    const category = await Category.findById(id).populate('productsList.productId');
     if (!category) {
       throw new Error('Categoria não encontrada');
     }
 
     // Filtra produtos realmente existentes e não deletados
-    const produtosVinculados = (category.products || []).filter(
+    const produtosVinculados = (category.productsList || []).filter(
       p => p.productId && !p.productId.deleted
     );
 
@@ -139,8 +142,8 @@ const deleteCategory = async function(id) {
     }
 
     const deleted = await Category.findOneAndUpdate(
-      {_id: id, deleted: false},
-      {deleted: true},
+      {_id: id, categoryDeleted: false},
+      {categoryDeleted: true},
       {new: true}
     );
     
