@@ -1,90 +1,121 @@
 //userEntity.js
 const mongoose = require('mongoose');
 
-// Schema do usuário
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
+const UserSchema = new mongoose.Schema({
+  name: { 
+    type: String, 
     required: true,
-    trim: true
+    trim: true,
+    minlength: 5,
+    maxlength: 80
   },
+
   email: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
-    lowercase: true
+    minlength: 6,
+    maxlength: 50,
+    unique: true
   },
+
   password: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    minlength: 60,
+    maxlength: 60
   },
+
   type: {
     type: String,
     required: true,
-    enum: ['admin', 'client', 'employee']
+    enum: ['admin', 'client']
+  },
+
+  // Embedding - Subdocumentos
+  //1:1
+  adminDetails: {
+    _id: false,
+    status: { 
+      type: Boolean,
+      default: true 
+    }
+  },
+
+  //1:1
+  clientDetails: {
+    _id: false,
+    cpf: { 
+      type: String,
+      trim: true,
+      minlength: 11,
+      maxlength: 11
+    },
+
+    cell: { 
+      type: String,
+      trim: true,
+      minlength: 11,
+      maxlength: 11
+    }
+  },
+
+  deleted: {
+    type: Boolean,
+    required: true,
+    default: false
   }
-}, {
-  timestamps: true
+}, { 
+  timestamps: true,
+  versionKey: false
 });
 
-// Modelo do usuário
-const User = mongoose.model('User', userSchema);
+UserSchema.pre('validate', function(next) {
+  if (this.type === 'admin') {
+    this.clientDetails = undefined;
 
-//Create
-async function createUser({name, email, password, type}) {
-  try {
-    const user = new User({ name, email, password, type });
-    const result = await user.save();
-    return result._id;
-  } catch (error) {
-    throw error;
-  }
-}
+    if (!this.adminDetails) {
+      this.adminDetails = { status: true };
+    };  
+  } else if (this.type === 'client') {
+    this.adminDetails = undefined;
 
-//Read
-async function getUserType({type}) {
-  try {
-    const user = await User.findOne({ type });
-    return user;
-  } catch (error) {
-    throw error;
-  }
-}
-
-//Update
-async function updateUser({id, name, email, password}) {
-  try {
-    // Filtra apenas campos que foram enviados (não undefined/null)
-    const fieldsToUpdate = {};
-
-    if (name) fieldsToUpdate.name = name;
-    if (email) fieldsToUpdate.email = email;
-    if (password) fieldsToUpdate.password = password;
-
-    if (Object.keys(fieldsToUpdate).length === 0) {
-      return { success: false, message: 'Nenhum campo para atualizar' };
-    }
-
-    const result = await User.findByIdAndUpdate(
-      id,
-      fieldsToUpdate,
-      { new: true, runValidators: true }
-    );
-
-    return {
-      success: !!result,
-      affectedRows: result ? 1 : 0,
-      user: result
+    if (!this.clientDetails || !this.clientDetails.cpf || !this.clientDetails.cell) {
+      return next(new Error('Para clientes, CPF e telefone são obrigatórios'));
     };
-  } catch (error) {
-    throw error;
-  }
-}
+  };
+  next();
+});
 
-module.exports = { 
-  User,
-  createUser, 
-  getUserType, 
-  updateUser 
-};
+UserSchema.index({ email: 1 });
+UserSchema.index({ type: 1 });
+UserSchema.index({ deleted: 1, type: 1 });
+
+UserSchema.index(
+  { 'clientDetails.cpf': 1 }, 
+  { 
+    unique: true, 
+    sparse: true,
+    partialFilterExpression: { 
+      type: 'client',
+      deleted: false,
+      'clientDetails.cpf': { $exists: true, $ne: null }
+    }
+  }
+);
+
+UserSchema.index(
+  { 'clientDetails.cell': 1 }, 
+  { 
+    unique: true, 
+    sparse: true,
+    partialFilterExpression: { 
+      type: 'client',
+      deleted: false,
+      'clientDetails.cell': { $exists: true, $ne: null, $ne: '' }
+    }
+  }
+);
+
+module.exports = mongoose.model('User', UserSchema);
