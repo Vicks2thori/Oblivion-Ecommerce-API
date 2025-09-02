@@ -1,5 +1,6 @@
 //productService.js
 const Product = require("./productEntity");
+const { addProductToCategoryWithTransfer, removeProductFromAllCategories } = require("../category/categoryService");
 
 
 //CREATE
@@ -38,7 +39,7 @@ const updateProduct = async function(id, updateData) {
     if (!product || product.deleted) {
       throw new Error('Produto não encontrado');
     };
-
+    
     if (updateData.categoryId) {
       await addProductToCategoryWithTransfer(product._id, updateData.categoryId);
     };
@@ -55,23 +56,19 @@ const updateProduct = async function(id, updateData) {
 //DELETE
 const deleteProduct = async function(id) {
  try {
-    const product = await Product.findById(id);
-    
-    if (!product || product.deleted) {
-      throw new Error('Produto não encontrado');
-    };
-
-    const deleted = await Product.findOneAndUpdate(
+    const productDeleted = await Product.findOneAndUpdate(
       {_id: id, deleted: false},
       {deleted: true},  
       {new: true}
     );
-    
-    if (!deleted) {
+
+    await removeProductFromAllCategories(id);
+
+    if (!productDeleted) {
       throw new Error('Produto não encontrado');
     };
     
-    return deleted;
+    return productDeleted;
   } catch (error) {
     throw new Error(`Erro ao deletar produto: ${error.message}`);
   };
