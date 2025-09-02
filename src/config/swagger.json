@@ -1,0 +1,529 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Oblivion Ecommerce API",
+    "version": "1.0.0",
+    "description": "API para sistema de e-commerce com retaguarda administrativa",
+    "contact": {
+      "name": "Victoria Riso",
+      "email": "devvicrisosan@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de Desenvolvimento"
+    },
+    {
+      "url": "https://tcc-oblivion.onrender.com",
+      "description": "Servidor de Produção (Render)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Categoria",
+      "description": "Endpoints para gestão de Categorias de Produtos"
+    },
+    {
+      "name": "Produto",
+      "description": "Endpoints para gestão de Produtos"
+    },
+    {
+      "name": "Condição de Pagamento",
+      "description": "Endpoints para gestão de Condições de Pagamento"
+    },
+    {
+      "name": "Pagamento",
+      "description": "Endpoints para gestão de Pagamentos"
+    },
+    {
+      "name": "Categoria de Estoque",
+      "description": "Endpoints para gestão de Categorias de Estoque"
+    },
+    {
+      "name": "Site",
+      "description": "Endpoints para configuração do Site"
+    },
+    {
+      "name": "Empresa",
+      "description": "Endpoints para gestão de Empresas"
+    },
+    {
+      "name": "Pedido",
+      "description": "Endpoints para gestão de Pedidos"
+    },
+    {
+      "name": "Usuários",
+      "description": "Endpoints para gestão de Usuários"
+    },
+    {
+      "name": "Estoque",
+      "description": "Endpoints para gestão de Movimentações de Estoque"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único do usuário" },
+          "name": { "type": "string", "description": "Nome completo do usuário" },
+          "email": { "type": "string", "format": "email", "description": "Email do usuário" },
+          "role": { "type": "string", "enum": ["admin", "client"], "description": "Tipo de usuário" },
+          "createdAt": { "type": "string", "format": "date-time", "description": "Data de criação" }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único do produto" },
+          "name": { "type": "string", "description": "Nome do produto" },
+          "description": { "type": "string", "description": "Descrição do produto" },
+          "price": { "type": "number", "description": "Preço do produto" },
+          "category": { "type": "string", "description": "ID da categoria" },
+          "stock": { "type": "number", "description": "Quantidade em estoque" }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único da categoria" },
+          "name": { "type": "string", "description": "Nome da categoria" },
+          "status": { "type": "boolean", "description": "Status da categoria" },
+          "deleted": { "type": "boolean", "description": "Status de exclusão da categoria (soft delete)" }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único do pedido" },
+          "user": { "type": "string", "description": "ID do usuário" },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "product": { "type": "string", "description": "ID do produto" },
+                "quantity": { "type": "number", "description": "Quantidade" },
+                "price": { "type": "number", "description": "Preço unitário" }
+              }
+            }
+          },
+          "total": { "type": "number", "description": "Total do pedido" },
+          "status": { "type": "string", "enum": ["pending", "confirmed", "shipped", "delivered"], "description": "Status do pedido" }
+        }
+      },
+      "PaymentCondition": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único da condição de pagamento" },
+          "name": { "type": "string", "description": "Nome da condição de pagamento" },
+          "installments": { "type": "number", "description": "Número de parcelas" },
+          "interest": { "type": "number", "description": "Taxa de juros" },
+          "status": { "type": "boolean", "description": "Status da condição de pagamento" }
+        }
+      },
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único do pagamento" },
+          "order": { "type": "string", "description": "ID do pedido" },
+          "amount": { "type": "number", "description": "Valor do pagamento" },
+          "method": { "type": "string", "description": "Método de pagamento" },
+          "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "Status do pagamento" }
+        }
+      },
+      "StockCategory": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único da categoria de estoque" },
+          "name": { "type": "string", "description": "Nome da categoria de estoque" },
+          "description": { "type": "string", "description": "Descrição da categoria" },
+          "status": { "type": "boolean", "description": "Status da categoria" }
+        }
+      },
+      "Site": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único do site" },
+          "name": { "type": "string", "description": "Nome do site" },
+          "url": { "type": "string", "description": "URL do site" },
+          "status": { "type": "boolean", "description": "Status do site" }
+        }
+      },
+      "Enterprise": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "ID único da empresa" },
+          "name": { "type": "string", "description": "Nome da empresa" },
+          "cnpj": { "type": "string", "description": "CNPJ da empresa" },
+          "status": { "type": "boolean", "description": "Status da empresa" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/private/categories": {
+      "get": {
+        "summary": "Lista todas as categorias com produtos vinculados",
+        "description": "Retorna uma lista de todas as categorias cadastradas e seus produtos ativos/inativos",
+        "tags": ["Categoria"],
+        "responses": {
+          "200": {
+            "description": "Lista de categorias retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Category" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria uma nova categoria",
+        "description": "Cadastra uma nova categoria no sistema",
+        "tags": ["Categoria"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Category" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Categoria criada com sucesso"
+          }
+        }
+      }
+    },
+    "/api/public/categories": {
+      "get": {
+        "summary": "Lista todas as categorias",
+        "description": "Retorna uma lista de todas as categorias cadastradas",
+        "tags": ["Categoria"],
+        "responses": {
+          "200": {
+            "description": "Lista de categorias retornada com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/products": {
+      "get": {
+        "summary": "Lista todos os produtos",
+        "description": "Retorna uma lista de todos os produtos cadastrados",
+        "tags": ["Produto"],
+        "responses": {
+          "200": {
+            "description": "Lista de produtos retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo produto",
+        "description": "Cadastra um novo produto no sistema",
+        "tags": ["Produto"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Product" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Produto criado com sucesso"
+          }
+        }
+      }
+    },
+    "/api/public/products": {
+      "get": {
+        "summary": "Lista produtos públicos",
+        "description": "Retorna uma lista de produtos disponíveis para o público",
+        "tags": ["Produto"],
+        "responses": {
+          "200": {
+            "description": "Lista de produtos retornada com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/payment-conditions": {
+      "get": {
+        "summary": "Lista condições de pagamento",
+        "description": "Retorna uma lista de todas as condições de pagamento",
+        "tags": ["Condição de Pagamento"],
+        "responses": {
+          "200": {
+            "description": "Lista de condições de pagamento retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria nova condição de pagamento",
+        "description": "Cadastra uma nova condição de pagamento no sistema",
+        "tags": ["Condição de Pagamento"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PaymentCondition" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Condição de pagamento criada com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/payments": {
+      "get": {
+        "summary": "Lista pagamentos",
+        "description": "Retorna uma lista de todos os pagamentos",
+        "tags": ["Pagamento"],
+        "responses": {
+          "200": {
+            "description": "Lista de pagamentos retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria novo pagamento",
+        "description": "Cadastra um novo pagamento no sistema",
+        "tags": ["Pagamento"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Payment" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pagamento criado com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/stock-categories": {
+      "get": {
+        "summary": "Lista categorias de estoque",
+        "description": "Retorna uma lista de todas as categorias de estoque",
+        "tags": ["Categoria de Estoque"],
+        "responses": {
+          "200": {
+            "description": "Lista de categorias de estoque retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria nova categoria de estoque",
+        "description": "Cadastra uma nova categoria de estoque no sistema",
+        "tags": ["Categoria de Estoque"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/StockCategory" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Categoria de estoque criada com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/sites": {
+      "get": {
+        "summary": "Lista sites",
+        "description": "Retorna uma lista de todos os sites configurados",
+        "tags": ["Site"],
+        "responses": {
+          "200": {
+            "description": "Lista de sites retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria novo site",
+        "description": "Cadastra um novo site no sistema",
+        "tags": ["Site"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Site" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Site criado com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/enterprises": {
+      "get": {
+        "summary": "Lista empresas",
+        "description": "Retorna uma lista de todas as empresas cadastradas",
+        "tags": ["Empresa"],
+        "responses": {
+          "200": {
+            "description": "Lista de empresas retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria nova empresa",
+        "description": "Cadastra uma nova empresa no sistema",
+        "tags": ["Empresa"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Enterprise" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Empresa criada com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/orders": {
+      "get": {
+        "summary": "Lista pedidos",
+        "description": "Retorna uma lista de todos os pedidos",
+        "tags": ["Pedido"],
+        "responses": {
+          "200": {
+            "description": "Lista de pedidos retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria novo pedido",
+        "description": "Cadastra um novo pedido no sistema",
+        "tags": ["Pedido"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Order" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pedido criado com sucesso"
+          }
+        }
+      }
+    },
+    "/api/public/orders": {
+      "post": {
+        "summary": "Cria um novo pedido",
+        "description": "Cria um novo pedido no sistema",
+        "tags": ["Pedido"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Order" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pedido criado com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/users": {
+      "get": {
+        "summary": "Lista usuários",
+        "description": "Retorna uma lista de todos os usuários",
+        "tags": ["Usuários"],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria novo usuário",
+        "description": "Cadastra um novo usuário no sistema",
+        "tags": ["Usuários"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/User" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário criado com sucesso"
+          }
+        }
+      }
+    },
+    "/api/private/stock-movements": {
+      "get": {
+        "summary": "Lista movimentações de estoque",
+        "description": "Retorna uma lista de todas as movimentações de estoque",
+        "tags": ["Estoque"],
+        "responses": {
+          "200": {
+            "description": "Lista de movimentações de estoque retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria nova movimentação de estoque",
+        "description": "Cadastra uma nova movimentação de estoque no sistema",
+        "tags": ["Estoque"],
+        "responses": {
+          "200": {
+            "description": "Movimentação de estoque criada com sucesso"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,9 @@
 //stock_movementService.js
 const StockMovement = require("./stock_movementEntity");
 const StockCategory = require("../stock_category/stock_categoryEntity");
+const Product = require("../product/productEntity");
+const User = require("../user/userEntity");
+const { updateStock } = require("../product/productService");
 
 //Create
 const createStockMovement = async function(data) {
@@ -30,7 +33,13 @@ const createStockMovement = async function(data) {
     const stockMovementSaved = await stockMovement.save(); //salva no banco
 
     //função para atualizar o estoque dos produtos
-    //CRIAR
+    try {
+      await updateStock(data.products, data.type);
+    } catch (stockError) {
+      // Se falhar ao atualizar o estoque, remove a movimentação criada
+      await StockMovement.findByIdAndDelete(stockMovementSaved._id);
+      throw new Error(`Erro ao atualizar estoque: ${stockError.message}`);
+    }
 
     return stockMovementSaved; //retorna o movimento de estoque salvo
   }catch (error) {
@@ -43,7 +52,7 @@ const createStockMovement = async function(data) {
 //All
 const getAllStockMovements = async function() {
   try {
-    return await StockMovement.sort({name: 1});
+    return await StockMovement.find().sort({name: 1});
   }catch (error) {
     throw new Error(`Erro ao buscar todos os movimentos de estoque: ${error.message}`);
   }
@@ -55,6 +64,7 @@ const getStockMovementById = async function(id) {
     if (!stockMovement) {
       throw new Error('Movimento de estoque não encontrado');
     }
+    return stockMovement;
   }
   catch (error) {
     throw new Error(`Erro ao buscar movimento de estoque: ${error.message}`);

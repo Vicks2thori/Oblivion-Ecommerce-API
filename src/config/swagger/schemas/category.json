@@ -1,0 +1,96 @@
+{
+  "Category": {
+    "oneOf": [
+      { "$ref": "#/CategoryCreate" },
+      { "$ref": "#/CategoryUpdate" },
+      { "$ref": "#/CategoryResponse" },
+      { "$ref": "#/CategoryList" }
+    ]
+  },
+  
+  "CategoryCreate": {
+    "type": "object",
+    "properties": {
+      "name": { 
+        "type": "string", 
+        "description": "Nome da categoria",
+        "example": "Eletrônicos"
+      },
+      "status": { 
+        "type": "boolean", 
+        "description": "Status da categoria (ativa/inativa)",
+        "example": true
+      }
+    },
+    "required": ["name", "status"]
+  },
+  
+  "CategoryUpdate": {
+    "type": "object",
+    "properties": {
+      "name": { 
+        "type": "string", 
+        "description": "Nome da categoria",
+        "example": "Eletrônicos e Tecnologia"
+      },
+      "status": { 
+        "type": "boolean", 
+        "description": "Status da categoria (ativa/inativa)",
+        "example": false
+      }
+    }
+  },
+  
+  "CategoryResponse": {
+    "type": "object",
+    "properties": {
+      "_id": { 
+        "type": "string", 
+        "description": "ID único da categoria",
+        "example": "507f1f77bcf86cd799439011"
+      },
+      "name": { 
+        "type": "string", 
+        "description": "Nome da categoria",
+        "example": "Eletrônicos"
+      },
+      "status": { 
+        "type": "boolean", 
+        "description": "Status da categoria",
+        "example": true
+      },
+      "deleted": { 
+        "type": "boolean", 
+        "description": "Status de exclusão (soft delete)",
+        "example": false
+      }
+    }
+  },
+  
+  "CategoryList": {
+    "type": "object",
+    "properties": {
+      "_id": { 
+        "type": "string", 
+        "description": "ID único da categoria",
+        "example": "507f1f77bcf86cd799439011"
+      },
+      "name": { 
+        "type": "string", 
+        "description": "Nome da categoria",
+        "example": "Eletrônicos"
+      },
+      "status": { 
+        "type": "boolean", 
+        "description": "Status da categoria",
+        "example": true
+      },
+      "deleted": { 
+        "type": "boolean", 
+        "description": "Status de exclusão (soft delete)",
+        "example": false
+      }
+    }
+  }
+}
+

@@ -1,0 +1,310 @@
+/* ===== ESTILIZAÇÃO PERSONALIZADA DO SWAGGER UI ===== */
+
+/* Cores da marca */
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #8b5cf6;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --dark-bg: #1f2937;
+  --light-bg: #f9fafb;
+  --border-color: #e5e7eb;
+}
+
+/* Header personalizado */
+.swagger-ui .topbar {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 20px 0;
+}
+
+.swagger-ui .topbar .download-url-wrapper {
+  display: none;
+}
+
+/* Título da API */
+.swagger-ui .info .title {
+  color: var(--primary-color);
+  font-size: 2.5em;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Descrição */
+.swagger-ui .info .description {
+  color: #374151;
+  font-size: 1.1em;
+  line-height: 1.6;
+}
+
+/* Tags */
+.swagger-ui .opblock-tag {
+  background: var(--light-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  margin: 10px 0;
+  transition: all 0.3s ease;
+}
+
+.swagger-ui .opblock-tag:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+.swagger-ui .opblock-tag-section h3 {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Endpoints */
+.swagger-ui .opblock {
+  border-radius: 12px;
+  margin: 15px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.swagger-ui .opblock:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Métodos HTTP */
+.swagger-ui .opblock.opblock-get {
+  border-color: var(--success-color);
+}
+
+.swagger-ui .opblock.opblock-post {
+  border-color: var(--primary-color);
+}
+
+.swagger-ui .opblock.opblock-put {
+  border-color: var(--warning-color);
+}
+
+.swagger-ui .opblock.opblock-delete {
+  border-color: var(--error-color);
+}
+
+.swagger-ui .opblock.opblock-patch {
+  border-color: var(--secondary-color);
+}
+
+/* Headers dos métodos */
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+  background: var(--success-color);
+}
+
+.swagger-ui .opblock.opblock-post .opblock-summary-method {
+  background: var(--primary-color);
+}
+
+.swagger-ui .opblock.opblock-put .opblock-summary-method {
+  background: var(--warning-color);
+}
+
+.swagger-ui .opblock.opblock-delete .opblock-summary-method {
+  background: var(--error-color);
+}
+
+.swagger-ui .opblock.opblock-patch .opblock-summary-method {
+  background: var(--secondary-color);
+}
+
+/* Resumos dos endpoints */
+.swagger-ui .opblock-summary-description {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Botões */
+.swagger-ui .btn.execute {
+  background: var(--success-color);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.swagger-ui .btn.execute:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.swagger-ui .btn.authorize {
+  background: var(--primary-color);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.swagger-ui .btn.authorize:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+/* Modelos */
+.swagger-ui .model {
+  background: var(--light-bg);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+}
+
+.swagger-ui .model-title {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Propriedades dos modelos */
+.swagger-ui .model-box {
+  background: white;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.swagger-ui .model-box .model-box {
+  background: #f8fafc;
+}
+
+/* Exemplos */
+.swagger-ui .examples-selector {
+  background: var(--light-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 10px 0;
+}
+
+/* Respostas */
+.swagger-ui .responses-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.swagger-ui .responses-table th {
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+}
+
+/* Status codes */
+.swagger-ui .response-col_status {
+  font-weight: 600;
+}
+
+.swagger-ui .response-col_status.response-200 {
+  color: var(--success-color);
+}
+
+.swagger-ui .response-col_status.response-400 {
+  color: var(--warning-color);
+}
+
+.swagger-ui .response-col_status.response-401 {
+  color: var(--error-color);
+}
+
+.swagger-ui .response-col_status.response-404 {
+  color: var(--error-color);
+}
+
+.swagger-ui .response-col_status.response-500 {
+  color: var(--error-color);
+}
+
+/* Parâmetros */
+.swagger-ui .parameters-container {
+  background: var(--light-bg);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+}
+
+.swagger-ui .parameters-container th {
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+}
+
+/* Campos de input */
+.swagger-ui input[type="text"],
+.swagger-ui textarea,
+.swagger-ui select {
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.swagger-ui input[type="text"]:focus,
+.swagger-ui textarea:focus,
+.swagger-ui select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  outline: none;
+}
+
+/* Scrollbar personalizada */
+.swagger-ui ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.swagger-ui ::-webkit-scrollbar-track {
+  background: var(--light-bg);
+}
+
+.swagger-ui ::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.swagger-ui ::-webkit-scrollbar-thumb:hover {
+  background: #4f46e5;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.swagger-ui .opblock {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .swagger-ui .info .title {
+    font-size: 2em;
+  }
+  
+  .swagger-ui .opblock {
+    margin: 10px 0;
+  }
+  
+  .swagger-ui .parameters-container {
+    padding: 10px;
+  }
+}
+
+/* Tema escuro opcional */
+.swagger-ui.dark-theme {
+  background: var(--dark-bg);
+  color: white;
+}
+
+.swagger-ui.dark-theme .opblock {
+  background: #374151;
+  color: white;
+}
+
+.swagger-ui.dark-theme .model {
+  background: #374151;
+  color: white;
+}
+
+
+

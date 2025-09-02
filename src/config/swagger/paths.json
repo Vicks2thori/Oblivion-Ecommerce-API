@@ -1,0 +1,353 @@
+{
+  "/api/private/categories": {
+    "get": {
+      "summary": "Lista todas as categorias (admin)",
+      "description": "Retorna uma lista de todas as categorias cadastradas e seus produtos ativos/inativos",
+      "tags": ["Categoria"],
+      "responses": {
+        "200": {
+          "description": "Lista de categorias retornada com sucesso",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": { "type": "boolean" },
+                  "message": { "type": "string" },
+                  "data": {
+                    "type": "array",
+                    "items": { "$ref": "./schemas.json#/Category" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria uma nova categoria",
+      "description": "Cadastra uma nova categoria no sistema",
+      "tags": ["Categoria"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/Category" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Categoria criada com sucesso"
+        }
+      }
+    }
+  },
+  "/api/public/categories": {
+    "get": {
+      "summary": "Lista todas as categorias com produtos ativos (client)",
+      "description": "Retorna uma lista de todas as categorias cadastradas e seus produtos ativos vinculador",
+      "tags": ["Categoria"],
+      "responses": {
+        "200": {
+          "description": "Lista de categorias retornada com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/products": {
+    "get": {
+      "summary": "Lista todos os produtos",
+      "description": "Retorna uma lista de todos os produtos cadastrados",
+      "tags": ["Produto"],
+      "responses": {
+        "200": {
+          "description": "Lista de produtos retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria um novo produto",
+      "description": "Cadastra um novo produto no sistema",
+      "tags": ["Produto"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/Product" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Produto criado com sucesso"
+        }
+      }
+    }
+  },
+  "/api/public/products": {
+    "get": {
+      "summary": "Lista produtos públicos",
+      "description": "Retorna uma lista de produtos disponíveis para o público",
+      "tags": ["Produto"],
+      "responses": {
+        "200": {
+          "description": "Lista de produtos retornada com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/payment-conditions": {
+    "get": {
+      "summary": "Lista condições de pagamento",
+      "description": "Retorna uma lista de todas as condições de pagamento",
+      "tags": ["Condição de Pagamento"],
+      "responses": {
+        "200": {
+          "description": "Lista de condições de pagamento retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria nova condição de pagamento",
+      "description": "Cadastra uma nova condição de pagamento no sistema",
+      "tags": ["Condição de Pagamento"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/PaymentCondition" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Condição de pagamento criada com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/payments": {
+    "get": {
+      "summary": "Lista pagamentos",
+      "description": "Retorna uma lista de todos os pagamentos",
+      "tags": ["Pagamento"],
+      "responses": {
+        "200": {
+          "description": "Lista de pagamentos retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria novo pagamento",
+      "description": "Cadastra um novo pagamento no sistema",
+      "tags": ["Pagamento"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/Payment" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Pagamento criado com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/stock-categories": {
+    "get": {
+      "summary": "Lista categorias de estoque",
+      "description": "Retorna uma lista de todas as categorias de estoque",
+      "tags": ["Categoria de Estoque"],
+      "responses": {
+        "200": {
+          "description": "Lista de categorias de estoque retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria nova categoria de estoque",
+      "description": "Cadastra uma nova categoria de estoque no sistema",
+      "tags": ["Categoria de Estoque"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/StockCategory" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Categoria de estoque criada com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/sites": {
+    "get": {
+      "summary": "Lista sites",
+      "description": "Retorna uma lista de todos os sites configurados",
+      "tags": ["Site"],
+      "responses": {
+        "200": {
+          "description": "Lista de sites retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria novo site",
+      "description": "Cadastra um novo site no sistema",
+      "tags": ["Site"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/Site" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Site criado com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/enterprises": {
+    "get": {
+      "summary": "Lista empresas",
+      "description": "Retorna uma lista de todas as empresas cadastradas",
+      "tags": ["Empresa"],
+      "responses": {
+        "200": {
+          "description": "Lista de empresas retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria nova empresa",
+      "description": "Cadastra uma nova empresa no sistema",
+      "tags": ["Empresa"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/Enterprise" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Empresa criada com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/orders": {
+    "get": {
+      "summary": "Lista pedidos",
+      "description": "Retorna uma lista de todos os pedidos",
+      "tags": ["Pedido"],
+      "responses": {
+        "200": {
+          "description": "Lista de pedidos retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria novo pedido",
+      "description": "Cadastra um novo pedido no sistema",
+      "tags": ["Pedido"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/Order" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Pedido criado com sucesso"
+        }
+      }
+    }
+  },
+  "/api/public/orders": {
+    "post": {
+      "summary": "Cria um novo pedido",
+      "description": "Cria um novo pedido no sistema",
+      "tags": ["Pedido"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/Order" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Pedido criado com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/users": {
+    "get": {
+      "summary": "Lista usuários",
+      "description": "Retorna uma lista de todos os usuários",
+      "tags": ["Usuários"],
+      "responses": {
+        "200": {
+          "description": "Lista de usuários retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria novo usuário",
+      "description": "Cadastra um novo usuário no sistema",
+      "tags": ["Usuários"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "./schemas.json#/User" }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Usuário criado com sucesso"
+        }
+      }
+    }
+  },
+  "/api/private/stock-movements": {
+    "get": {
+      "summary": "Lista movimentações de estoque",
+      "description": "Retorna uma lista de todas as movimentações de estoque",
+      "tags": ["Estoque"],
+      "responses": {
+        "200": {
+          "description": "Lista de movimentações de estoque retornada com sucesso"
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria nova movimentação de estoque",
+      "description": "Cadastra uma nova movimentação de estoque no sistema",
+      "tags": ["Estoque"],
+      "responses": {
+        "200": {
+          "description": "Movimentação de estoque criada com sucesso"
+        }
+      }
+    }
+  }
+}

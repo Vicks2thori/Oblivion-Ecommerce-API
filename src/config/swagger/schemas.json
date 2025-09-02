@@ -1,0 +1,111 @@
+{
+  "User": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único do usuário" },
+      "name": { "type": "string", "description": "Nome completo do usuário" },
+      "email": { "type": "string", "format": "email", "description": "Email do usuário" },
+      "role": { "type": "string", "enum": ["admin", "client"], "description": "Tipo de usuário" },
+      "createdAt": { "type": "string", "format": "date-time", "description": "Data de criação" }
+    }
+  },
+  "example": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "Eletrônicos",
+    "status": true,
+    "deleted": false
+  },
+  "Product": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único do produto" },
+      "name": { "type": "string", "description": "Nome do produto" },
+      "description": { "type": "string", "description": "Descrição do produto" },
+      "price": { "type": "number", "description": "Preço do produto" },
+      "category": { "type": "string", "description": "ID da categoria" },
+      "quantity": { "type": "number", "description": "Quantidade em estoque" },
+      "status": { "type": "boolean", "description": "Status do produto" }
+    }
+  },
+  "Category": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único da categoria" },
+      "name": { "type": "string", "description": "Nome da categoria" },
+      "status": { "type": "boolean", "description": "Status da categoria" }
+    },
+    "example": {
+      "_id": "507f1f77bcf86cd799439011",
+      "name": "Eletrônicos",
+      "status": true,
+      "deleted": false
+    }
+  },
+  "Order": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único do pedido" },
+      "user": { "type": "string", "description": "ID do usuário" },
+      "products": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "product": { "type": "string", "description": "ID do produto" },
+            "quantity": { "type": "number", "description": "Quantidade" },
+            "price": { "type": "number", "description": "Preço unitário" }
+          }
+        }
+      },
+      "total": { "type": "number", "description": "Total do pedido" },
+      "status": { "type": "string", "enum": ["pending", "confirmed", "shipped", "delivered"], "description": "Status do pedido" }
+    }
+  },
+  "PaymentCondition": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único da condição de pagamento" },
+      "name": { "type": "string", "description": "Nome da condição de pagamento" },
+      "installments": { "type": "number", "description": "Número de parcelas" },
+      "interest": { "type": "number", "description": "Taxa de juros" },
+      "status": { "type": "boolean", "description": "Status da condição de pagamento" }
+    }
+  },
+  "Payment": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único do pagamento" },
+      "order": { "type": "string", "description": "ID do pedido" },
+      "amount": { "type": "number", "description": "Valor do pagamento" },
+      "method": { "type": "string", "description": "Método de pagamento" },
+      "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "Status do pagamento" }
+    }
+  },
+  "StockCategory": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único da categoria de estoque" },
+      "name": { "type": "string", "description": "Nome da categoria de estoque" },
+      "description": { "type": "string", "description": "Descrição da categoria" },
+      "status": { "type": "boolean", "description": "Status da categoria" }
+    }
+  },
+  "Site": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único do site" },
+      "name": { "type": "string", "description": "Nome do site" },
+      "url": { "type": "string", "description": "URL do site" },
+      "status": { "type": "boolean", "description": "Status do site" }
+    }
+  },
+  "Enterprise": {
+    "type": "object",
+    "properties": {
+      "_id": { "type": "string", "description": "ID único da empresa" },
+      "name": { "type": "string", "description": "Nome da empresa" },
+      "cnpj": { "type": "string", "description": "CNPJ da empresa" },
+      "status": { "type": "boolean", "description": "Status da empresa" }
+    }
+  }
+}
