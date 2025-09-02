@@ -1,12 +1,14 @@
 //productService.js
 const Product = require("./productEntity");
-const { addProductToCategoryWithTransfer, removeProductFromAllCategories } = require("../category/categoryService");
+const { addProductToCategoryWithTransfer, removeProductFromAllCategories } = require("../category/categoryUtils");
 
 
 //CREATE
 const createProduct = async function(data) {
   try { 
     const product = new Product(data);
+
+    await addProductToCategoryWithTransfer(data.categoryId, product._id);
 
     return await product.save();
   } catch (error) {
