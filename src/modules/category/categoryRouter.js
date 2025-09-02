@@ -1,23 +1,28 @@
-// categoryRouter.js
+//categoryRouter.js
 const express = require('express');
 const categoryController = require('./categoryController');
 
-//ROUTER PÚBLICO (E-commerce)
+
+//CLIENT
 const publicRouter = express.Router();
+//Read -get
+publicRouter.get('/active', categoryController.getActive);
 
-//Só rotas que o público pode acessar
-publicRouter.get('/active', categoryController.getActive);  // Lista ativas
 
-
-// ROUTER PRIVADO (Admin)
+//ADMIN
 const privateRouter = express.Router();
 
-// CRUD completo para admin
-privateRouter.post('/', categoryController.create);           // Criar
-privateRouter.get('/', categoryController.getAll);            // Listar todas
-privateRouter.get('/:id', categoryController.getById);        // Buscar por ID
-privateRouter.put('/:id', categoryController.update);         // Atualizar
-privateRouter.put('/:id/delete', categoryController.deleteCategory); // Deletar
+//Create -post
+privateRouter.post('/', categoryController.create);
+
+//Read -get
+privateRouter.get('/', categoryController.getAll);
+privateRouter.get('/:id', categoryController.getById);
+
+//Update/Delete -put
+privateRouter.put('/:id', categoryController.update);
+privateRouter.put('/:id/delete', categoryController.deleteCategory);
+
 
 module.exports = {
   public: publicRouter,
