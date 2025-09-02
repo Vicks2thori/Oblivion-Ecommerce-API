@@ -1,32 +1,23 @@
 //userController.js
 const { createAdminSchema, createClientSchema, updateAdminSchema, updateClientSchema } = require('./userDto');
 const User = require('./userService');
-//const { badRequest400, responseHelpersOk, responseHelpersError } = require("../../../routes/responseHelpers"); futuramente qando estiver funcionando
 
-//CRUD
 
-//Create
+//CREATE
 async function createClient(req, res) {
   try {
-    //Validar DTO
     req.body.type = 'client';
-    
-    // Garante que adminDetails não seja enviado para client
-    if (req.body.adminDetails) {
-      delete req.body.adminDetails;
-    }
     
     const { error, value } = createClientSchema.validate(req.body); //validate do Joi retorna um erro(null se estender ok) e os valores
     if (error) {
-      //400 - Dados inválidos
+      //Dados inválidos
       return res.status(400).json({
         success: false,
-        message: '400 - Dados inválidos',
-        errors: error.details.map(d => d.message) //extrai só as mensagens
+        message: `400 - Dados inválidos ${error.details.map(d => d.message)}`
       });
     };
 
-    //Criar através do Service
+  
     const user = await User.createClient(value);
 
     //200 - Sucesso geral
