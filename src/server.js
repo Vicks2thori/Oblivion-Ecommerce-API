@@ -4,6 +4,7 @@ const express = require("express");
 const morgan = require("morgan");
 const swaggerUi = require('swagger-ui-express');
 const specs = require('./config/swagger');
+const cors = require('cors');
 const { connectDB } = require('./model/database'); // ✅ Importar função
 const { initializeSite } = require('./modules/site/siteService'); // ✅ Importar inicialização do Site
 
@@ -24,6 +25,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
     tryItOutEnabled: true
   }
 }));
+
+
+// Configuração de CORS flexível para desenvolvimento e produção
+const corsOptions = require('./config/cors');
+app.use(cors(corsOptions));
 
 // Rotas
 const publicRoutes = require('./routes/publicRoutes');
