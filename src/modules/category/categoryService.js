@@ -1,6 +1,6 @@
 //categoryService.js
 const Category = require("./categoryEntity");
-const { filterProducts, addProductToCategoryWithTransfer } = require("./categoryUtils");
+const { filterProducts } = require("./categoryUtils");
 
 
 //CREATE
@@ -96,14 +96,6 @@ const updateCategory = async function(id, updateData) {
     
     if (!category || category.categoryDeleted) {
       throw new Error('Categoria não encontrada');
-    };
-
-    if (updateData.products && Array.isArray(updateData.products)) {
-      for (const product of updateData.products) {
-        await addProductToCategoryWithTransfer(category._id, product.productId);
-      };
-      
-      delete updateData.products;
     };
 
     Object.assign(category, updateData);
