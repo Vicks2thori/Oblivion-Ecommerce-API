@@ -8,6 +8,8 @@ const createProduct = async function(data) {
   try { 
     const product = new Product(data);
 
+    await addProductToCategoryWithTransfer(data.categoryId, product._id);
+
     return await product.save();
   } catch (error) {
     throw new Error(`Erro ao criar produto: ${error.message}`);
