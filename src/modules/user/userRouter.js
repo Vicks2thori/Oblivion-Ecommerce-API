@@ -2,24 +2,35 @@
 const express = require('express');
 const userController = require('./userController');
 
-//ROUTER PÚBLICO (E-commerce)
+
+//CLIENT
 const publicRouter = express.Router();
 
-//Só rotas que o público pode acessar
+//Create -post
 publicRouter.post('/', userController.createClient);
+
+//Read -get
 publicRouter.get('/:id', userController.getClientById);
+
+//Update/Delete -put
 publicRouter.put('/:id', userController.updateClient);
 publicRouter.put('/:id/delete', userController.deleteUser);
 
-// ROUTER PRIVADO (Admin)
+
+//ADMIN
 const privateRouter = express.Router();
 
-// CRUD completo para admin
+//Create -post
 privateRouter.post('/', userController.createAdmin);           // Criar
-privateRouter.get('/', userController.getAllAdmins);            // Listar todas
-privateRouter.get('/:id', userController.getAdminById);        // Buscar por ID
-privateRouter.put('/:id', userController.updateAdmin);         // Atualizar
+
+//Read -get
+privateRouter.get('/', userController.getAllAdmins);
+privateRouter.get('/:id', userController.getAdminById);
+
+//Update/Delete -put
+privateRouter.put('/:id', userController.updateAdmin);
 privateRouter.put('/:id/delete', userController.deleteUser); // Deletar
+
 
 module.exports = {
   public: publicRouter,
