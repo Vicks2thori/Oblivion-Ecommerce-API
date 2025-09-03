@@ -21,7 +21,7 @@ publicRouter.put('/:id/delete', userController.deleteUser);
 const privateRouter = express.Router();
 
 //Create -post
-privateRouter.post('/', userController.createAdmin);           // Criar
+privateRouter.post('/', userController.createAdmin);
 
 //Read -get
 privateRouter.get('/', userController.getAllAdmins);
@@ -29,7 +29,7 @@ privateRouter.get('/:id', userController.getAdminById);
 
 //Update/Delete -put
 privateRouter.put('/:id', userController.updateAdmin);
-privateRouter.put('/:id/delete', userController.deleteUser); // Deletar
+privateRouter.put('/:id/delete', userController.deleteUser);
 
 
 module.exports = {
