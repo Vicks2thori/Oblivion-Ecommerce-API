@@ -1,10 +1,36 @@
 //userService.js
 const User = require("./userEntity");
+const { convertDataToSearchableHash,
+  convertPasswordToHash,
+  checkIfEmailExist,
+  checkIfCpfExist,
+  checkIfCellExist } = require("./userUtils");
 
 
 //CREATE
 const createClient = async function(data) {
-  try { 
+  try {
+    const emailExist = await checkIfEmailExist(data.email);
+    const cpfExist = await checkIfCpfExist(data.clientDetails.cpf);
+    const cellExist = await checkIfCellExist(data.clientDetails.cell);
+
+    if (emailExist) {
+      throw new Error('Email já cadastrado');
+    };
+
+    if (cpfExist) {
+      throw new Error('Cpf já cadastrado');
+    };
+
+    if (cellExist) {
+      throw new Error('Celular já cadastrado');
+    };
+
+    data.email = await convertDataToSearchableHash(data.email);
+    data.password = await convertPasswordToHash(data.password);
+    data.clientDetails.cpf = await convertDataToSearchableHash(data.clientDetails.cpf);
+    data.clientDetails.cell = await convertDataToSearchableHash(data.clientDetails.cell);
+
     const user = new User(data); 
 
     return await user.save();
@@ -14,7 +40,16 @@ const createClient = async function(data) {
 };
 
 const createAdmin = async function(data) {
-  try { 
+  try {
+    const emailExist = await checkIfEmailExist(data.email);
+
+    if (emailExist) {
+      throw new Error('Email já cadastrado');
+    };
+
+    data.email = await convertDataToSearchableHash(data.email);
+    data.password = await convertPasswordToHash(data.password);
+
     const user = new User(data);
 
     return await user.save();
@@ -64,6 +99,15 @@ const getClientById = async function(id) {
 //UPDATE
 const updateAdmin = async function(id, updateData) {
   try {
+    if (updateData.email) {
+      const emailHash = await convertDataToSearchableHash(updateData.email);
+      const emailExist = await checkIfEmailExist(emailHash);
+
+      if (emailExist) {
+        throw new Error('Email já cadastrado');
+      };
+    };
+
     const updated = await User.findOneAndUpdate(
       {_id: id, deleted: false, type: 'admin' },
       updateData, 
@@ -82,6 +126,38 @@ const updateAdmin = async function(id, updateData) {
 //UPDATE
 const updateClient = async function(id, updateData) {
   try {
+    if (updateData.email) {
+      const emailHash = await convertDataToSearchableHash(updateData.email);
+      const emailExist = await checkIfEmailExist(emailHash);
+
+      if (emailExist) {
+        throw new Error('Email já cadastrado');
+      };
+
+      updateData.email = emailHash;
+    };
+
+    if (updateData.clientDetails && updateData.clientDetails.cpf) {
+      const cpfHash = await convertDataToSearchableHash(updateData.clientDetails.cpf);
+      const cpfExist = await checkIfCpfExist(cpfHash);
+
+      if (cpfExist) {
+        throw new Error('Cpf já cadastrado');
+      };
+
+      updateData.clientDetails.cpf = cpfHash;
+    };
+
+    if (updateData.clientDetails && updateData.clientDetails.cell) {
+      const cellHash = await convertDataToSearchableHash(updateData.clientDetails.cell);
+      const cellExist = await checkIfCellExist(cellHash);
+
+      if (cellExist) {
+        throw new Error('Celular já cadastrado');
+      };
+      updateData.clientDetails.cell = cellHash;
+    };
+
     const updated = await User.findOneAndUpdate(
       {_id: id, deleted: false, type: 'client' },
       updateData, 

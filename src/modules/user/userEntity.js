@@ -14,8 +14,8 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minlength: 6,
-    maxlength: 50,
+    minlength: 64,
+    maxlength: 64,
     unique: true
   },
 
@@ -38,8 +38,7 @@ const UserSchema = new mongoose.Schema({
   adminDetails: {
     _id: false,
     status: { 
-      type: Boolean,
-      default: true 
+      type: Boolean
     }
   },
 
@@ -49,15 +48,15 @@ const UserSchema = new mongoose.Schema({
     cpf: { 
       type: String,
       trim: true,
-      minlength: 11,
-      maxlength: 11
+      minlength: 64,
+      maxlength: 64
     },
 
     cell: { 
       type: String,
       trim: true,
-      minlength: 11,
-      maxlength: 11
+      minlength: 64,
+      maxlength: 64
     }
   },
 
@@ -73,17 +72,26 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.pre('validate', function(next) {
   if (this.type === 'admin') {
-    this.clientDetails = undefined;
+    delete this.clientDetails;
 
     if (!this.adminDetails) {
       this.adminDetails = { status: true };
     };  
   } else if (this.type === 'client') {
-    this.adminDetails = undefined;
+    delete this.adminDetails;
 
     if (!this.clientDetails || !this.clientDetails.cpf || !this.clientDetails.cell) {
       return next(new Error('Para clientes, CPF e telefone são obrigatórios'));
     };
+  };
+  next();
+});
+
+UserSchema.pre('save', function(next) {
+  if (this.type === 'admin') {
+    delete this.clientDetails;
+  } else if (this.type === 'client') {
+    delete this.adminDetails;
   };
   next();
 });
