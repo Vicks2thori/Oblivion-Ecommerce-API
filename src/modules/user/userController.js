@@ -42,6 +42,9 @@ async function createAdmin(req, res) {
   try {
     //Validar DTO
     req.body.type = 'admin';
+    if (!req.body.adminDetails) {
+      req.body.adminDetails = { status: true };
+    };
     
     const { error, value } = createAdminSchema.validate(req.body); //validate do Joi retorna um erro(null se estiver ok) e os valores
     if (error) {

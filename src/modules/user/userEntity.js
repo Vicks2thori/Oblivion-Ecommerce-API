@@ -76,13 +76,22 @@ UserSchema.pre('validate', function(next) {
 
     if (!this.adminDetails) {
       this.adminDetails = { status: true };
-    };
+    };  
   } else if (this.type === 'client') {
     delete this.adminDetails;
 
     if (!this.clientDetails || !this.clientDetails.cpf || !this.clientDetails.cell) {
       return next(new Error('Para clientes, CPF e telefone são obrigatórios'));
     };
+  };
+  next();
+});
+
+UserSchema.pre('save', function(next) {
+  if (this.type === 'admin') {
+    delete this.clientDetails;
+  } else if (this.type === 'client') {
+    delete this.adminDetails;
   };
   next();
 });
