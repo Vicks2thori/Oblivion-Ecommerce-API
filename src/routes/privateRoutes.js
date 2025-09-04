@@ -13,8 +13,7 @@ const userRoutes = require('../modules/user/userRouter');
 
 const privateRouter = express.Router();
 
-//PAYMENT
-//payment condition
+
 privateRouter.use('/payment-conditions', paymentConditionRoutes.private);
 privateRouter.use('/payments', paymentRoutes.private)
 privateRouter.use('/stock-categories', stockCategoryRoutes.private);
