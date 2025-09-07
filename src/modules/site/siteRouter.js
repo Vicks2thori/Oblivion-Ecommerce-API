@@ -2,19 +2,23 @@
 const express = require('express');
 const siteController = require('./siteController');
 
-//ROUTER PÚBLICO (E-commerce)
+
+//CLIENT
 const publicRouter = express.Router();
 
-//Só rotas que o público pode acessar
-publicRouter.get('/', siteController.getSite);  // Lista
+//Read -get
+publicRouter.get('/', siteController.getSite);
 
 
-// ROUTER PRIVADO (Admin)
+//ADMIN
 const privateRouter = express.Router();
 
-// CRUD completo para admin
-privateRouter.get('/', siteController.getSite);  // Lista
-privateRouter.put('/', siteController.updateSite);         // Atualizar
+//Read -get
+privateRouter.get('/', siteController.getSite);
+
+//Update -put
+privateRouter.put('/', siteController.updateSite);
+
 
 module.exports = {
   public: publicRouter,
