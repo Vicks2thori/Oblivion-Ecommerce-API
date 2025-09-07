@@ -2,9 +2,7 @@
 const stockMovementService = require('./stock_movementService');
 const { createStockMovementSchema } = require('./stock_movementDto');
 
-//CRUD (apenas Create e Read)
 
-//Create
 const create = async function(req, res) {
   try {
     const stockMovement = await stockMovementService.createStockMovementSchema(req.body);
