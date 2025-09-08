@@ -16,10 +16,19 @@ const createStockMovementSchema = Joi.object({
   .max(255)
   .required(),
 
-  stockCategoryId: Joi.string()
-  .length(24)
-  .hex()
-  .required(),
+  stockCategory: Joi.array().items(
+    Joi.object({
+      stockCategoryId: Joi.string()
+      .length(24)
+      .hex()
+      .required(),
+
+      nameStockCategory: Joi.string()
+      .min(3)
+      .max(50)
+      .required()
+    })
+  ).min(1).max(1).required(),
 
   type: Joi.string()
   .valid('exit', 'entry', 'definition')
@@ -32,6 +41,11 @@ const createStockMovementSchema = Joi.object({
       .hex()
       .required(),
 
+      nameProduct: Joi.string()
+      .min(1)
+      .max(50)
+      .required(),
+
       quantity: Joi.number()
       .min(1)
       .max(65535)
@@ -39,10 +53,19 @@ const createStockMovementSchema = Joi.object({
     })
   ).min(1).required(),
 
-  adminId: Joi.string()
-  .length(24)
-  .hex()
-  .required()
+  admin: Joi.array().items(
+    Joi.object({
+      adminId: Joi.string()
+      .length(24)
+      .hex()
+      .required(),
+
+      nameAdmin: Joi.string()
+      .min(5)
+      .max(80)
+      .required()
+    })
+  ).min(1).max(1).required(),
 }).min(7).max(7); 
 
 module.exports = { createStockMovementSchema };

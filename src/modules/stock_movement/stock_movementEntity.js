@@ -8,6 +8,12 @@ const StockMovementSchema = new mongoose.Schema({
     default: Date.now
   },
 
+  type: {
+    type: String,
+    required: [true, 'Tipo é obrigatório'],
+    enum: ['entry', 'exit', 'definition']
+  },
+
   name: { 
     type: String, 
     required: [true, 'Nome é obrigatório'],
@@ -23,20 +29,25 @@ const StockMovementSchema = new mongoose.Schema({
     maxlength: [255, 'Descrição deve ter um máximo de 255 caracteres']
   },
 
+  //Referencing - subdocumentos
   //1:1
-  stockCategoryId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'StockCategory',
-    required: [true, 'stockCategoryId é obrigatório']
-  },
+  stockCategory: {
+    _id: false,
+    stockCategoryId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'StockCategory',
+      required: true,
+    },
 
-  type: {
-    type: String,
-    required: [true, 'Tipo é obrigatório'],
-    enum: ['entry', 'exit', 'definition']
+    nameStockCategory:{
+      type: String,
+      trim: true,
+      required: true,
+      minlength: 3,
+      maxlength: 50
+    }
   },
   
-  //Referencing - subdocumentos
   //1:N
   products: [
     {
@@ -46,6 +57,14 @@ const StockMovementSchema = new mongoose.Schema({
       ref: 'Product',
       required: [true, 'productId é obrigatório']
     },
+
+    nameProduct: {
+      type: String,
+      trim: true,
+      minlength: 1,
+      maxlength: 50
+    },
+
     quantity: {
       type: Number,
       required: [true, 'quantity é obrigatório']
@@ -54,12 +73,22 @@ const StockMovementSchema = new mongoose.Schema({
   ],
 
   //1:1
-  adminId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'adminId é obrigatório']
+  admin: {
+    _id: false,
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+
+    nameAdmin: {
+      type: String,
+      minlength: 5,
+      maxlength: 80,
+      required: true
+    }
   }
-},{
+}, {
   timestamps: true,
   versionKey: false,
 });
