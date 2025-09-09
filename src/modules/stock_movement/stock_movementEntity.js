@@ -4,29 +4,28 @@ const mongoose = require('mongoose');
 const StockMovementSchema = new mongoose.Schema({
   date: {
     type: Date,
-    required: [true, 'Data é obrigatória'],
+    required: true,
     default: Date.now
   },
 
   type: {
     type: String,
-    required: [true, 'Tipo é obrigatório'],
+    required: true,
     enum: ['entry', 'exit', 'definition']
   },
 
   name: { 
     type: String, 
-    required: [true, 'Nome é obrigatório'],
+    required: true,
     trim: true,
-    minlength: [2, 'Nome deve ter um minímo de 2 caracteres'],
-    maxlength: [50, 'Nome deve ter um máximo de 50 caracteres']
+    minlength: 2,
+    maxlength: 50
   },
   
   description:{
     type: String,
-    required: false,
     trim: true,
-    maxlength: [255, 'Descrição deve ter um máximo de 255 caracteres']
+    maxlength: 255
   },
 
   //Referencing - subdocumentos
@@ -55,7 +54,7 @@ const StockMovementSchema = new mongoose.Schema({
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product',
-      required: [true, 'productId é obrigatório']
+      required: true
     },
 
     nameProduct: {
@@ -67,7 +66,7 @@ const StockMovementSchema = new mongoose.Schema({
 
     quantity: {
       type: Number,
-      required: [true, 'quantity é obrigatório']
+      required: true
     }
     },
   ],
