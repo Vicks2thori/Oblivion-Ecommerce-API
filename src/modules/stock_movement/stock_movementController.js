@@ -17,12 +17,14 @@ const create = async function(req, res) {
 
     const stockMovement = await stockMovementService.createStockMovement(value);
     
+    //Sucesso
     res.status(200).json({
       success: true,
       data: stockMovement,
       message: 'Movimento de estoque criado com sucesso'
     });
   } catch (error) {
+    //Erro interno do servidor
     res.status(500).json({
       success: false,
       message: error.message
@@ -36,12 +38,14 @@ const getAll = async function(req, res) {
   try {
     const stockMovements = await stockMovementService.getAllStockMovements();
     
+    //Sucesso
     res.status(200).json({
       success: true,
       data: stockMovements,
       message: 'Movimentos de estoque obtidos com sucesso'
     });
   } catch (error) {
+    //Erro interno do servidor
     res.status(500).json({
       success: false,
       message: error.message
@@ -53,12 +57,14 @@ const getById = async function(req, res) {
     try {
       const stockMovement = await stockMovementService.getStockMovementById(req.params.id);
       
+      //Sucesso
       res.status(200).json({
         success: true,
         data: stockMovement,
         message: 'Movimento de estoque obtido com sucesso'
       });
     } catch (error) {
+      //Erro interno no servidor
       res.status(500).json({
         success: false,
         message: error.message

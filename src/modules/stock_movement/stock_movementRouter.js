@@ -12,6 +12,4 @@ privateRouter.post('/', stock_movementController.create);
 privateRouter.get('/', stock_movementController.getAll);
 privateRouter.get('/:id', stock_movementController.getById);
 
-module.exports = {
-  private: privateRouter
-};
+module.exports = { private: privateRouter };

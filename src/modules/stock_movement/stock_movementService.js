@@ -38,10 +38,10 @@ const createStockMovement = async function(data) {
     } catch (stockError) {
       await StockMovement.findByIdAndDelete(stockMovementSaved._id);
       throw new Error(`Erro ao atualizar estoque: ${stockError.message}`);
-    }    
+    };
 
     return stockMovementSaved;
-   }catch (error) {
+   } catch (error) {
     throw new Error(`Erro ao criar movimento de estoque ${error.message}`);
   };
 };
