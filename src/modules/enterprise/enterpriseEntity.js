@@ -2,72 +2,76 @@
 const mongoose = require('mongoose');
 
 const EnterpriseSchema = new mongoose.Schema({
-  // Campo especial para garantir unicidade - apenas um registro pode existir
   singleton: {
     type: String,
     default: 'singleton',
     unique: true,
     required: true,
-    immutable: true // Impede modificação após criação
+    immutable: true
   },
-  name: { 
-    type: String, 
-    required: [true, 'Nome é obrigatório'], //required + mensagem personalizada
-    trim: true,  //Remove espaços inicio/fim
-    minlength: [2, 'Nome deve ter mais que 2 caracteres'],
-    maxlength: [50, 'Nome deve menos que 50 caracteres']
+
+  nameEnterprise: { 
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 50
   },
+
   logoUrl: { 
-    type: String, 
-    required: [true, 'Logo é obrigatório'], //required + mensagem personalizada
-    trim: true,  //Remove espaços inicio/fim
-    minlength: [2, 'Logo deve ter mais que 2 caracteres'],
-    maxlength: [255, 'Logo deve menos que 255 caracteres']
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 255
   },
-  phone: {
-    type: String, 
-    required: false, //required + mensagem personalizada
-    trim: true,  //Remove espaços inicio/fim
-    minlength: [11, 'Telefone deve ter exatamente 11 caracteres'],
-    maxlength: [11, 'Telefone deve ter exatamente 11 caracteres']
+
+  cell: {
+    type: String,
+    required: false,
+    trim: true,
+    minlength: 11,
+    maxlength: 11
   },
-  instagram: { //só o nome do instagram
-    type: String, 
-    required: false, //required + mensagem personalizada
-    trim: true,  //Remove espaços inicio/fim
-    minlength: [1, 'Instagram deve ter mais que 1 caracteres'],
-    maxlength: [30, 'Instagram deve ter menos que 30 caracteres']
+
+  nameInstagram: {
+    type: String,
+    required: false,
+    trim: true,
+    minlength: 1,
+    maxlength: 30
   },
-  facebook: {
-    type: String, 
-    required: false, //required + mensagem personalizada
-    trim: true,  //Remove espaços inicio/fim
-    minlength: [5, 'Facebook deve ter mais que 5 caracteres'],
-    maxlength: [50, 'Facebook deve menos que 50 caracteres']
-  },  
+
+  nameFacebook: {
+    type: String,
+    required: false,
+    trim: true,
+    minlength: 5,
+    maxlength: 50
+  },
+
   email: {
-    type: String, 
-    required: false, //required + mensagem personalizada
-    trim: true,  //Remove espaços inicio/fim
-    minlength: [6, 'Email deve ter mais que 6 caracteres'],
-    maxlength: [50, 'Email deve menos que 50 caracteres']
+    type: String,
+    required: false,
+    trim: true,
+    minlength: 6,
+    maxlength: 50
   }
 }, { 
-  timestamps: true, //controle automático de tempo
-  versionKey: false //remove campo inutil
+  timestamps: true,
+  versionKey: false
 });
 
-// Índice único para garantir apenas um registro
 EnterpriseSchema.index({ singleton: 1 }, { unique: true });
 
-// Middleware para prevenir criação de múltiplos registros (vou criar um arquivo para isso?)
 EnterpriseSchema.pre('save', async function(next) {
   if (this.isNew) {
     const existingEnterprise = await this.constructor.findOne({});
+
     if (existingEnterprise) {
       throw new Error('Apenas um registro Enterprise pode existir');
-    }
-  }
+    };
+  };
   next();
 });
 
