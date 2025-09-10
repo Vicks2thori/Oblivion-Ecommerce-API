@@ -3,7 +3,7 @@ const StockMovement = require("./stock_movementEntity");
 const StockCategory = require("../stock_category/stock_categoryEntity");
 const Product = require("../product/productEntity");
 const User = require("../user/userEntity");
-const { updateStock } = require("../product/productService");
+const { updateStock } = require("../product/productUtils");
 const { prepareStockMovementData } = require("./stock_movementUtils");
 
 
@@ -33,12 +33,12 @@ const createStockMovement = async function(data) {
     const stockMovement = new StockMovement(preparedData);
     const stockMovementSaved = await stockMovement.save();
 
-   /* try {
+    try {
       await updateStock(data.products, data.type);
     } catch (stockError) {
       await StockMovement.findByIdAndDelete(stockMovementSaved._id);
       throw new Error(`Erro ao atualizar estoque: ${stockError.message}`);
-    }; */
+    }    
 
     return stockMovementSaved;
    }catch (error) {
