@@ -92,20 +92,6 @@ const StockMovementSchema = new mongoose.Schema({
   versionKey: false,
 });
 
-StockMovementSchema.pre('save', function(next) {
-  if (this.products.length === 0) {
-    return next(new Error('Movimentação de estoque deve ter pelo menos um produto'));
-  };
-  next();
-});
-
-StockMovementSchema.pre('save', function(next) {
-  if (!this.stockCategoryId) {
-    return next(new Error('Movimentação de estoque deve ter uma categoria'));
-  };
-  next();
-});
-
 StockMovementSchema.index({ name: 1 });
 StockMovementSchema.index({ stockCategoryId: 1 });
 

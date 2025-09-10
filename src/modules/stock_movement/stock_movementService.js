@@ -4,12 +4,13 @@ const StockCategory = require("../stock_category/stock_categoryEntity");
 const Product = require("../product/productEntity");
 const User = require("../user/userEntity");
 const { updateStock } = require("../product/productService");
+const { prepareStockMovementData } = require("./stock_movementUtils");
 
 
 //CREATE
 const createStockMovement = async function(data) {
   try {
-    const stockCategory = await StockCategory.findById(data.stockCategoryId);
+    const stockCategory = await StockCategory.findById(data.stockCategory.stockCategoryId);
 
     if (!stockCategory) {
         throw new Error('Categoria de estoque não encontrada');
@@ -21,21 +22,23 @@ const createStockMovement = async function(data) {
         throw new Error('Produto não encontrado');
     };
 
-    const admin = await User.findById(data.adminId);
+    const admin = await User.findById(data.admin.adminId);
 
     if (!admin) {
         throw new Error('Administrador não encontrado');
     };
+    
+    const preparedData = await prepareStockMovementData(data);
 
-    const stockMovement = new StockMovement(data);
+    const stockMovement = new StockMovement(preparedData);
     const stockMovementSaved = await stockMovement.save();
 
-    try {
+   /* try {
       await updateStock(data.products, data.type);
     } catch (stockError) {
       await StockMovement.findByIdAndDelete(stockMovementSaved._id);
       throw new Error(`Erro ao atualizar estoque: ${stockError.message}`);
-    };
+    }; */
 
     return stockMovementSaved;
    }catch (error) {
