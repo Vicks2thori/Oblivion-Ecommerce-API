@@ -1,20 +1,25 @@
-// orderRouter.js
+//orderRouter.js
 const express = require('express');
 const orderController = require('./orderController');
 
-//ROUTER PÚBLICO (E-commerce)
+//CLIENT
 const publicRouter = express.Router();
 
-//Só rotas que o público pode acessar
-publicRouter.post('/', orderController.create);           // Criar
-publicRouter.get('/:id', orderController.getOrdersByClient);       // Buscar por ID do client
+//Create -post
+publicRouter.post('/', orderController.create);
 
-// ROUTER PRIVADO (Admin)
+//Get -get
+publicRouter.get('/:id', orderController.getOrdersByClient);
+
+
+//ADMIN
 const privateRouter = express.Router();
 
-// CRUD
-privateRouter.get('/', orderController.getOrdersByStatus);            // Listar todas
-privateRouter.put('/:id', orderController.update);         // Atualizar
+//Read -get
+privateRouter.get('/', orderController.getOrdersByStatus);
+
+//Update -put
+privateRouter.put('/:id', orderController.update);
 
 module.exports = {
   public: publicRouter,
