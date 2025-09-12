@@ -58,7 +58,7 @@ async function getOrdersByStatus(req, res) {
 
 async function getOrdersByClient(req, res) {
   try {
-    const clientId = req.user.id;
+    const { id: clientId } = req.params;
     const order = await Order.getOrdersByClient(clientId);
 
     //Sucesso
