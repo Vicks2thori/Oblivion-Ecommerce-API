@@ -16,7 +16,7 @@ publicRouter.get('/:id', orderController.getOrdersByClient);
 const privateRouter = express.Router();
 
 //Read -get
-privateRouter.get('/', orderController.getOrdersByStatus);
+privateRouter.get('/:status', orderController.getOrdersByStatus);
 
 //Update -put
 privateRouter.put('/:id', orderController.update);
