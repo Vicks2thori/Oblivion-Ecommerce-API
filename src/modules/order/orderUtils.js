@@ -41,8 +41,8 @@ const getClientSnapshot = async (clientId) => {
     
     return {
       clientId: client._id,
-      client_name: client.name,
-      client_phone: client.clientDetails.type.phone
+      clientName: client.name,
+      clientCell: client.clientDetails.cell
     };
   } catch (error) {
     throw new Error(`Erro ao buscar dados do cliente: ${error.message}`);
@@ -64,8 +64,8 @@ const getProductSnapshot = async (productId) => {
     
     return {
       productId: product._id,
-      product_name: product.name,
-      product_price: product.price
+      productName: product.name,
+      productPrice: product.price
     };
   } catch (error) {
     throw new Error(`Erro ao buscar dados do produto: ${error.message}`);
@@ -87,7 +87,7 @@ const getPaymentMethodSnapshot = async (methodId) => {
     
     return {
       methodId: payment._id,
-      method_name: payment.name
+      methodName: payment.name
     };
   } catch (error) {
     throw new Error(`Erro ao buscar dados do método de pagamento: ${error.message}`);
@@ -109,7 +109,7 @@ const getPaymentConditionSnapshot = async (conditionId) => {
     
     return {
       conditionId: condition._id,
-      condition_name: condition.name
+      conditionName: condition.name
     };
   } catch (error) {
     throw new Error(`Erro ao buscar dados da condição de pagamento: ${error.message}`);
@@ -122,24 +122,24 @@ const calculateItemSubtotal = (price, quantity) => {
 
 const calculateOrderTotal = (products) => {
   return products.reduce((total, product) => {
-    return total + product.product_subtotal;
+    return total + product.productSubtotal;
   }, 0);
 };
 
 const prepareOrderData = async (orderData) => {
   try {
-    const { clientId, products, payment, ...otherData } = orderData;
-    const clientSnapshot = await getClientSnapshot(clientId);
+    const { client, products, payment, ...otherData } = orderData;
+    const clientSnapshot = await getClientSnapshot(client.clientId);
     const preparedProducts = [];
 
     for (const productItem of products) {
       const productSnapshot = await getProductSnapshot(productItem.productId);
-      const subtotal = calculateItemSubtotal(productSnapshot.product_price, productItem.quantity);
+      const subtotal = calculateItemSubtotal(productSnapshot.productPrice, productItem.quantity);
       
       preparedProducts.push({
         ...productSnapshot,
         quantity: productItem.quantity,
-        product_subtotal: subtotal
+        productSubtotal: subtotal
       });
     };
     

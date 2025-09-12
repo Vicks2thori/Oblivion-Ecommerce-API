@@ -22,7 +22,7 @@ const getOrdersByStatus = async function(status) {
     return await Order.find({
       status: status
     })
-    .populate('clientId', 'name phone')
+    .populate('client.clientId', 'name phone')
     .populate('products.productId', 'name price')
     .populate('payment.methodId', 'name imageType')
     .populate('payment.conditionId', 'name')
