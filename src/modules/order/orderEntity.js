@@ -10,7 +10,7 @@ const OrderSchema = new mongoose.Schema({
   
   code: {
     type: String,
-    required: [true, 'Código é obrigatório'],
+    required: true,
     trim: true,
     unique: true,
     default: null
@@ -20,18 +20,18 @@ const OrderSchema = new mongoose.Schema({
     clientId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'userId é obrigatório']
+      required: true
     },
 
-    client_name: {
+    clientName: {
       type: String,
-      required: [true, 'Nome é obrigatório'],
+      required: true,
       trim: true
     },
 
-    client_phone: {
+    clientCell: {
       type: String,
-      required: [true, 'Telefone é obrigatório'],
+      required: true,
       trim: true
     }
   },
@@ -42,31 +42,31 @@ const OrderSchema = new mongoose.Schema({
       productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
-        required: [true, 'productId é obrigatório']
+        required: true
       },
 
       quantity: {
         type: Number,
-        required: [true, 'quantity é obrigatório'],
-        min: [1, 'quantity deve ser maior que 0']
+        required: true,
+        min: 1
       },
 
-      product_name: {
+      productName: {
         type: String,
-        required: [true, 'Nome do produto é obrigatório'],
+        required: true,
         trim: true
       },
 
-      product_price: {
+      productPrice: {
         type: Number,
-        required: [true, 'Preço do produto é obrigatório'],
-        min: [0, 'Preço deve ser maior ou igual a 0']
+        required: true,
+        min: 0
       },
 
-      product_subtotal: {
+      productSubtotal: {
         type: Number,
-        required: [true, 'subtotal é obrigatório'],
-        min: [0, 'subtotal deve ser maior ou igual a 0']
+        required: true,
+        min: 0
       }
       },
     ],
@@ -76,38 +76,38 @@ const OrderSchema = new mongoose.Schema({
     methodId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Payment',
-      required: [true, 'Método de pagamento é obrigatório']
+      required: true
     },
 
-    method_name: {
+    methodName: {
       type: String,
-      required: [true, 'Nome do método de pagamento é obrigatório'],
+      required: true,
       trim: true
     },
 
     conditionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'PaymentCondition',
-      required: [true, 'Condição de pagamento é obrigatória']
+      required: true
     },
 
-    condition_name: {
+    conditionName: {
       type: String,
-      required: [true, 'Nome da condição de pagamento é obrigatório'],
+      required: true,
       trim: true
     }
   },
 
   total: {
     type: Number,
-    required: [true, 'total é obrigatório'],
-    min: [0.01, 'total deve ser maior que 0']
+    required: true,
+    min: 0.01
   },
 
   status: {
     type: String,
     enum: ['pending', 'in_progress', 'cancel', 'approved'],
-    required: [true, 'status é obrigatório'],
+    required: true,
     default: 'pending'
   }
 }, {
