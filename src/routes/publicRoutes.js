@@ -10,9 +10,6 @@ const userRoutes = require('../modules/user/userRouter');
 
 const publicRouter = express.Router();
 
-//PAYMENT
-//payment condition
-publicRouter.use('/payment-conditions', paymentConditionRoutes.public);
 publicRouter.use('/payments', paymentRoutes.public);
 publicRouter.use('/categories', categoryRoutes.public);
 publicRouter.use('/site', siteRoutes.public);

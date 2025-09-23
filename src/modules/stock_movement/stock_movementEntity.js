@@ -4,79 +4,94 @@ const mongoose = require('mongoose');
 const StockMovementSchema = new mongoose.Schema({
   date: {
     type: Date,
-    required: [true, 'Data é obrigatória'],
+    required: true,
     default: Date.now
   },
-  name: { 
-    type: String, 
-    required: [true, 'Nome é obrigatório'], //required + mensagem personalizada
-    trim: true,  //Remove espaços inicio/fim
-    minlength: [2, 'Nome deve ter um minímo de 2 caracteres'],
-    maxlength: [50, 'Nome deve ter um máximo de 50 caracteres'],
-    //unique: true, //Quando o unique esta ativo ele retorna um erro, mesmo quando o item foi "deletado"
-  },
-  description:{
-    type: String,
-    required: false,
-    trim: true,
-    maxlength: [255, 'Descrição deve ter um máximo de 255 caracteres']
-  },
-  stockCategoryId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'StockCategory',
-    required: [true, 'stockCategoryId é obrigatório']
-  },
+
   type: {
     type: String,
-    required: [true, 'Tipo é obrigatório'],
+    required: true,
     enum: ['entry', 'exit', 'definition']
   },
-  //REFERENCING - subdocumentos
+
+  name: { 
+    type: String, 
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 50
+  },
+  
+  description:{
+    type: String,
+    trim: true,
+    maxlength: 255
+  },
+
+  //Referencing - subdocumentos
+  //1:1
+  stockCategory: {
+    _id: false,
+    stockCategoryId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'StockCategory',
+      required: true,
+    },
+
+    nameStockCategory:{
+      type: String,
+      trim: true,
+      required: true,
+      minlength: 3,
+      maxlength: 50
+    }
+  },
+  
+  //1:N
   products: [
     {
-    _id: false, //Impede que o Mongo gere um _id para o subdocumento
+    _id: false,
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product',
-      required: [true, 'productId é obrigatório']
+      required: true
     },
+
+    nameProduct: {
+      type: String,
+      trim: true,
+      minlength: 1,
+      maxlength: 50
+    },
+
     quantity: {
       type: Number,
-      required: [true, 'quantity é obrigatório']
+      required: true
     }
     },
   ],
-  adminId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'adminId é obrigatório']
+
+  //1:1
+  admin: {
+    _id: false,
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+
+    nameAdmin: {
+      type: String,
+      minlength: 5,
+      maxlength: 80,
+      required: true
+    }
   }
-},{
-  timestamps: true, //controle automático de tempo
-  versionKey: false, //remove campo inutil
+}, {
+  timestamps: true,
+  versionKey: false,
 });
 
-
-//MIDDLEWARES
-// Validação customizada para garantir pelo menos um produto
-StockMovementSchema.pre('save', function(next) {
-  if (this.products.length === 0) {
-    return next(new Error('Movimentação de estoque deve ter pelo menos um produto'));
-  }
-  next();
-});
-
-// Validação customizada para garantir uma categoria
-StockMovementSchema.pre('save', function(next) {
-  if (!this.stockCategoryId) {
-    return next(new Error('Movimentação de estoque deve ter uma categoria'));
-  }
-  next();
-});
-
-
-
-// Índices para performance
 StockMovementSchema.index({ name: 1 });
 StockMovementSchema.index({ stockCategoryId: 1 });
 

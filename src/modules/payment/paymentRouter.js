@@ -1,24 +1,29 @@
-// paymentRouter.js
+//paymentRouter.js
 const express = require('express');
 const paymentController = require('./paymentController');
 
-//ROUTER PÚBLICO (E-commerce)
+
+//CLIENT
 const publicRouter = express.Router();
 
-//Só rotas que o público pode acessar
-publicRouter.get('/active', paymentController.getActive);  // Lista ativas
-publicRouter.get('/:id', paymentController.getById); //lista por id? preciso ver como vai ser feito
+//Read -get
+publicRouter.get('/active', paymentController.getActive);
 
 
-// ROUTER PRIVADO (Admin)
+//ADMIN
 const privateRouter = express.Router();
 
-// CRUD completo para admin
-privateRouter.post('/', paymentController.create);           // Criar
-privateRouter.get('/', paymentController.getAll);            // Listar todas
-privateRouter.get('/:id', paymentController.getById);        // Buscar por ID
-privateRouter.put('/:id', paymentController.update);         // Atualizar
-privateRouter.delete('/:id', paymentController.deletePayment); // Deletar
+//Create -post
+privateRouter.post('/', paymentController.create);
+
+//Read -get
+privateRouter.get('/', paymentController.getAll);
+privateRouter.get('/:id', paymentController.getById);
+
+//Update/Delete -put
+privateRouter.put('/:id', paymentController.update);
+privateRouter.put('/:id/delete', paymentController.deletePayment);
+
 
 module.exports = {
   public: publicRouter,

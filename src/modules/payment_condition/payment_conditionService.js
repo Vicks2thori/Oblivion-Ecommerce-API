@@ -1,21 +1,19 @@
 //payment_conditionService.js
 const PaymentCondition = require("./payment_conditionEntity");
 
-//CRUD
 
-//Create
+//CREATE
 const createPaymentCondition = async function(data) {
   try { 
-    const paymentCondition = new PaymentCondition(data); //cria um novo
-    return await paymentCondition.save(); //salva no banco
-  }catch (error) {
+    const paymentCondition = new PaymentCondition(data);
+    return await paymentCondition.save();
+  } catch (error) {
     throw new Error(`Erro ao criar condição de pagamento: ${error.message}`);
-  }
+  };
 };
 
 
-//Read
-//All
+//READ
 const getAllPaymentConditions = async function() {
   try {
     return await PaymentCondition.find({deleted: false}).sort({name: 1});
@@ -24,55 +22,42 @@ const getAllPaymentConditions = async function() {
   }
 };
 
-//Active
-const getActivePaymentConditions = async function() {
-  try {
-    return await PaymentCondition.find({
-      deleted: false,
-      status: true 
-    }).sort({ name: 1 });
-  }catch (error) {
-    throw new Error(`Erro ao buscar condições de pagamento ativas: ${error.message}`);
-  }
-};
-
-//By ID
 const getPaymentConditionById = async function(id) {
   try {
     const getById = await PaymentCondition.findById(id);
     
-    if (!getById || getById.deleted) { //se não encontrou ou encontrou e esta deletada
-      throw new Error('Condição de pagamento não encontrada'); //cria um novo erro
-    }
+    if (!getById || getById.deleted) {
+      throw new Error('Condição de pagamento não encontrada');
+    };
     
     return getById;
   } catch (error) {
     throw new Error(`Erro ao buscar condição de pagamento: ${error.message}`);
-  }
+  };
 };
 
 
-//Update
+//UPDATE
 const updatePaymentCondition = async function(id, updateData) {
   try {
     const updated = await PaymentCondition.findOneAndUpdate(
-      {_id: id, deleted: false }, //só atualiza se não foi deletado
+      {_id: id, deleted: false },
       updateData, 
       {new: true, runValidators: true}
     );
     
     if (!updated) {
-      throw new Error('Condição de pagamento não encontrada'); //novo erro caso não encontre
-    }
+      throw new Error('Condição de pagamento não encontrada');
+    };
     
     return updated;
   } catch (error) {
     throw new Error(`Erro ao atualizar condição de pagamento: ${error.message}`);
-  }
+  };
 };
 
 
-//Delete (soft delete)
+//DELETE
 const deletePaymentCondition = async function(id) {
  try {
     const deleted = await PaymentCondition.findOneAndUpdate(
@@ -83,18 +68,17 @@ const deletePaymentCondition = async function(id) {
     
     if (!deleted) {
       throw new Error('Condição de pagamento não encontrada');
-    }
+    };
     
     return deleted;
   } catch (error) {
     throw new Error(`Erro ao deletar condição de pagamento: ${error.message}`);
-  }
+  };
 };
 
 module.exports = {
     createPaymentCondition,
     getAllPaymentConditions,
-    getActivePaymentConditions,
     getPaymentConditionById,
     updatePaymentCondition,
     deletePaymentCondition

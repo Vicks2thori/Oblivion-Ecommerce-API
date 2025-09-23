@@ -2,27 +2,21 @@
 const express = require('express');
 const payment_conditionController = require('./payment_conditionController');
 
-//ROUTER PÚBLICO (E-commerce)
-const publicRouter = express.Router();
 
-//Só rotas que o público pode acessar
-publicRouter.get('/active', payment_conditionController.getActive);  // Lista ativas
-publicRouter.get('/:id', payment_conditionController.getById);       // Buscar por ID (para pedidos) 
-//para pedidos? não vai estar dentro de pagamento? preciso organizar melhor
-
-
-// ROUTER PRIVADO (Admin)
+//ADMIN
 const privateRouter = express.Router();
 
-// CRUD completo para admin
-privateRouter.post('/', payment_conditionController.create);           // Criar
-privateRouter.get('/', payment_conditionController.getAll);            // Listar todas
-//privateRouter.get('/active', payment_conditionController.getActive);   // Listar ativas não precisa (isso eu posso fazer uma query)
-privateRouter.get('/:id', payment_conditionController.getById);        // Buscar por ID
-privateRouter.put('/:id', payment_conditionController.update);         // Atualizar
-privateRouter.delete('/:id', payment_conditionController.deletePaymentCondition); // Deletar
+//Create -post
+privateRouter.post('/', payment_conditionController.create);
+
+//Read -get
+privateRouter.get('/', payment_conditionController.getAll);
+privateRouter.get('/:id', payment_conditionController.getById);
+
+//Update/Delete -put
+privateRouter.put('/:id', payment_conditionController.update);
+privateRouter.put('/:id/delete', payment_conditionController.deletePaymentCondition);
 
 module.exports = {
-  public: publicRouter,
   private: privateRouter
 };

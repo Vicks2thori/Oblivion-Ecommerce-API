@@ -1,48 +1,29 @@
 //productService.js
 const Product = require("./productEntity");
+const { addProductToCategoryWithTransfer, removeProductFromAllCategories } = require("../category/categoryUtils");
 
-//CRUD
 
-//Create
+//CREATE
 const createProduct = async function(data) {
   try { 
-    const product = new Product(data); //cria um novo
-    return await product.save(); //salva no banco
-  }catch (error) {
+    const product = new Product(data);
+
+    await addProductToCategoryWithTransfer(data.categoryId, product._id);
+
+    return await product.save();
+  } catch (error) {
     throw new Error(`Erro ao criar produto: ${error.message}`);
-  }
+  };
 };
 
 
-//Read
-//All
-const getAllProducts = async function() {
-  try {
-    return await Product.find({deleted: false}).sort({name: 1});
-  }catch (error) {
-    throw new Error(`Erro ao buscar todos os produtos: ${error.message}`);
-  }
-};
-
-//Active
-const getActiveProducts = async function() { //faz sentido se eu relacionar na categoria?
-  try {
-    return await Product.find({
-      deleted: false,
-      status: true 
-    }).sort({ name: 1 });
-  }catch (error) {
-    throw new Error(`Erro ao buscar produtos ativos: ${error.message}`);
-  }
-};
-
-//By ID
+//READ
 const getProductById = async function(id) {
   try {
     const getById = await Product.findById(id);
     
-    if (!getById || getById.deleted) { //se não encontrou ou encontrou e esta deletada
-      throw new Error('Produto não encontrado'); //cria um novo erro
+    if (!getById || getById.deleted) {
+      throw new Error('Produto não encontrado');
     }
     
     return getById;
@@ -52,48 +33,51 @@ const getProductById = async function(id) {
 };
 
 
-//Update
+//UPDATE
 const updateProduct = async function(id, updateData) {
   try {
-    const updated = await Product.findOneAndUpdate(
-      {_id: id, deleted: false }, //só atualiza se não foi deletado
-      updateData, 
-      {new: true, runValidators: true})
+    const product = await Product.findById(id);
     
-    if (!updated) {
-      throw new Error('Produto não encontrado'); //novo erro caso não encontre
-    }
+    if (!product || product.deleted) {
+      throw new Error('Produto não encontrado');
+    };
     
-    return updated;
+    if (updateData.categoryId) {
+      await addProductToCategoryWithTransfer(product._id, updateData.categoryId);
+    };
+
+    Object.assign(product, updateData);
+    
+    return await product.save();
   } catch (error) {
     throw new Error(`Erro ao atualizar produto: ${error.message}`);
-  }
+  };
 };
 
 
-//Delete (soft delete)
+//DELETE
 const deleteProduct = async function(id) {
  try {
-    const deleted = await Product.findOneAndUpdate(
+    const productDeleted = await Product.findOneAndUpdate(
       {_id: id, deleted: false},
-      {deleted: true},
+      {deleted: true},  
       {new: true}
     );
-    
-    if (!deleted) {
+
+    await removeProductFromAllCategories(id);
+
+    if (!productDeleted) {
       throw new Error('Produto não encontrado');
-    }
+    };
     
-    return deleted;
+    return productDeleted;
   } catch (error) {
     throw new Error(`Erro ao deletar produto: ${error.message}`);
-  }
+  };
 };
 
 module.exports = {
     createProduct,
-    getAllProducts,
-    getActiveProducts,
     getProductById,
     updateProduct,
     deleteProduct

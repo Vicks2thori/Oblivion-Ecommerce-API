@@ -1,103 +1,101 @@
 //paymentService.js
 const Payment = require("./paymentEntity");
+const { filterPaymentConditionsActive,
+  addPaymentConditionInPayment,
+  removePaymentConditionInPayment } = require('./paymentUtils')
 
-//CRUD
 
-//Create
+//CREATE
 const createPayment = async function(data) {
   try { 
-    const payment = new Payment(data); //cria um novo
-    return await payment.save(); //salva no banco
-  }catch (error) {
+    const payment = new Payment(data);
+    return await payment.save();
+  } catch (error) {
     throw new Error(`Erro ao criar pagamento: ${error.message}`);
-  }
+  };
 };
 
 
-//Read
-//All
+//READ
 const getAllPayments = async function() {
   try {
     return await Payment.find({deleted: false}).sort({name: 1});
-  }catch (error) {
+  } catch (error) {
     throw new Error(`Erro ao buscar todos os pagamento: ${error.message}`);
-  }
+  };
 };
 
-//Active
 const getActivePayments = async function() {
   try {
     return await Payment.find({
       deleted: false,
       status: true 
-    }).sort({ name: 1 });
-  }catch (error) {
-    throw new Error(`Erro ao buscar os pagamento ativos: ${error.message}`);
-  }
+    })
+    .populate({
+      path: 'paymentConditions.conditionsId',
+      select: 'name'
+    })
+    .sort({ name: 1 })
+    .then(payments => {
+      return payments.map(payment => {
+        const activePaymentConditions = filterPaymentConditionsActive(payment.paymentConditions);
+        
+        return {
+          _id: payment._id,
+          name: payment.name,
+          products: activePaymentConditions
+        };
+      });
+    });
+  } catch (error) {
+    throw new Error(`Erro ao buscar categorias ativas: ${error.message}`);
+  };
 };
 
-//By ID
 const getPaymentById = async function(id) {
   try {
     const getById = await Payment.findById(id);
     
-    if (!getById || getById.deleted) { //se não encontrou ou encontrou e esta deletada
-      throw new Error('Pagamento não encontrado'); //cria um novo erro
-    }
+    if (!getById || getById.deleted) {
+      throw new Error('Pagamento não encontrado');
+    };
     
     return getById;
   } catch (error) {
     throw new Error(`Erro ao buscar pagamento: ${error.message}`);
-  }
+  };
 };
 
-//Update com lógica de relacionamentos
+//UPDATE
 const updatePayment = async function(id, updateData) {
   try {
     const payment = await Payment.findById(id);
     
     if (!payment || payment.deleted) {
       throw new Error('Pagamento não encontrado');
-    }
+    };
 
-    // Processar condições de pagamento se existirem
     if (updateData.paymentConditions && Array.isArray(updateData.paymentConditions)) {
       for (const condition of updateData.paymentConditions) {
         if (condition.action === 'add') {
-          // Verificar se já existe
-          const exists = payment.paymentConditions.some(
-            pc => pc.conditionsId.toString() === condition.conditionsId
-          );
-          
-          if (!exists) {
-            payment.paymentConditions.push({
-              conditionsId: condition.conditionsId,
-              referencing: true
-            });
-          }
-        } else if (condition.action === 'remove') {
-          // Remover se existir
-          payment.paymentConditions = payment.paymentConditions.filter(
-            pc => pc.conditionsId.toString() !== condition.conditionsId
-          );
-        }
-      }
-      
-      // Remover paymentConditions do updateData para não sobrescrever
-      delete updateData.paymentConditions;
-    }
+          await addPaymentConditionInPayment(payment._id, condition.conditionsId);
 
-    // Atualizar outros campos
+        } else if (condition.action === 'remove') {
+          await removePaymentConditionInPayment(payment._id, condition.conditionsId);
+        };
+      };
+      
+      delete updateData.paymentConditions;
+    };
+    
     Object.assign(payment, updateData);
-    
-    return await payment.save();
-    
+    return await Payment.findById(id);
   } catch (error) {
     throw new Error(`Erro ao atualizar pagamento: ${error.message}`);
-  }
+  };
 };
 
-//Delete (soft delete)
+//DELETE
 const deletePayment = async function(id) {
  try {
     const deleted = await Payment.findOneAndUpdate(
@@ -108,12 +106,12 @@ const deletePayment = async function(id) {
     
     if (!deleted) {
       throw new Error('Pagamento não encontrado');
-    }
+    };
     
     return deleted;
   } catch (error) {
     throw new Error(`Erro ao deletar condição de pagamento: ${error.message}`);
-  }
+  };
 };
 
 module.exports = {
