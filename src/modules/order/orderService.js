@@ -17,6 +17,20 @@ const createOrder = async function(data) {
 
 
 //READ
+const getOrderById = async function(id) {
+  try {
+    const order = await Order.findById(id);
+
+    if (!order) {
+      throw new Error('Pedido não encontrada');
+    }
+
+    return order;
+  } catch (error) {
+    throw new Error(`Erro ao buscar pedido por ID: ${error.message}`);
+  };
+};
+
 const getOrdersByStatus = async function(status) {
   try {
     return await Order.find({
@@ -75,6 +89,7 @@ const updateOrder = async function(id, status) {
 
 module.exports = {
   createOrder,
+  getOrderById,
   getOrdersByStatus,
   getOrdersByClient,
   updateOrder

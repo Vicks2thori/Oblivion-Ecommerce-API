@@ -36,9 +36,29 @@ async function create(req, res) {
 
 
 //READ
-async function getOrdersByStatus(req, res) {
+async function getById(req, res) {
   try {
-    const { status } = req.params;
+    const id = req.params.id;
+    const order = await Order.getOrderById(id);
+
+    //Sucesso
+    res.status(200).json({
+      success: true,
+      message: '200 - Operação realizada com sucesso',
+      data: order
+    });
+  } catch (error) {
+    //Erro interno do servidor
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  };
+};
+
+async function getByStatus(req, res) {
+  try {
+    const status = req.params.status;
     const order = await Order.getOrdersByStatus(status);
 
     //Sucesso geral
@@ -56,9 +76,9 @@ async function getOrdersByStatus(req, res) {
   };
 };
 
-async function getOrdersByClient(req, res) {
+async function getByClient(req, res) {
   try {
-    const { id: clientId } = req.params;
+    const clientId = req.params.clientId;
     const order = await Order.getOrdersByClient(clientId);
 
     //Sucesso
@@ -80,7 +100,7 @@ async function getOrdersByClient(req, res) {
 //UPDATE
 async function update(req, res) {
   try {
-    const { id } = req.params;
+    const { id } = req.params.id;
     const { error, value } = updateOrderSchema.validate(req.body);
 
     if (error) {
@@ -109,7 +129,8 @@ async function update(req, res) {
 
 module.exports = {
   create,
-  getOrdersByStatus,
-  getOrdersByClient,
+  getById,
+  getByStatus,
+  getByClient,
   update
 };

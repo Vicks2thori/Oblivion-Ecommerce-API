@@ -9,17 +9,20 @@ const publicRouter = express.Router();
 publicRouter.post('/', orderController.create);
 
 //Get -get
-publicRouter.get('/:id', orderController.getOrdersByClient);
+publicRouter.get('/client/:clientId', orderController.getByClient);
+publicRouter.get('/:id', orderController.getById);
 
 
 //ADMIN
 const privateRouter = express.Router();
 
 //Read -get
-privateRouter.get('/:status', orderController.getOrdersByStatus);
+privateRouter.get('/status/:status', orderController.getByStatus);
+privateRouter.get('/:id', orderController.getById);
 
 //Update -put
 privateRouter.put('/:id', orderController.update);
+
 
 module.exports = {
   public: publicRouter,
