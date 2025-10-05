@@ -1,7 +1,7 @@
   //categoryUtills.js
   const Category = require("./categoryEntity");
 
-  const filterProducts = (products, status = 'all') => {
+  const filterProducts = (products, status) => {
     if (status === 'active') {
       return products
         .map(p => p.productId)
