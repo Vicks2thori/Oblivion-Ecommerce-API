@@ -34,9 +34,11 @@ app.use(cors(corsOptions));
 // Rotas
 const publicRoutes = require('./routes/publicRoutes');
 const privateRoutes = require('./routes/privateRoutes');
+const healthRoutes = require('./routes/healthRoutes');
 
 app.use('/api/public', publicRoutes);
 app.use('/api/private', privateRoutes);
+app.use('/api/health', healthRoutes);
 
 app.use((req, res) => {
     return res.json({ 
