@@ -4,11 +4,30 @@ const os = require('os');
 const mongoose = require('mongoose');
 
 /**
- * Middleware simples que apenas registra que o health check foi acionado.
+ * Fábrica de middleware de healthcheck.
+ * Se "checkFn" for informado, responde com JSON do status desse check.
+ * Caso contrário, apenas chama next() após logar o evento.
  */
-const createHealthCheck = (req, res, next) => {
-  console.log(`[${new Date().toISOString()}] Health check triggered.`);
-  next();
+const createHealthCheck = (name, checkFn) => {
+  return async (req, res, next) => {
+    try {
+      console.log(`[${new Date().toISOString()}] Health check triggered${name ? `: ${name}` : ''}.`);
+
+      if (typeof checkFn === 'function') {
+        const ok = await checkFn();
+        return res.status(ok ? 200 : 500).json({
+          status: ok ? 'ok' : 'error',
+          check: name || 'unnamed-check',
+          timestamp: new Date(),
+        });
+      }
+
+      return typeof next === 'function' ? next() : undefined;
+    } catch (error) {
+      console.error('Erro no healthcheck:', error);
+      return res.status(500).json({ status: 'error', message: error.message });
+    }
+  };
 };
 
 /**

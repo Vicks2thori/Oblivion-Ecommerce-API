@@ -2,8 +2,6 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
-const swaggerUi = require('swagger-ui-express');
-const specs = require('./config/swagger');
 const cors = require('cors');
 const { connectDB } = require('./model/database'); // ✅ Importar função
 const { initializeSite } = require('./modules/site/siteService'); // ✅ Importar inicialização do Site
@@ -15,16 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
-// Swagger Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
-  customSiteTitle: 'Oblivion Ecommerce API Documentation',
-  swaggerOptions: {
-    docExpansion: 'list',
-    filter: true,
-    showRequestHeaders: true,
-    tryItOutEnabled: true
-  }
-}));
+// Swagger removido
 
 
 // Configuração de CORS flexível para desenvolvimento e produção
@@ -72,7 +61,6 @@ async function startServer() {
             console.log(`🚀 Servidor rodando: http://localhost:${SERVER_PORT}`);
             console.log(`📱 Público: http://localhost:${SERVER_PORT}/api/public`);
             console.log(`🔒 Privado: http://localhost:${SERVER_PORT}/api/private`);
-            console.log(`🔒 Swagger: http://localhost:${SERVER_PORT}/api-docs`);
         });
         
     } catch (error) {
