@@ -15,7 +15,7 @@ privateRouter.get('/:id', stock_categoryController.getById);
 
 //Update/Delete -put
 privateRouter.put('/:id', stock_categoryController.update);
-privateRouter.delete(':id/delete', stock_categoryController.deleteStockCategory);
+privateRouter.put('/:id/delete', stock_categoryController.deleteStockCategory);
 
 
 module.exports = {

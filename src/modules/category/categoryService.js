@@ -22,7 +22,7 @@ const getAllCategories = async function() {
       .populate({
         path: 'productsList.productId',
         match: { deleted: false },
-        select: 'name imageUrl description price code quantity status'
+        select: 'name imageUrl description price code quantity status deleted'
       })
       .sort({name: 1})
       .then(categories => {
@@ -66,20 +66,17 @@ const getActiveCategories = async function() {
     })
     .populate({
       path: 'productsList.productId',
+      match: { deleted: false },
       select: 'name imageUrl description price code quantity'
     })
     .sort({ name: 1 })
     .then(categories => {
       return categories.map(category => {
-        const activeProducts = filterProducts(category.productsList, 'active');
-        
+        const activeProducts = filterProducts(category.productsList, "active");
         return {
           _id: category._id,
           name: category.name,
-          status: category.status,
-          products: activeProducts,
-          createdAt: category.createdAt,
-          updatedAt: category.updatedAt
+          products: activeProducts
         };
       });
     });

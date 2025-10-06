@@ -1,16 +1,18 @@
   //categoryUtills.js
   const Category = require("./categoryEntity");
 
-  const filterProducts = (products, status = 'all') => {
+  const filterProducts = (products, status = "all") => {
+    const docs = products
+      .map(p => p && p.productId)
+      .filter(p => p && typeof p === 'object');
+
+    const notDeleted = p => p.deleted !== true; // undefined -> mantém
+
     if (status === 'active') {
-      return products
-        .map(p => p.productId)
-        .filter(product => product && !product.deleted && product.status);
-    } else {
-      return products
-        .map(p => p.productId)
-        .filter(product => product && !product.deleted);
-    };
+      return docs.filter(p => notDeleted(p) && p.status !== false); // undefined -> mantém
+    }
+
+    return docs.filter(notDeleted);
   };
 
   const removeProductFromAllCategories = async function(productId) {
