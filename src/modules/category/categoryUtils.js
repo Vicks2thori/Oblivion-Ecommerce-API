@@ -1,13 +1,7 @@
   //categoryUtills.js
   const Category = require("./categoryEntity");
 
-  const filterProducts = (products, status = "all") => {
-    const docs = products
-      .map(p => p && p.productId)
-      .filter(p => p && typeof p === 'object');
-
-    const notDeleted = p => p.deleted !== true; // undefined -> mantém
-
+  const filterProducts = (products, status = 'all') => {
     if (status === 'active') {
       return docs.filter(p => notDeleted(p) && p.status !== false); // undefined -> mantém
     }
