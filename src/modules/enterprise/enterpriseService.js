@@ -2,11 +2,11 @@
 const Enterprise = require("./enterpriseEntity");
 
 const defaultEnterpriseConfig = {
-  name: 'Oblivion',
+  nameEnterprise: 'Oblivion',
   logoUrl: 'https://www.oblivion.com.br/logo.png',
-  phone: '10987654321',
-  instagram: 'www.instagram.com/oblivion',
-  facebook: 'https://www.facebook.com/oblivion',
+  cell: '10987654321',
+  nameInstagram: 'oblivion',
+  nameFacebook: 'oblivion',
   email: 'oblivion@gmail.com'
 };
 

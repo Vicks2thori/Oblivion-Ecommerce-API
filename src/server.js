@@ -12,6 +12,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+app.use('/uploads', express.static('src/assets/images/uploads'));
 
 // Swagger removido
 

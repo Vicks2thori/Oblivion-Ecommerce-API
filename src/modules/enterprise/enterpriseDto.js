@@ -15,12 +15,10 @@ const createEnterpriseSchema = Joi.object({
   }),
 
   logoUrl: Joi.string()
-  .uri({ scheme: ['http', 'https'] })
   .min(5)
   .max(255)
   .required()
   .messages({
-    'string.uri': 'logoUrl deve ser uma Url valida',
     'string.base': 'logoUrl deve ser uma string',
     'string.min': 'logoUrl deve ter no mínimo 5 caracteres',
     'string.max': 'logoUrl deve ter no máximo 255 caracteres',
