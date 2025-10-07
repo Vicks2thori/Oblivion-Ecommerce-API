@@ -120,6 +120,12 @@ const deleteCategory = async function(id) {
     if (produtosVinculados.length > 0) {
       throw new Error('Categoria não pode ser deletada pois possui produtos vinculados');
     };
+
+    const deleted = await Category.findOneAndUpdate(
+      {_id: id, categoryDeleted: false},
+      {categoryDeleted: true},  
+      {new: true}
+    );
     
     return deleted;
   } catch (error) {

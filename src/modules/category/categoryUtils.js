@@ -63,5 +63,6 @@
 
   module.exports = {
       filterProducts,
-      addProductToCategoryWithTransfer
+      addProductToCategoryWithTransfer,
+      removeProductFromAllCategories
   };
