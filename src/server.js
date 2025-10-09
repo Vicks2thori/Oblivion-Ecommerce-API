@@ -24,15 +24,17 @@ app.use(cors(corsOptions));
 const publicRoutes = require('./routes/publicRoutes');
 const privateRoutes = require('./routes/privateRoutes');
 const healthRoutes = require('./routes/healthRoutes');
+const imagesRoutes = require('./modules/images/imagesRouter');
 
 app.use('/api/public', publicRoutes);
 app.use('/api/private', privateRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/uploads', imagesRoutes);
 
 app.use((req, res) => {
     return res.json({ 
         message: "Endpoint não encontrado",
-        availableRoutes: ["/api/public", "/api/private"]
+        availableRoutes: ["/api/public", "/api/private", "/api/health", "/api/uploads"]
     });
 });
 
