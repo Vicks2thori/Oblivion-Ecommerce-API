@@ -29,7 +29,6 @@ const createClient = async function(data) {
     data.email = await convertDataToSearchableHash(data.email);
     data.password = await convertPasswordToHash(data.password);
     data.clientDetails.cpf = await convertDataToSearchableHash(data.clientDetails.cpf);
-    data.clientDetails.cell = await convertDataToSearchableHash(data.clientDetails.cell);
 
     const user = new User(data); 
 
@@ -149,13 +148,11 @@ const updateClient = async function(id, updateData) {
     };
 
     if (updateData.clientDetails && updateData.clientDetails.cell) {
-      const cellHash = await convertDataToSearchableHash(updateData.clientDetails.cell);
-      const cellExist = await checkIfCellExist(cellHash);
+      const cellExist = await checkIfCellExist(updateData.clientDetails.cell);
 
       if (cellExist) {
         throw new Error('Celular já cadastrado');
       };
-      updateData.clientDetails.cell = cellHash;
     };
 
     const updated = await User.findOneAndUpdate(

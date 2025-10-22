@@ -60,8 +60,7 @@ const checkIfCpfExist = async function(cpf) {
 
 const checkIfCellExist = async function(cell) {
   try {
-    const cellHash = convertDataToSearchableHash(cell);
-    const cellExists = await User.findOne({deleted: false, 'clientDetails.cell': cellHash});
+    const cellExists = await User.findOne({deleted: false, 'clientDetails.cell': cell});
 
     if (!cellExists) {
       return false;

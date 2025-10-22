@@ -55,8 +55,8 @@ const UserSchema = new mongoose.Schema({
     cell: { 
       type: String,
       trim: true,
-      minlength: 64,
-      maxlength: 64
+      minlength: 11,
+      maxlength: 11
     }
   },
 
