@@ -78,7 +78,7 @@ const getAdminById = async function(id) {
     return getById;
   } catch (error) {
     throw new Error(`Erro ao buscar admin: ${error.message}`);
-  }
+  };
 };
 
 const getClientById = async function(id) {
@@ -92,8 +92,8 @@ const getClientById = async function(id) {
     return getById;
   } catch (error) {
     throw new Error(`Erro ao buscar cliente: ${error.message}`);
-    };
   };
+};
 
 //UPDATE
 const updateAdmin = async function(id, updateData) {
@@ -186,7 +186,7 @@ const deleteUser = async function(id) {
     return deleted;
   } catch (error) {
     throw new Error(`Erro ao deletar usuário: ${error.message}`);
-  }
+  };
 };
 
 module.exports = {
