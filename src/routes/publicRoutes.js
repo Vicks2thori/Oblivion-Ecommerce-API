@@ -7,6 +7,8 @@ const siteRoutes = require('../modules/site/siteRouter');
 const enterpriseRoutes = require('../modules/enterprise/enterpriseRouter');
 const orderRoutes = require('../modules/order/orderRouter');
 const userRoutes = require('../modules/user/userRouter');
+const auth = require('../middlewares/auth');
+const { isClient } = require('../middlewares/role');
 
 const publicRouter = express.Router();
 
@@ -14,7 +16,7 @@ publicRouter.use('/payments', paymentRoutes.public);
 publicRouter.use('/categories', categoryRoutes.public);
 publicRouter.use('/site', siteRoutes.public);
 publicRouter.use('/enterprise', enterpriseRoutes.public);
-publicRouter.use('/orders', orderRoutes.public);
+publicRouter.use('/orders', auth, isClient, orderRoutes.public);
 publicRouter.use('/clients', userRoutes.public);
 
 module.exports = publicRouter;
