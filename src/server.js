@@ -5,6 +5,8 @@ const morgan = require("morgan");
 const cors = require('cors');
 const { connectDB } = require('./model/database'); // ✅ Importar função
 const { initializeSite } = require('./modules/site/siteService'); // ✅ Importar inicialização do Site
+const authMiddleware = require('./middlewares/auth');
+const { isAdmin } = require('./middlewares/role');
 
 const SERVER_PORT = process.env.PORT || 3000;
 const app = express();
@@ -22,20 +24,22 @@ const corsOptions = require('./config/cors');
 app.use(cors(corsOptions));
 
 // Rotas
+const loginRoutes = require('./modules/login/loginRouter');
 const publicRoutes = require('./routes/publicRoutes');
 const privateRoutes = require('./routes/privateRoutes');
 const healthRoutes = require('./routes/healthRoutes');
 const imagesRoutes = require('./modules/images/imagesRouter');
 
+app.use('/api/login', loginRoutes)
 app.use('/api/public', publicRoutes);
-app.use('/api/private', privateRoutes);
+app.use('/api/private', authMiddleware, isAdmin, privateRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/uploads', imagesRoutes);
 
 app.use((req, res) => {
     return res.json({ 
         message: "Endpoint não encontrado",
-        availableRoutes: ["/api/public", "/api/private", "/api/health", "/api/uploads"]
+        availableRoutes: ["/api/public", "/api/private", "/api/health", "/api/uploads", "/api/login"]
     });
 });
 
