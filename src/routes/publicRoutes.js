@@ -16,7 +16,7 @@ publicRouter.use('/payments', paymentRoutes.public);
 publicRouter.use('/categories', categoryRoutes.public);
 publicRouter.use('/site', siteRoutes.public);
 publicRouter.use('/enterprise', enterpriseRoutes.public);
-publicRouter.use('/orders', auth, isClient, orderRoutes.public);
+publicRouter.use('/orders', orderRoutes.public);
 publicRouter.use('/clients', userRoutes.public);
 
 module.exports = publicRouter;

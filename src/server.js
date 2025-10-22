@@ -5,8 +5,6 @@ const morgan = require("morgan");
 const cors = require('cors');
 const { connectDB } = require('./model/database'); // ✅ Importar função
 const { initializeSite } = require('./modules/site/siteService'); // ✅ Importar inicialização do Site
-const authMiddleware = require('./middlewares/auth');
-const { isAdmin } = require('./middlewares/role');
 
 const SERVER_PORT = process.env.PORT || 3000;
 const app = express();
@@ -32,7 +30,7 @@ const imagesRoutes = require('./modules/images/imagesRouter');
 
 app.use('/api/login', loginRoutes)
 app.use('/api/public', publicRoutes);
-app.use('/api/private', authMiddleware, isAdmin, privateRoutes);
+app.use('/api/private', privateRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/uploads', imagesRoutes);
 
