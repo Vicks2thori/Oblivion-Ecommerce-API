@@ -100,7 +100,7 @@ async function getByClient(req, res) {
 //UPDATE
 async function update(req, res) {
   try {
-    const { id } = req.params.id;
+    const id = req.params.id;
     const { error, value } = updateOrderSchema.validate(req.body);
 
     if (error) {
