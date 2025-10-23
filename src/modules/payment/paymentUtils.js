@@ -2,10 +2,20 @@
 const Payment = require("./paymentEntity");
 const PaymentCondition = require("../payment_condition/payment_conditionEntity");
 
-const filterPaymentConditionsActive = (paymentCondition) => {
-    return paymentCondition
-      .map(pc => pc.conditionId)
-      .filter(paymentConditions => paymentConditions && !paymentConditions.deleted && paymentConditions.status);
+const filterPaymentConditionsActive = (paymentConditions) => {
+    console.log('Input paymentConditions:', JSON.stringify(paymentConditions, null, 2));
+    
+    const mappedConditions = paymentConditions.map(pc => pc.conditionsId);
+    console.log('Mapped conditions:', JSON.stringify(mappedConditions, null, 2));
+    
+    const filteredConditions = mappedConditions.filter(condition => {
+        const isValid = condition && !condition.deleted && condition.status;
+        console.log('Condition:', condition, 'isValid:', isValid);
+        return isValid;
+    });
+    
+    console.log('Final filtered conditions:', JSON.stringify(filteredConditions, null, 2));
+    return filteredConditions;
 };
 
 const removePaymentConditionInPayment = async (paymentId, conditionId) => {

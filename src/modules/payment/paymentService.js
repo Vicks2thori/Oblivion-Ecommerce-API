@@ -33,7 +33,7 @@ const getActivePayments = async function() {
     })
     .populate({
       path: 'paymentConditions.conditionsId',
-      select: 'name'
+      select: 'name status deleted'
     })
     .sort({ name: 1 })
     .then(payments => {
@@ -43,7 +43,7 @@ const getActivePayments = async function() {
         return {
           _id: payment._id,
           name: payment.name,
-          products: activePaymentConditions
+          paymentConditions: activePaymentConditions
         };
       });
     });
