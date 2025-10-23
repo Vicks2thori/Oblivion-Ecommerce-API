@@ -1,18 +1,21 @@
 // imagesRouter.js
 const express = require('express');
-const { uploadImage, handleError, requireFile } = require('../../config/multer');
+const fileUpload = require('express-fileupload');
 const imagesController = require('./imagesController');
 
 const router = express.Router();
 
-//SAVE -post -put
-router.post('/:id', uploadImage(), handleError, requireFile, imagesController.save);
-router.put('/:id', uploadImage(), handleError, requireFile, imagesController.save);
+const uploadMiddleware = fileUpload({
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  abortOnLimit: true,
+  useTempFiles: false
+});
 
-//READ -get
+router.post('/:id', uploadMiddleware, imagesController.save);
+router.put('/:id', uploadMiddleware, imagesController.save);
+
 router.get('/:id', imagesController.get);
 
-//DELETE -delete
 router.delete('/:id', imagesController.remove);
 
 module.exports = router;
