@@ -4,8 +4,11 @@ const { generateAccessToken, verifyAccessToken } = require('../../config/jwt');
 const createTokenPayload = (user) => {
   return {
     sub: user._id.toString(),
+    id: user._id.toString(), // Adicionando campo id para compatibilidade
     role: user.type,
-    name: user.name
+    name: user.name,
+    email: user.email,
+    enterprise_id: user.enterprise_id
   };
 };
 
